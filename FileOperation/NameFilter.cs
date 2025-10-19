@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 using Interfaces;
 using System.Text.RegularExpressions;
 
-namespace NameFilter
+namespace FileOperation
 {
-    public class MyFilter : IFilter
+    public class NameFilter : IFilter
     {
         private string Wildcard { get; set; }
         public string Name
@@ -22,7 +22,7 @@ namespace NameFilter
         public bool Enabled { get; set; }
         public System.Windows.Forms.IWin32Window MainWnd { get; set; }
 
-        public MyFilter()
+        public NameFilter()
         {
             this.Enabled = true;
             this.Wildcard = string.Empty;
@@ -53,8 +53,7 @@ namespace NameFilter
 
         public System.Windows.Forms.DialogResult ShowAbout(System.Windows.Forms.IWin32Window owner)
         {
-            AboutForm frm = new AboutForm();
-            return frm.ShowDialog(owner);
+            return System.Windows.Forms.DialogResult.OK;
         }
 
         public System.Windows.Forms.DialogResult ShowSettings(System.Windows.Forms.IWin32Window owner)

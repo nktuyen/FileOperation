@@ -16,6 +16,7 @@ namespace AttributesFilter
     public partial class SettingsForm : Form
     {
         public FileAttributes Attributes { get; set; }
+        public bool ExactMatch { get; set; }
 
         public SettingsForm()
         {
@@ -68,7 +69,11 @@ namespace AttributesFilter
             item = lvwFIleAttributes.Items.Add(FileAttributes.Temporary.ToString());
             if ((this.Attributes & FileAttributes.Temporary) != 0)
                 item.Checked = true;
-            lvwFIleAttributes.HeaderStyle = ColumnHeaderStyle.None;
+
+            if (this.ExactMatch)
+                radEquality.Checked = true;
+            else
+                radContains.Checked = true;
         }
 
         private void btnOK_Click(object sender, EventArgs e)
@@ -121,6 +126,22 @@ namespace AttributesFilter
         private void lvwFIleAttributes_ItemChecked(object sender, ItemCheckedEventArgs e)
         {
 
+        }
+
+        private void radEquality_CheckedChanged(object sender, EventArgs e)
+        {
+            if (radEquality.Checked)
+                this.ExactMatch = true;
+            else
+                this.ExactMatch = false;
+        }
+
+        private void radContains_CheckedChanged(object sender, EventArgs e)
+        {
+            if (radEquality.Checked)
+                this.ExactMatch = true;
+            else
+                this.ExactMatch = false;
         }
     }
 }

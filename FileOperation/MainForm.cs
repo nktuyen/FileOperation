@@ -19,12 +19,14 @@ namespace FileOperation
     {
         private Dictionary<Control, bool> EnabledControlsMap { get; set; }
         private List<IFilter> Filters { get; set; }
+        private List<IOperator> Operators { get; set; }
         private System.Timers.Timer Timer { get; set; }
         public MainForm()
         {
             InitializeComponent();
             EnabledControlsMap = new Dictionary<Control, bool>();
             Filters = new List<IFilter>();
+            Operators=new List<IOperator>();
         }
 
         private void EnableControls(Control ctrl, bool enabled)
@@ -81,10 +83,54 @@ namespace FileOperation
                 ctrl.Enabled = EnabledControlsMap[ctrl];
         }
 
+        private int LoadOperators()
+        {
+            int count = 0;
+            Operators.Clear();
+            //Add default operator
+            IOperator deleteOperator = new DeleteOperator();
+            if (deleteOperator != null)
+            {
+                deleteOperator.MainWnd = this;
+                deleteOperator.Initialize();
+                Operators.Add(deleteOperator);
+
+                count++;
+            }
+
+            return count;
+        }
+
         private int LoadFilters()
         {
             int count = 0;
             Filters.Clear();
+
+            //Add default filter
+            IFilter nameFilter = new NameFilter();
+            if (nameFilter != null)
+            {
+                nameFilter.MainWnd = this;
+                nameFilter.Initialize();
+                Filters.Add(nameFilter);
+
+                ToolStripMenuItem filterItem = (ToolStripMenuItem)filterToolStripMenuItem.DropDownItems.Add(nameFilter.Name);
+                filterItem.Checked = nameFilter.Enabled;
+                filterItem.Tag = nameFilter;
+                filterItem.Click += new EventHandler(filterMenuItemToolStripMenuItem_Click);
+
+                ToolStripMenuItem filterSettingsItem = (ToolStripMenuItem)settingsToolstripMenuItem.DropDownItems.Add(nameFilter.Name);
+                filterSettingsItem.Tag = nameFilter;
+                filterSettingsItem.Click += new EventHandler(filterSettingsMenuItemToolStripMenuItem_Click);
+
+                //ToolStripMenuItem filterAboutItem = (ToolStripMenuItem)aboutToolStripMenuItem.DropDownItems.Add(nameFilter.Name);
+                //filterAboutItem.Tag = nameFilter;
+                //filterAboutItem.Click += new EventHandler(filterAboutMenuItemToolStripMenuItem_Click);
+                count++;
+            }
+
+
+
             Assembly executingAssembly = Assembly.GetExecutingAssembly();
             string assemblyPath = executingAssembly.Location;
             int pos = assemblyPath.LastIndexOf("\\");
@@ -138,6 +184,7 @@ namespace FileOperation
         private void MainForm_Load(object sender, EventArgs e)
         {
             LoadFilters();
+            LoadOperators();
         }
 
         private void filterAboutMenuItemToolStripMenuItem_Click(object sender, EventArgs e)
@@ -199,6 +246,7 @@ namespace FileOperation
         private void bgwAddFiles_PreDoWork(object sender, DoWorkEventArgs e)
         {
             EnableControls(MainMenu, false);
+            EnableControls(filesContextMenuStrip, false);
 
             string[] files = e.Argument as string[];
 
@@ -239,13 +287,11 @@ namespace FileOperation
                 lblStatus.Invoke(new MethodInvoker(delegate
                 {
                     lblStatus.Text = string.Empty;
-                    lblStatus.Visible = true;
                 }));
             }
             else
             {
                 lblStatus.Text = string.Empty;
-                lblStatus.Visible = true;
             }
 
             
@@ -304,6 +350,13 @@ namespace FileOperation
                             item.SubItems.Add(AutoFileSize(fi.Length));
                             item.SubItems.Add(fi.Attributes.ToString());
                         }
+                        else
+                        {
+                            item.SubItems.Add(string.Empty);
+                            item.SubItems.Add(string.Empty);
+                            item.SubItems.Add(string.Empty);
+                        }
+                        item.SubItems.Add(string.Empty);//Status
                     }));
                 }
                 else
@@ -316,6 +369,13 @@ namespace FileOperation
                         item.SubItems.Add(AutoFileSize(fi.Length));
                         item.SubItems.Add(fi.Attributes.ToString());
                     }
+                    else
+                    {
+                        item.SubItems.Add(string.Empty);
+                        item.SubItems.Add(string.Empty);
+                        item.SubItems.Add(string.Empty);
+                    }
+                    item.SubItems.Add(string.Empty);//Status
                 }
             }
         }
@@ -340,6 +400,7 @@ namespace FileOperation
         private void bgwAddFiles_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             RestoreControlEnabled(MainMenu);
+            RestoreControlEnabled(filesContextMenuStrip);
 
             if (MainProgressbar.InvokeRequired)
             {
@@ -369,12 +430,12 @@ namespace FileOperation
             {
                 lblStatus.Invoke(new MethodInvoker(delegate
                 {
-                    lblStatus.Visible = false;
+                    lblStatus.Text = string.Format("Total:{0} file(s)", lvwFiles.Items.Count);
                 }));
             }
             else
             {
-                lblStatus.Visible = false;
+                lblStatus.Text = string.Format("Total:{0} file(s)", lvwFiles.Items.Count);
             }
 
             removeAllFilesToolstripMenu.Enabled = lvwFiles.Items.Count > 0;
@@ -383,6 +444,7 @@ namespace FileOperation
         private void bgwAddFilesInFolder_PreDoWork(object sender, DoWorkEventArgs e)
         {
             EnableControls(MainMenu, false);
+            EnableControls(filesContextMenuStrip, false);
 
             if (MainProgressbar.InvokeRequired)
             {
@@ -425,13 +487,11 @@ namespace FileOperation
                 lblStatus.Invoke(new MethodInvoker(delegate
                 {
                     lblStatus.Text = string.Empty;
-                    lblStatus.Visible = true;
                 }));
             }
             else
             {
                 lblStatus.Text = string.Empty;
-                lblStatus.Visible = true;
             }
 
             Timer = new System.Timers.Timer(MainProgressbar.MarqueeAnimationSpeed);
@@ -511,6 +571,13 @@ namespace FileOperation
                                 item.SubItems.Add(AutoFileSize(fi.Length));
                                 item.SubItems.Add(fi.Attributes.ToString());
                             }
+                            else
+                            {
+                                item.SubItems.Add(string.Empty);
+                                item.SubItems.Add(string.Empty);
+                                item.SubItems.Add(string.Empty);
+                            }
+                            item.SubItems.Add(string.Empty);//Status
                         }));
                     }
                     else
@@ -523,6 +590,13 @@ namespace FileOperation
                             item.SubItems.Add(AutoFileSize(fi.Length));
                             item.SubItems.Add(fi.Attributes.ToString());
                         }
+                        else
+                        {
+                            item.SubItems.Add(string.Empty);
+                            item.SubItems.Add(string.Empty);
+                            item.SubItems.Add(string.Empty);
+                        }
+                        item.SubItems.Add(string.Empty);//Status
                     }
                     bgwAddFilesInFolder.ReportProgress(count, filePath);
                 }
@@ -567,6 +641,7 @@ namespace FileOperation
         private void bgwAddFilesInFolder_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             RestoreControlEnabled(MainMenu);
+            RestoreControlEnabled(filesContextMenuStrip);
 
             if (MainProgressbar.InvokeRequired)
             {
@@ -596,12 +671,12 @@ namespace FileOperation
             {
                 lblStatus.Invoke(new MethodInvoker(delegate
                 {
-                    lblStatus.Visible = false;
+                    lblStatus.Text = string.Format("Total:{0} file(s)", lvwFiles.Items.Count);
                 }));
             }
             else
             {
-                lblStatus.Visible = false;
+                lblStatus.Text = string.Format("Total:{0} file(s)", lvwFiles.Items.Count);
             }
 
             if (this.Timer != null)
@@ -631,6 +706,7 @@ namespace FileOperation
             if (res != DialogResult.Yes)
                 return;
             lvwFiles.Items.Clear();
+            lblStatus.Text = string.Format("Total:{0} file(s)", lvwFiles.Items.Count);
             removeAllFilesToolstripMenu.Enabled = lvwFiles.Items.Count > 0;
         }
 
@@ -655,6 +731,85 @@ namespace FileOperation
             if (btnCancel.Visible && e.KeyCode == Keys.Escape)
             {
                 btnCancel_Click(sender, e);
+            }
+        }
+
+        private void filesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ToolStripItem operItem = (ToolStripItem)sender;
+            IOperator oper = null;
+            if(operItem != null)
+                oper = (IOperator)operItem.Tag;
+            if(oper != null)
+            {
+                if(!oper.PreOperate(lvwFiles.SelectedItems.Count > 1))
+                    return;
+                List<ListViewItem> deletedItems =new List<ListViewItem>();
+                foreach (ListViewItem item in lvwFiles.SelectedItems)
+                {
+                    item.SubItems[4].Text=string.Empty;
+                    string filePath = item.SubItems[1].Text;
+                    oper.FilePath = filePath;
+                    if (oper.Operate())
+                    {
+                        if (oper.FilePath.Length <= 0) //Deleted
+                        {
+                            deletedItems.Add(item);
+                        }
+                        else
+                        {
+                            if (oper.FilePath != filePath) //Name changed
+                            {
+                                item.SubItems[1].Text = oper.FilePath;
+                            }
+                        }
+                        item.SubItems[4].Text = "Success";
+                    }
+                    else
+                        item.SubItems[4].Text = oper.ErrorMessage;
+
+                }
+
+                if (deletedItems.Count > 0)
+                {
+                    deletedItems.Sort((a, b) => a.Index.CompareTo(b.Index));
+                    int minIndex = deletedItems[0].Index;
+                    foreach (ListViewItem item in deletedItems)
+                    {
+                        lvwFiles.Items.Remove(item);
+                    }
+                    //Correct Nb column
+                    for (int i = minIndex; i < lvwFiles.Items.Count; i++)
+                    {
+                        minIndex = i+1;
+                        ListViewItem item = lvwFiles.Items[i];
+                        item.SubItems[0].Text = minIndex.ToString();
+                    }
+
+                    lblStatus.Text = string.Format("Total:{0} file(s)", lvwFiles.Items.Count);
+                }
+            }
+        }
+
+        private void filesContextMenuStrip_Opening(object sender, CancelEventArgs e)
+        {
+            filesContextMenuStrip.Items.Clear();
+            if (lvwFiles.SelectedItems.Count <= 0)
+                return;
+
+            foreach (IOperator oper in Operators)
+            {
+                ToolStripItem operItem = filesContextMenuStrip.Items.Add(oper.Name);
+                if (operItem != null)
+                {
+                    operItem.Tag = oper;
+                    operItem.Click += new EventHandler(filesToolStripMenuItem_Click);
+                    operItem.Image = oper.Icon;
+                    if (!oper.InitializeContextMenu(lvwFiles.SelectedItems.Count > 1))
+                        filesContextMenuStrip.Items.Remove(operItem);
+                    else
+                        operItem.Enabled = oper.Enabled;
+                }
             }
         }
     }

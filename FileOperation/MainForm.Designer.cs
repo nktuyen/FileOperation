@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.MainMenu = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -50,6 +51,7 @@
             this.MainProgressbar = new System.Windows.Forms.ProgressBar();
             this.btnCancel = new System.Windows.Forms.Button();
             this.lblStatus = new System.Windows.Forms.Label();
+            this.filesContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.lvwFiles = new FileOperation.ListViewEx();
             this.colNb = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.colName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -225,7 +227,12 @@
             this.lblStatus.Name = "lblStatus";
             this.lblStatus.Size = new System.Drawing.Size(752, 14);
             this.lblStatus.TabIndex = 5;
-            this.lblStatus.Visible = false;
+            // 
+            // filesContextMenuStrip
+            // 
+            this.filesContextMenuStrip.Name = "filesContextMenuStrip";
+            this.filesContextMenuStrip.Size = new System.Drawing.Size(61, 4);
+            this.filesContextMenuStrip.Opening += new System.ComponentModel.CancelEventHandler(this.filesContextMenuStrip_Opening);
             // 
             // lvwFiles
             // 
@@ -239,6 +246,7 @@
             this.colSize,
             this.colAttributes,
             this.colStatus});
+            this.lvwFiles.ContextMenuStrip = this.filesContextMenuStrip;
             this.lvwFiles.FullRowSelect = true;
             this.lvwFiles.GridLines = true;
             this.lvwFiles.Location = new System.Drawing.Point(10, 24);
@@ -334,6 +342,7 @@
         private System.Windows.Forms.Label lblStatus;
         private System.Windows.Forms.ToolStripMenuItem removeAllFilesToolstripMenu;
         private System.Windows.Forms.ColumnHeader colStatus;
+        private System.Windows.Forms.ContextMenuStrip filesContextMenuStrip;
     }
 }
 

@@ -10,8 +10,9 @@ namespace AttributesFilter
 {
     public class MyFilter : IFilter
     {
-        private FileAttributes Attributes { get; set;   }
-
+        private FileAttributes Attributes { get; set; }
+        public enum MatchingMode { EQuality, Containing }
+        public MatchingMode Matching { get; set; }
         public string Name
         {
             get
@@ -25,6 +26,7 @@ namespace AttributesFilter
         public MyFilter()
         {
             this.Attributes = FileAttributes.Archive | FileAttributes.Normal;
+            this.Matching = MatchingMode.Containing;
         }
         public bool Initialize()
         {
@@ -37,8 +39,16 @@ namespace AttributesFilter
             try
             {
                 fi = new FileInfo(filePath);
-                if ((fi.Attributes & this.Attributes) != 0)
-                    return true;
+                if (this.Matching == MatchingMode.EQuality)
+                {
+                    if ((fi.Attributes == this.Attributes))
+                        return true;
+                }
+                else if (this.Matching == MatchingMode.Containing)
+                {
+                    if ((fi.Attributes & this.Attributes) != 0)
+                        return true;
+                }
             }
             catch (System.Exception ex)
             {
@@ -58,10 +68,18 @@ namespace AttributesFilter
         {
             SettingsForm frm = new SettingsForm();
             frm.Attributes = this.Attributes;
+            if (this.Matching == MatchingMode.Containing)
+                frm.ExactMatch = false;
+            else
+                frm.ExactMatch = true;
             System.Windows.Forms.DialogResult res = frm.ShowDialog(owner);
             if (res == System.Windows.Forms.DialogResult.OK)
             {
                 this.Attributes = frm.Attributes;
+                if (frm.ExactMatch)
+                    this.Matching = MatchingMode.EQuality;
+                else
+                    this.Matching = MatchingMode.Containing;
             }
             return res;
         }
