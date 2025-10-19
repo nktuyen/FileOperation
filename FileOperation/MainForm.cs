@@ -101,6 +101,45 @@ namespace FileOperation
                 count++;
             }
 
+            Assembly executingAssembly = Assembly.GetExecutingAssembly();
+            string assemblyPath = executingAssembly.Location;
+            int pos = assemblyPath.LastIndexOf("\\");
+            if (pos > -1)
+                assemblyPath = assemblyPath.Substring(0, pos);
+            string opeartorsPath = System.IO.Path.Combine(assemblyPath, "Operators");
+            if (!System.IO.Directory.Exists(opeartorsPath))
+                return count;
+
+            DirectoryInfo di = new DirectoryInfo(opeartorsPath);
+            foreach (FileInfo fi in di.GetFiles("*.dll"))
+            {
+                Assembly assembly = Assembly.LoadFrom(fi.FullName);
+                if (assembly != null)
+                {
+                    Type pluginType = null;
+                    foreach (Type type in assembly.GetTypes())
+                    {
+                        if (typeof(IFilter).IsAssignableFrom(type) && !type.IsInterface && !type.IsAbstract)
+                        {
+                            pluginType = type;
+                            break;
+                        }
+                    }
+                    if (pluginType != null)
+                    {
+                        IOperator oper = (IOperator)Activator.CreateInstance(pluginType);
+                        if (oper != null)
+                        {
+                            oper.MainWnd = this;
+                            oper.Initialize();
+                            Operators.Add(oper);
+
+                            count++;
+                        }
+                    }
+                }
+            }
+
             return count;
         }
 
@@ -122,17 +161,15 @@ namespace FileOperation
                 filterItem.Tag = nameFilter;
                 filterItem.Click += new EventHandler(filterMenuItemToolStripMenuItem_Click);
 
-                ToolStripMenuItem filterSettingsItem = (ToolStripMenuItem)settingsToolstripMenuItem.DropDownItems.Add(nameFilter.Name);
+                ToolStripMenuItem filterSettingsItem = (ToolStripMenuItem)settingsFiltersToolStripMenuItem.DropDownItems.Add(nameFilter.Name);
                 filterSettingsItem.Tag = nameFilter;
                 filterSettingsItem.Click += new EventHandler(filterSettingsMenuItemToolStripMenuItem_Click);
 
-                //ToolStripMenuItem filterAboutItem = (ToolStripMenuItem)aboutToolStripMenuItem.DropDownItems.Add(nameFilter.Name);
-                //filterAboutItem.Tag = nameFilter;
-                //filterAboutItem.Click += new EventHandler(filterAboutMenuItemToolStripMenuItem_Click);
+                ToolStripMenuItem filterAboutItem = (ToolStripMenuItem)aboutFiltersToolStripMenuItem.DropDownItems.Add(nameFilter.Name);
+                filterAboutItem.Tag = nameFilter;
+                filterAboutItem.Click += new EventHandler(filterAboutMenuItemToolStripMenuItem_Click);
                 count++;
             }
-
-
 
             Assembly executingAssembly = Assembly.GetExecutingAssembly();
             string assemblyPath = executingAssembly.Location;
@@ -140,6 +177,8 @@ namespace FileOperation
             if (pos > -1)
                 assemblyPath = assemblyPath.Substring(0, pos);
             string filtersPath = System.IO.Path.Combine(assemblyPath, "Filters");
+            if (!System.IO.Directory.Exists(filtersPath))
+                return count;
             DirectoryInfo di = new DirectoryInfo(filtersPath);
             foreach (FileInfo fi in di.GetFiles("*.dll"))
             {
@@ -169,11 +208,11 @@ namespace FileOperation
                             filterItem.Tag = filter;
                             filterItem.Click += new EventHandler(filterMenuItemToolStripMenuItem_Click);
 
-                            ToolStripMenuItem filterSettingsItem = (ToolStripMenuItem)settingsToolstripMenuItem.DropDownItems.Add(filter.Name);
+                            ToolStripMenuItem filterSettingsItem = (ToolStripMenuItem)settingsFiltersToolStripMenuItem.DropDownItems.Add(filter.Name);
                             filterSettingsItem.Tag = filter;
                             filterSettingsItem.Click += new EventHandler(filterSettingsMenuItemToolStripMenuItem_Click);
 
-                            ToolStripMenuItem filterAboutItem = (ToolStripMenuItem)aboutToolStripMenuItem.DropDownItems.Add(filter.Name);
+                            ToolStripMenuItem filterAboutItem = (ToolStripMenuItem)aboutFiltersToolStripMenuItem.DropDownItems.Add(filter.Name);
                             filterAboutItem.Tag = filter;
                             filterAboutItem.Click += new EventHandler(filterAboutMenuItemToolStripMenuItem_Click);
                         }
@@ -1154,6 +1193,11 @@ namespace FileOperation
                 }
                 writer.Flush();
             }
+        }
+
+        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.Close();
         }
     }
 }
