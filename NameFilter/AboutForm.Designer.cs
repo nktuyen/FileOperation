@@ -42,6 +42,7 @@
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "AboutFor";
+            this.Load += new System.EventHandler(this.AboutForm_Load);
             this.ResumeLayout(false);
 
         }

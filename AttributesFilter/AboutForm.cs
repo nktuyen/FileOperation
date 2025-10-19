@@ -28,7 +28,7 @@ namespace AttributesFilter
                 if (asm != null)
                 {
                     FileVersionInfo ver = FileVersionInfo.GetVersionInfo(asm.Location);
-                    this.Text = ver.FileDescription + " - About";
+                    this.Text = "About " + ver.FileDescription;
                 }
             }
             catch (System.Exception ex)

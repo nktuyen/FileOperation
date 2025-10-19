@@ -18,6 +18,7 @@ namespace DateFilter
         }
 
         public bool Enabled { get; set; }
+        public System.Windows.Forms.IWin32Window MainWnd { get; set; }
 
         public bool Initialize()
         {

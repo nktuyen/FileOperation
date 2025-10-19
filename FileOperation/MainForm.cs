@@ -42,6 +42,39 @@ namespace FileOperation
             }
         }
 
+        private string AutoFileSize(long size)
+        {
+            string res = string.Empty;
+            if (size >= Math.Pow(1024, 1))
+            {
+                if (size >= Math.Pow(1024, 2))
+                {
+                    if (size >= Math.Pow(1024, 3))
+                    {
+                        if (size >= Math.Pow(1024, 4))
+                        {
+                            if (size >= Math.Pow(1024, 5))
+                            {
+                                res = string.Format("{0} PB", (long)size / (long)Math.Pow(1024, 5));
+                            }
+                            else
+                                res = string.Format("{0} TB", (long)size / (long)Math.Pow(1024, 4));
+                        }
+                        else
+                            res = string.Format("{0} GB", (long)size / (long)Math.Pow(1024, 3));
+                    }
+                    else
+                        res = string.Format("{0} MB", (long)size / (long)Math.Pow(1024, 2));
+                }
+                else
+                    res = string.Format("{0} KB", (long)size/(long)Math.Pow(1024,1));
+            }
+            else
+                res = string.Format("{0} byte(s)", size);
+
+            return res;
+        }
+
         private void RestoreControlEnabled(Control ctrl)
         {
             if (EnabledControlsMap.ContainsKey(ctrl))
@@ -78,6 +111,8 @@ namespace FileOperation
                         IFilter filter = (IFilter)Activator.CreateInstance(pluginType);
                         if (filter != null)
                         {
+                            filter.MainWnd = this;
+                            filter.Initialize();
                             Filters.Add(filter);
 
                             ToolStripMenuItem filterItem = (ToolStripMenuItem)filterToolStripMenuItem.DropDownItems.Add(filter.Name);
@@ -111,7 +146,7 @@ namespace FileOperation
             IFilter filter = (IFilter)menuItem.Tag;
             if (filter != null)
             {
-                filter.ShowAbout(this);
+                filter.ShowAbout();
             }
         }
 
@@ -121,7 +156,7 @@ namespace FileOperation
             IFilter filter = (IFilter)menuItem.Tag;
             if (filter != null)
             {
-                filter.ShowSettings(this);
+                filter.ShowSettings();
             }
         }
 
@@ -224,6 +259,7 @@ namespace FileOperation
             int percent = 0;
             int count = 0;
             bool bSatisfied = false;
+            FileInfo fi = null;
             foreach (string filePath in files)
             {
                 if (bgwAddFiles.CancellationPending)
@@ -241,22 +277,45 @@ namespace FileOperation
                         break;
                     }
                 }
+
                 if (!bSatisfied)
                     continue;
 
                 count++;
+                try
+                {
+                    fi = new FileInfo(filePath);
+                }
+                catch (System.Exception ex)
+                {
+                    Debug.Print(ex.Message);
+                    fi = null;
+                }
+
                 if (lvwFiles.InvokeRequired)
                 {
                     lvwFiles.Invoke(new MethodInvoker(delegate
                     {
                         ListViewItem item = lvwFiles.Items.Add(count.ToString());
                         item.SubItems.Add(filePath);
+                        if (fi != null)
+                        {
+                            item.SubItems.Add(fi.Extension.StartsWith(".")?fi.Extension.Substring(1): fi.Extension);
+                            item.SubItems.Add(AutoFileSize(fi.Length));
+                            item.SubItems.Add(fi.Attributes.ToString());
+                        }
                     }));
                 }
                 else
                 {
                     ListViewItem item = lvwFiles.Items.Add(count.ToString());
                     item.SubItems.Add(filePath);
+                    if (fi != null)
+                    {
+                        item.SubItems.Add(fi.Extension.StartsWith(".") ? fi.Extension.Substring(1) : fi.Extension);
+                        item.SubItems.Add(AutoFileSize(fi.Length));
+                        item.SubItems.Add(fi.Attributes.ToString());
+                    }
                 }
             }
         }
@@ -406,6 +465,7 @@ namespace FileOperation
             if (maxDepth != -1 && currentDepth >= maxDepth)
                 return;
             int count = lvwFiles.Items.Count;
+            FileInfo fi = null;
             bool bSatisfied = false;
             try
             {
@@ -424,26 +484,47 @@ namespace FileOperation
                             bSatisfied = false;
                             break;
                         }
+                    }
 
-                        if (!bSatisfied)
-                            continue;
+                    if (!bSatisfied)
+                        continue;
 
-                        count++;
-                        if (lvwFiles.InvokeRequired)
-                        {
-                            lvwFiles.Invoke(new MethodInvoker(delegate
-                            {
-                                ListViewItem item = lvwFiles.Items.Add(count.ToString());
-                                item.SubItems.Add(filePath);
-                            }));
-                        }
-                        else
+                    count++;
+                    try
+                    {
+                        fi = new FileInfo(filePath);
+                    }
+                    catch (System.Exception ex)
+                    {
+                        Debug.Print(ex.Message);
+                        fi = null;
+                    }
+                    if (lvwFiles.InvokeRequired)
+                    {
+                        lvwFiles.Invoke(new MethodInvoker(delegate
                         {
                             ListViewItem item = lvwFiles.Items.Add(count.ToString());
                             item.SubItems.Add(filePath);
-                        }
-                        bgwAddFilesInFolder.ReportProgress(count, filePath);
+                            if (fi != null)
+                            {
+                                item.SubItems.Add(fi.Extension.StartsWith(".") ? fi.Extension.Substring(1) : fi.Extension);
+                                item.SubItems.Add(AutoFileSize(fi.Length));
+                                item.SubItems.Add(fi.Attributes.ToString());
+                            }
+                        }));
                     }
+                    else
+                    {
+                        ListViewItem item = lvwFiles.Items.Add(count.ToString());
+                        item.SubItems.Add(filePath);
+                        if (fi != null)
+                        {
+                            item.SubItems.Add(fi.Extension.StartsWith(".") ? fi.Extension.Substring(1) : fi.Extension);
+                            item.SubItems.Add(AutoFileSize(fi.Length));
+                            item.SubItems.Add(fi.Attributes.ToString());
+                        }
+                    }
+                    bgwAddFilesInFolder.ReportProgress(count, filePath);
                 }
 
                 foreach (string d in Directory.GetDirectories(dirName))
