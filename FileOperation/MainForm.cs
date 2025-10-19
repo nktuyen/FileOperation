@@ -1124,6 +1124,7 @@ namespace FileOperation
                         }
                         catch (System.Exception ex)
                         {
+                            Debug.Print(ex.Message);
                             continue;
                         }
                     }
