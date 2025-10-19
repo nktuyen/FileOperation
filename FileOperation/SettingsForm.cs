@@ -35,6 +35,7 @@ namespace FileOperation
             }
             catch (System.Exception ex)
             {
+                Debug.Print(ex.Message);
                 this.Text = "Settings";
             }
 

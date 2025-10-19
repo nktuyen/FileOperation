@@ -12,6 +12,7 @@ using System.Windows.Forms;
 using Interfaces;
 using System.Diagnostics;
 using System.Timers;
+using System.Xml;
 
 namespace FileOperation
 {
@@ -21,12 +22,14 @@ namespace FileOperation
         private List<IFilter> Filters { get; set; }
         private List<IOperator> Operators { get; set; }
         private System.Timers.Timer Timer { get; set; }
+        private string WorkingFile { get; set; }
         public MainForm()
         {
             InitializeComponent();
             EnabledControlsMap = new Dictionary<Control, bool>();
             Filters = new List<IFilter>();
             Operators=new List<IOperator>();
+            WorkingFile = string.Empty;
         }
 
         private void EnableControls(Control ctrl, bool enabled)
@@ -439,6 +442,7 @@ namespace FileOperation
             }
 
             removeAllFilesToolstripMenu.Enabled = lvwFiles.Items.Count > 0;
+            saveListToolStripMenuItem.Enabled = lvwFiles.Items.Count > 0;
         }
 
         private void bgwAddFilesInFolder_PreDoWork(object sender, DoWorkEventArgs e)
@@ -531,12 +535,12 @@ namespace FileOperation
             {
                 foreach (string filePath in Directory.GetFiles(dirName))
                 {
-                    if (bgwAddFilesInFolder.CancellationPending)
+                    if (bgwDropFiles.CancellationPending || bgwAddFilesInFolder.CancellationPending)
                         break;
                     bSatisfied = true;
                     foreach (IFilter filter in Filters)
                     {
-                        if (bgwAddFilesInFolder.CancellationPending)
+                        if (bgwDropFiles.CancellationPending || bgwAddFilesInFolder.CancellationPending)
                             break;
 
                         if (filter.Enabled && !filter.Filter(filePath))
@@ -598,12 +602,15 @@ namespace FileOperation
                         }
                         item.SubItems.Add(string.Empty);//Status
                     }
-                    bgwAddFilesInFolder.ReportProgress(count, filePath);
+                    if (bgwAddFilesInFolder.IsBusy)
+                        bgwAddFilesInFolder.ReportProgress(count, filePath);
+                    else if (bgwDropFiles.IsBusy)
+                        bgwDropFiles.ReportProgress(count, filePath);
                 }
 
                 foreach (string d in Directory.GetDirectories(dirName))
                 {
-                    if (bgwAddFilesInFolder.CancellationPending)
+                    if (bgwDropFiles.CancellationPending || bgwAddFilesInFolder.CancellationPending)
                         break;
                     this.WalkDir(d, currentDepth, maxDepth);
                 }
@@ -686,6 +693,7 @@ namespace FileOperation
             }
 
             removeAllFilesToolstripMenu.Enabled = lvwFiles.Items.Count > 0;
+            saveListToolStripMenuItem.Enabled = lvwFiles.Items.Count > 0;
         }
 
         private void btnCancel_Click(object sender, EventArgs e)
@@ -698,6 +706,8 @@ namespace FileOperation
             {
                 bgwAddFilesInFolder.CancelAsync();
             }
+            else if(bgwDropFiles.IsBusy)
+                bgwDropFiles.CancelAsync();
         }
 
         private void removeAllFilesToolstripMenu_Click(object sender, EventArgs e)
@@ -708,6 +718,7 @@ namespace FileOperation
             lvwFiles.Items.Clear();
             lblStatus.Text = string.Format("Total:{0} file(s)", lvwFiles.Items.Count);
             removeAllFilesToolstripMenu.Enabled = lvwFiles.Items.Count > 0;
+            saveListToolStripMenuItem.Enabled = lvwFiles.Items.Count > 0;
         }
 
         private void MainForm_KeyUp(object sender, KeyEventArgs e)
@@ -724,6 +735,7 @@ namespace FileOperation
             {
                 btnCancel_Click(sender, e);
             }
+            txtListViewItem.Visible = false;
         }
 
         private void btnCancel_KeyUp(object sender, KeyEventArgs e)
@@ -747,7 +759,7 @@ namespace FileOperation
                 List<ListViewItem> deletedItems =new List<ListViewItem>();
                 foreach (ListViewItem item in lvwFiles.SelectedItems)
                 {
-                    item.SubItems[4].Text=string.Empty;
+                    item.SubItems[5].Text=string.Empty;
                     string filePath = item.SubItems[1].Text;
                     oper.FilePath = filePath;
                     if (oper.Operate())
@@ -763,10 +775,10 @@ namespace FileOperation
                                 item.SubItems[1].Text = oper.FilePath;
                             }
                         }
-                        item.SubItems[4].Text = "Success";
+                        item.SubItems[5].Text = "Success";
                     }
                     else
-                        item.SubItems[4].Text = oper.ErrorMessage;
+                        item.SubItems[5].Text = oper.ErrorMessage;
 
                 }
 
@@ -786,6 +798,8 @@ namespace FileOperation
                         item.SubItems[0].Text = minIndex.ToString();
                     }
 
+                    removeAllFilesToolstripMenu.Enabled = lvwFiles.Items.Count > 0;
+                    saveListToolStripMenuItem.Enabled = lvwFiles.Items.Count > 0;
                     lblStatus.Text = string.Format("Total:{0} file(s)", lvwFiles.Items.Count);
                 }
             }
@@ -810,6 +824,334 @@ namespace FileOperation
                     else
                         operItem.Enabled = oper.Enabled;
                 }
+            }
+        }
+
+        private void lvwFiles_DoubleClick(object sender, EventArgs e)
+        {
+            txtListViewItem.Visible = false;
+        }
+
+        private void lvwFiles_ItemActivate(object sender, EventArgs e)
+        {
+            txtListViewItem.Visible = false;
+        }
+
+        private void lvwFiles_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+           ListViewHitTestInfo hittestInfo =  lvwFiles.HitTest(e.X, e.Y);
+           if (hittestInfo != null)
+           {
+               if (hittestInfo.Location == ListViewHitTestLocations.Label)
+               {
+                   if (hittestInfo.Item.SubItems.IndexOf(hittestInfo.SubItem) > 0)
+                   {
+                       txtListViewItem.Parent = lvwFiles;
+                       txtListViewItem.ReadOnly = true;
+                       txtListViewItem.Location = hittestInfo.SubItem.Bounds.Location;
+                       txtListViewItem.Size = hittestInfo.SubItem.Bounds.Size;
+                       txtListViewItem.Visible = true;
+                       txtListViewItem.Text = hittestInfo.SubItem.Text;
+                       txtListViewItem.Focus();
+                   }
+               }
+           }
+        }
+
+        private void txtListViewItem_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Escape)
+                txtListViewItem.Visible = false;
+        }
+
+        private void lvwFiles_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            txtListViewItem.Visible = false;
+        }
+
+        private void lvwFiles_FontChanged(object sender, EventArgs e)
+        {
+            txtListViewItem.Visible = false;
+        }
+
+        private void lvwFiles_DragEnter(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                e.Effect = DragDropEffects.Copy;
+            }
+            else
+            {
+                e.Effect = DragDropEffects.None;
+            }
+        }
+
+        private void lvwFiles_DragDrop(object sender, DragEventArgs e)
+        {
+            string[] paths = (string[])e.Data.GetData(DataFormats.FileDrop);
+            if (bgwDropFiles.IsBusy)
+                bgwDropFiles.CancelAsync();
+            bgwDropFiles.RunWorkerAsync(paths);
+        }
+
+        private void bgwDropFiles_PreDoWork(object sender, DoWorkEventArgs e)
+        {
+            EnableControls(MainMenu, false);
+            EnableControls(filesContextMenuStrip, false);
+
+            if (MainProgressbar.InvokeRequired)
+            {
+                MainProgressbar.Invoke(new MethodInvoker(delegate
+                {
+                    MainProgressbar.Style = ProgressBarStyle.Marquee;
+                    MainProgressbar.Minimum = 0;
+                    MainProgressbar.Maximum = 100;
+                    MainProgressbar.Value = 0;
+                    MainProgressbar.MarqueeAnimationSpeed = 10;
+                    MainProgressbar.Visible = true;
+                }));
+            }
+            else
+            {
+                MainProgressbar.Style = ProgressBarStyle.Marquee;
+                MainProgressbar.Minimum = 0;
+                MainProgressbar.Maximum = 100;
+                MainProgressbar.Value = 0;
+                MainProgressbar.MarqueeAnimationSpeed = 10;
+                MainProgressbar.Visible = true;
+            }
+
+            if (btnCancel.InvokeRequired)
+            {
+                btnCancel.Invoke(new MethodInvoker(delegate
+                {
+                    btnCancel.Visible = true;
+                    btnCancel.Focus();
+                }));
+            }
+            else
+            {
+                btnCancel.Visible = true;
+                btnCancel.Focus();
+            }
+
+            if (lblStatus.InvokeRequired)
+            {
+                lblStatus.Invoke(new MethodInvoker(delegate
+                {
+                    lblStatus.Text = string.Empty;
+                }));
+            }
+            else
+            {
+                lblStatus.Text = string.Empty;
+            }
+
+            Timer = new System.Timers.Timer(MainProgressbar.MarqueeAnimationSpeed);
+            Timer.Elapsed += new System.Timers.ElapsedEventHandler(OnTimerElapsed);
+            Timer.Start();
+        }
+
+        private void bgwDropFiles_DoWork(object sender, DoWorkEventArgs e)
+        {
+            bgwDropFiles_PreDoWork(sender, e);
+            string[] paths = e.Argument as string[];
+            int count = lvwFiles.Items.Count;
+            FileInfo fi = null;
+            bool satisfied = false;
+            foreach (string filePath in paths)
+            {
+                if (bgwDropFiles.CancellationPending)
+                    break;
+
+                if ((System.IO.File.GetAttributes(filePath) & FileAttributes.Directory) != 0)
+                {
+                    WalkDir(filePath, 0);
+                }
+                else
+                {
+                    satisfied = true;
+                    foreach (IFilter filter in Filters)
+                    {
+                        if (bgwDropFiles.CancellationPending)
+                        {
+                            satisfied = false;
+                            break;
+                        }
+                        if (filter.Enabled && !filter.Filter(filePath))
+                        {
+                            satisfied = false;
+                            break;
+                        }
+                    }
+
+                    if (!satisfied)
+                        continue;
+
+                    count = lvwFiles.Items.Count;
+                    count++;
+                    if (lvwFiles.InvokeRequired)
+                    {
+                        lvwFiles.Invoke(new MethodInvoker(delegate
+                        {
+                            ListViewItem item = lvwFiles.Items.Add(count.ToString());
+                            item.SubItems.Add(filePath);
+                            if (fi != null)
+                            {
+                                item.SubItems.Add(fi.Extension.StartsWith(".") ? fi.Extension.Substring(1) : fi.Extension);
+                                item.SubItems.Add(AutoFileSize(fi.Length));
+                                item.SubItems.Add(fi.Attributes.ToString());
+                            }
+                            else
+                            {
+                                item.SubItems.Add(string.Empty);
+                                item.SubItems.Add(string.Empty);
+                                item.SubItems.Add(string.Empty);
+                            }
+                            item.SubItems.Add(string.Empty);//Status
+                        }));
+                    }
+                    else
+                    {
+                        ListViewItem item = lvwFiles.Items.Add(count.ToString());
+                        item.SubItems.Add(filePath);
+                        if (fi != null)
+                        {
+                            item.SubItems.Add(fi.Extension.StartsWith(".") ? fi.Extension.Substring(1) : fi.Extension);
+                            item.SubItems.Add(AutoFileSize(fi.Length));
+                            item.SubItems.Add(fi.Attributes.ToString());
+                        }
+                        else
+                        {
+                            item.SubItems.Add(string.Empty);
+                            item.SubItems.Add(string.Empty);
+                            item.SubItems.Add(string.Empty);
+                        }
+                        item.SubItems.Add(string.Empty);//Status
+                    }
+                }
+            }
+        }
+
+        private void bgwDropFiles_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            string filePath = e.UserState as string;
+            if (lblStatus.InvokeRequired)
+            {
+                lblStatus.Invoke(new MethodInvoker(delegate
+                {
+                    lblStatus.Text = filePath;
+                }));
+            }
+            else
+            {
+                lblStatus.Text = filePath;
+            }
+        }
+
+        private void bgwDropFiles_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            RestoreControlEnabled(MainMenu);
+            RestoreControlEnabled(filesContextMenuStrip);
+
+            if (MainProgressbar.InvokeRequired)
+            {
+                MainProgressbar.Invoke(new MethodInvoker(delegate
+                {
+                    MainProgressbar.Visible = false;
+                }));
+            }
+            else
+            {
+                MainProgressbar.Visible = false;
+            }
+
+            if (btnCancel.InvokeRequired)
+            {
+                btnCancel.Invoke(new MethodInvoker(delegate
+                {
+                    btnCancel.Visible = false;
+                }));
+            }
+            else
+            {
+                btnCancel.Visible = false;
+            }
+
+            if (lblStatus.InvokeRequired)
+            {
+                lblStatus.Invoke(new MethodInvoker(delegate
+                {
+                    lblStatus.Text = string.Format("Total:{0} file(s)", lvwFiles.Items.Count);
+                }));
+            }
+            else
+            {
+                lblStatus.Text = string.Format("Total:{0} file(s)", lvwFiles.Items.Count);
+            }
+
+            if (this.Timer != null)
+            {
+                this.Timer.Stop();
+                this.Timer = null;
+            }
+
+            removeAllFilesToolstripMenu.Enabled = lvwFiles.Items.Count > 0;
+            saveListToolStripMenuItem.Enabled = lvwFiles.Items.Count > 0;
+        }
+
+        private void loadListToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            dlgOpenList.Title = "Open list file";
+            dlgOpenList.Filter = "All Files(*.*)|*.*|Text Files(*.txt)|*.txt||";
+            if (dlgOpenList.ShowDialog() != DialogResult.OK)
+                return;
+            List<string> files = new List<string>();
+            using (StreamReader fileStream = new StreamReader(dlgOpenList.FileName, Encoding.UTF8))
+            {
+                string line=string.Empty;
+                while ((line = fileStream.ReadLine()) != null)
+                {
+                    line = line.Trim();
+                    if (line.Length > 0)
+                    {
+                        try
+                        {
+                            if (System.IO.File.Exists(line))
+                            {
+                                files.Add(line);
+                            }
+                        }
+                        catch (System.Exception ex)
+                        {
+                            continue;
+                        }
+                    }
+                }
+            }
+
+            lvwFiles.Items.Clear();
+            if (bgwAddFiles.IsBusy)
+                bgwAddFiles.CancelAsync();
+            bgwAddFiles.RunWorkerAsync(files.ToArray());
+            this.WorkingFile = dlgFileOpen.FileName;
+        }
+
+        private void saveListToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            dlgSaveList.Title = "Save list to file";
+            dlgSaveList.Filter = "All Files(*.*)|*.*|Text Files(*.txt)|*.txt||";
+            if (dlgSaveList.ShowDialog() != DialogResult.OK)
+                return;
+            this.WorkingFile = dlgFileOpen.FileName;
+            using (StreamWriter writer = new StreamWriter(dlgSaveList.FileName, false, Encoding.UTF8))
+            {
+                foreach (ListViewItem item in lvwFiles.Items)
+                {
+                    string filePath = item.SubItems[1].Text;
+                    writer.WriteLine(filePath);
+                }
+                writer.Flush();
             }
         }
     }

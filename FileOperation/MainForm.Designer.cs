@@ -52,6 +52,13 @@
             this.btnCancel = new System.Windows.Forms.Button();
             this.lblStatus = new System.Windows.Forms.Label();
             this.filesContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.txtListViewItem = new System.Windows.Forms.TextBox();
+            this.bgwDropFiles = new System.ComponentModel.BackgroundWorker();
+            this.saveListToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.loadListToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.dlgOpenList = new System.Windows.Forms.OpenFileDialog();
+            this.dlgSaveList = new System.Windows.Forms.SaveFileDialog();
             this.lvwFiles = new FileOperation.ListViewEx();
             this.colNb = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.colName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -80,6 +87,9 @@
             this.addFilesToolStripMenuItem,
             this.addFilesInFolderToolStripMenuItem,
             this.removeAllFilesToolstripMenu,
+            this.toolStripSeparator1,
+            this.loadListToolStripMenuItem,
+            this.saveListToolStripMenuItem,
             this.toolStripMenuItem1,
             this.exitToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
@@ -234,8 +244,57 @@
             this.filesContextMenuStrip.Size = new System.Drawing.Size(61, 4);
             this.filesContextMenuStrip.Opening += new System.ComponentModel.CancelEventHandler(this.filesContextMenuStrip_Opening);
             // 
+            // txtListViewItem
+            // 
+            this.txtListViewItem.Location = new System.Drawing.Point(13, 524);
+            this.txtListViewItem.Name = "txtListViewItem";
+            this.txtListViewItem.Size = new System.Drawing.Size(100, 20);
+            this.txtListViewItem.TabIndex = 6;
+            this.txtListViewItem.Visible = false;
+            this.txtListViewItem.KeyUp += new System.Windows.Forms.KeyEventHandler(this.txtListViewItem_KeyUp);
+            // 
+            // bgwDropFiles
+            // 
+            this.bgwDropFiles.WorkerReportsProgress = true;
+            this.bgwDropFiles.WorkerSupportsCancellation = true;
+            this.bgwDropFiles.DoWork += new System.ComponentModel.DoWorkEventHandler(this.bgwDropFiles_DoWork);
+            this.bgwDropFiles.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.bgwDropFiles_ProgressChanged);
+            this.bgwDropFiles.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.bgwDropFiles_RunWorkerCompleted);
+            // 
+            // saveListToolStripMenuItem
+            // 
+            this.saveListToolStripMenuItem.Enabled = false;
+            this.saveListToolStripMenuItem.Name = "saveListToolStripMenuItem";
+            this.saveListToolStripMenuItem.Size = new System.Drawing.Size(171, 22);
+            this.saveListToolStripMenuItem.Text = "Save List";
+            this.saveListToolStripMenuItem.Click += new System.EventHandler(this.saveListToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(168, 6);
+            // 
+            // loadListToolStripMenuItem
+            // 
+            this.loadListToolStripMenuItem.Name = "loadListToolStripMenuItem";
+            this.loadListToolStripMenuItem.Size = new System.Drawing.Size(171, 22);
+            this.loadListToolStripMenuItem.Text = "Load List";
+            this.loadListToolStripMenuItem.Click += new System.EventHandler(this.loadListToolStripMenuItem_Click);
+            // 
+            // dlgOpenList
+            // 
+            this.dlgOpenList.AddExtension = false;
+            this.dlgOpenList.InitialDirectory = ".\\";
+            this.dlgOpenList.RestoreDirectory = true;
+            this.dlgOpenList.ShowReadOnly = true;
+            // 
+            // dlgSaveList
+            // 
+            this.dlgSaveList.DefaultExt = "txt";
+            // 
             // lvwFiles
             // 
+            this.lvwFiles.AllowDrop = true;
             this.lvwFiles.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
@@ -256,7 +315,14 @@
             this.lvwFiles.TabIndex = 2;
             this.lvwFiles.UseCompatibleStateImageBehavior = false;
             this.lvwFiles.View = System.Windows.Forms.View.Details;
+            this.lvwFiles.ItemActivate += new System.EventHandler(this.lvwFiles_ItemActivate);
+            this.lvwFiles.SelectedIndexChanged += new System.EventHandler(this.lvwFiles_SelectedIndexChanged);
+            this.lvwFiles.FontChanged += new System.EventHandler(this.lvwFiles_FontChanged);
+            this.lvwFiles.DragDrop += new System.Windows.Forms.DragEventHandler(this.lvwFiles_DragDrop);
+            this.lvwFiles.DragEnter += new System.Windows.Forms.DragEventHandler(this.lvwFiles_DragEnter);
+            this.lvwFiles.DoubleClick += new System.EventHandler(this.lvwFiles_DoubleClick);
             this.lvwFiles.KeyUp += new System.Windows.Forms.KeyEventHandler(this.lvwFiles_KeyUp);
+            this.lvwFiles.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.lvwFiles_MouseDoubleClick);
             // 
             // colNb
             // 
@@ -293,6 +359,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1008, 561);
+            this.Controls.Add(this.txtListViewItem);
             this.Controls.Add(this.lblStatus);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.MainProgressbar);
@@ -343,6 +410,13 @@
         private System.Windows.Forms.ToolStripMenuItem removeAllFilesToolstripMenu;
         private System.Windows.Forms.ColumnHeader colStatus;
         private System.Windows.Forms.ContextMenuStrip filesContextMenuStrip;
+        private System.Windows.Forms.TextBox txtListViewItem;
+        private System.ComponentModel.BackgroundWorker bgwDropFiles;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+        private System.Windows.Forms.ToolStripMenuItem loadListToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem saveListToolStripMenuItem;
+        private System.Windows.Forms.OpenFileDialog dlgOpenList;
+        private System.Windows.Forms.SaveFileDialog dlgSaveList;
     }
 }
 
