@@ -33,6 +33,7 @@ namespace AttributesFilter
             }
             catch (System.Exception ex)
             {
+                Debug.Print(ex.Message);
                 this.Text = "About";
             }
         }

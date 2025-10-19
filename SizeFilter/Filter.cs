@@ -52,7 +52,7 @@ namespace SizeFilter
             catch (System.Exception ex)
             {
                 Debug.Print(ex.Message);
-                return true;
+                return false;
             }
             return true;
         }

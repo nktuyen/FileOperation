@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Interfaces;
 using System.IO;
+using System.Diagnostics;
 
 namespace AttributesFilter
 {
@@ -52,7 +53,8 @@ namespace AttributesFilter
             }
             catch (System.Exception ex)
             {
-                return true;
+                Debug.Print(ex.Message);
+                return false;
             }
 
             return false;
