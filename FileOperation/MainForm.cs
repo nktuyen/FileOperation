@@ -13,11 +13,73 @@ using Interfaces;
 using System.Diagnostics;
 using System.Timers;
 using System.Xml;
+using System.Text.RegularExpressions;
+using System.Runtime.InteropServices;
 
 namespace FileOperation
 {
+   
+
     public partial class MainForm : Form
     {
+        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Auto)]
+        public struct SHFILEINFO
+        {
+            public IntPtr hIcon;
+            public int iIcon;
+            public uint dwAttributes;
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 260)]
+            public string szDisplayName;
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 80)]
+            public string szTypeName;
+        }
+
+        [Flags]
+        enum SHGFI : uint
+        {
+            /// <summary>get icon</summary>
+            Icon = 0x000000100,
+            /// <summary>get display name</summary>
+            DisplayName = 0x000000200,
+            /// <summary>get type name</summary>
+            TypeName = 0x000000400,
+            /// <summary>get attributes</summary>
+            Attributes = 0x000000800,
+            /// <summary>get icon location</summary>
+            IconLocation = 0x000001000,
+            /// <summary>return exe type</summary>
+            ExeType = 0x000002000,
+            /// <summary>get system icon index</summary>
+            SysIconIndex = 0x000004000,
+            /// <summary>put a link overlay on icon</summary>
+            LinkOverlay = 0x000008000,
+            /// <summary>show icon in selected state</summary>
+            Selected = 0x000010000,
+            /// <summary>get only specified attributes</summary>
+            Attr_Specified = 0x000020000,
+            /// <summary>get large icon</summary>
+            LargeIcon = 0x000000000,
+            /// <summary>get small icon</summary>
+            SmallIcon = 0x000000001,
+            /// <summary>get open icon</summary>
+            OpenIcon = 0x000000002,
+            /// <summary>get shell size icon</summary>
+            ShellIconSize = 0x000000004,
+            /// <summary>pszPath is a pidl</summary>
+            PIDL = 0x000000008,
+            /// <summary>use passed dwFileAttribute</summary>
+            UseFileAttributes = 0x000000010,
+            /// <summary>apply the appropriate overlays</summary>
+            AddOverlays = 0x000000020,
+            /// <summary>Get the index of the overlay in the upper 8 bits of the iIcon</summary>
+            OverlayIndex = 0x000000040,
+        }
+
+        [DllImport("shell32.dll", CharSet = CharSet.Auto)]
+        public static extern IntPtr SHGetFileInfo(string pszPath, uint dwFileAttributes, ref SHFILEINFO psfi, uint cbFileInfo, uint uFlags);
+        [DllImport("user32.dll", SetLastError = true)]
+        static extern bool DestroyIcon(IntPtr hIcon);
+
         private Dictionary<Control, bool> EnabledControlsMap { get; set; }
         private List<IFilter> Filters { get; set; }
         private List<IOperator> Operators { get; set; }
@@ -32,6 +94,16 @@ namespace FileOperation
             WorkingFile = string.Empty;
         }
 
+        private System.Drawing.Icon GetFileIcon(string name)
+        {
+            SHFILEINFO shfi = new SHFILEINFO();
+            uint flags = (uint)SHGFI.SmallIcon | (uint)SHGFI.Icon; // include the small icon flag
+            SHGetFileInfo(name, 0, ref shfi, (uint)System.Runtime.InteropServices.Marshal.SizeOf(shfi), flags);
+            System.Drawing.Icon icon = (System.Drawing.Icon)System.Drawing.Icon.FromHandle(shfi.hIcon).Clone();
+            DestroyIcon(shfi.hIcon);
+            return icon;
+
+        }
         private void EnableControls(Control ctrl, bool enabled)
         {
             EnabledControlsMap[ctrl] = ctrl.Enabled; //Backup state
@@ -348,6 +420,7 @@ namespace FileOperation
             int count = 0;
             bool bSatisfied = false;
             FileInfo fi = null;
+            System.Drawing.Icon fileIcon = null;
             foreach (string filePath in files)
             {
                 if (bgwAddFiles.CancellationPending)
@@ -373,6 +446,7 @@ namespace FileOperation
                 try
                 {
                     fi = new FileInfo(filePath);
+                    fileIcon = GetFileIcon(filePath);
                 }
                 catch (System.Exception ex)
                 {
@@ -385,6 +459,11 @@ namespace FileOperation
                     lvwFiles.Invoke(new MethodInvoker(delegate
                     {
                         ListViewItem item = lvwFiles.Items.Add(count.ToString());
+                        if (fileIcon != null)
+                        {
+                            item.ImageIndex = MainImgList.Images.Count;
+                            MainImgList.Images.Add(fileIcon);
+                        }
                         item.SubItems.Add(filePath);
                         if (fi != null)
                         {
@@ -404,6 +483,11 @@ namespace FileOperation
                 else
                 {
                     ListViewItem item = lvwFiles.Items.Add(count.ToString());
+                    if (fileIcon != null)
+                    {
+                        item.ImageIndex = MainImgList.Images.Count;
+                        MainImgList.Images.Add(fileIcon);
+                    }
                     item.SubItems.Add(filePath);
                     if (fi != null)
                     {
@@ -570,6 +654,7 @@ namespace FileOperation
             int count = lvwFiles.Items.Count;
             FileInfo fi = null;
             bool bSatisfied = false;
+            System.Drawing.Icon fileIcon = null;
             try
             {
                 foreach (string filePath in Directory.GetFiles(dirName))
@@ -596,6 +681,7 @@ namespace FileOperation
                     try
                     {
                         fi = new FileInfo(filePath);
+                        fileIcon = GetFileIcon(filePath);
                     }
                     catch (System.Exception ex)
                     {
@@ -607,6 +693,11 @@ namespace FileOperation
                         lvwFiles.Invoke(new MethodInvoker(delegate
                         {
                             ListViewItem item = lvwFiles.Items.Add(count.ToString());
+                            if (fileIcon != null)
+                            {
+                                item.ImageIndex = MainImgList.Images.Count;
+                                MainImgList.Images.Add(fileIcon);
+                            }
                             item.SubItems.Add(filePath);
                             if (fi != null)
                             {
@@ -626,6 +717,11 @@ namespace FileOperation
                     else
                     {
                         ListViewItem item = lvwFiles.Items.Add(count.ToString());
+                        if (fileIcon != null)
+                        {
+                            item.ImageIndex = MainImgList.Images.Count;
+                            MainImgList.Images.Add(fileIcon);
+                        }
                         item.SubItems.Add(filePath);
                         if (fi != null)
                         {
@@ -755,6 +851,7 @@ namespace FileOperation
             if (res != DialogResult.Yes)
                 return;
             lvwFiles.Items.Clear();
+            MainImgList.Images.Clear();
             lblStatus.Text = string.Format("Total:{0} file(s)", lvwFiles.Items.Count);
             removeAllFilesToolstripMenu.Enabled = lvwFiles.Items.Count > 0;
             saveListToolStripMenuItem.Enabled = lvwFiles.Items.Count > 0;
@@ -887,6 +984,7 @@ namespace FileOperation
                    {
                        txtListViewItem.Parent = lvwFiles;
                        txtListViewItem.ReadOnly = true;
+                       txtListViewItem.Font = lvwFiles.Font;
                        txtListViewItem.Location = hittestInfo.SubItem.Bounds.Location;
                        txtListViewItem.Size = hittestInfo.SubItem.Bounds.Size;
                        txtListViewItem.Visible = true;
@@ -1156,7 +1254,7 @@ namespace FileOperation
                     {
                         try
                         {
-                            if (System.IO.File.Exists(line))
+                            if (Regex.IsMatch(line, @"^(?:[a-zA-Z]\:|\\\\[\w\.]+\\[\w.$]+)\\(?:[\w]+\\)*"))
                             {
                                 files.Add(line);
                             }
@@ -1171,6 +1269,7 @@ namespace FileOperation
             }
 
             lvwFiles.Items.Clear();
+            MainImgList.Images.Clear();
             if (bgwAddFiles.IsBusy)
                 bgwAddFiles.CancelAsync();
             bgwAddFiles.RunWorkerAsync(files.ToArray());

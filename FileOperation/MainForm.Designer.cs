@@ -42,10 +42,14 @@
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.filterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.settingsToolstripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.settingsFiltersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.settingsOperatorsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.fileOpeartionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripSeparator();
+            this.aboutFiltersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.aboutOperatorsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.howToUseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.dlgFileOpen = new System.Windows.Forms.OpenFileDialog();
             this.dlgFolderBrowser = new System.Windows.Forms.FolderBrowserDialog();
@@ -59,10 +63,7 @@
             this.bgwDropFiles = new System.ComponentModel.BackgroundWorker();
             this.dlgOpenList = new System.Windows.Forms.OpenFileDialog();
             this.dlgSaveList = new System.Windows.Forms.SaveFileDialog();
-            this.aboutFiltersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.aboutOperatorsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.settingsFiltersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.settingsOperatorsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.MainImgList = new System.Windows.Forms.ImageList(this.components);
             this.lvwFiles = new FileOperation.ListViewEx();
             this.colNb = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.colName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -176,6 +177,18 @@
             this.settingsToolstripMenuItem.Size = new System.Drawing.Size(61, 20);
             this.settingsToolstripMenuItem.Text = "&Settings";
             // 
+            // settingsFiltersToolStripMenuItem
+            // 
+            this.settingsFiltersToolStripMenuItem.Name = "settingsFiltersToolStripMenuItem";
+            this.settingsFiltersToolStripMenuItem.Size = new System.Drawing.Size(126, 22);
+            this.settingsFiltersToolStripMenuItem.Text = "Filters";
+            // 
+            // settingsOperatorsToolStripMenuItem
+            // 
+            this.settingsOperatorsToolStripMenuItem.Name = "settingsOperatorsToolStripMenuItem";
+            this.settingsOperatorsToolStripMenuItem.Size = new System.Drawing.Size(126, 22);
+            this.settingsOperatorsToolStripMenuItem.Text = "Operators";
+            // 
             // helpToolStripMenuItem
             // 
             this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -208,6 +221,18 @@
             // 
             this.toolStripMenuItem2.Name = "toolStripMenuItem2";
             this.toolStripMenuItem2.Size = new System.Drawing.Size(161, 6);
+            // 
+            // aboutFiltersToolStripMenuItem
+            // 
+            this.aboutFiltersToolStripMenuItem.Name = "aboutFiltersToolStripMenuItem";
+            this.aboutFiltersToolStripMenuItem.Size = new System.Drawing.Size(164, 22);
+            this.aboutFiltersToolStripMenuItem.Text = "Filters";
+            // 
+            // aboutOperatorsToolStripMenuItem
+            // 
+            this.aboutOperatorsToolStripMenuItem.Name = "aboutOperatorsToolStripMenuItem";
+            this.aboutOperatorsToolStripMenuItem.Size = new System.Drawing.Size(164, 22);
+            this.aboutOperatorsToolStripMenuItem.Text = "Operators";
             // 
             // howToUseToolStripMenuItem
             // 
@@ -286,6 +311,7 @@
             // txtListViewItem
             // 
             this.txtListViewItem.Location = new System.Drawing.Point(13, 524);
+            this.txtListViewItem.Margin = new System.Windows.Forms.Padding(0);
             this.txtListViewItem.Name = "txtListViewItem";
             this.txtListViewItem.Size = new System.Drawing.Size(100, 20);
             this.txtListViewItem.TabIndex = 6;
@@ -311,29 +337,11 @@
             // 
             this.dlgSaveList.DefaultExt = "txt";
             // 
-            // aboutFiltersToolStripMenuItem
+            // MainImgList
             // 
-            this.aboutFiltersToolStripMenuItem.Name = "aboutFiltersToolStripMenuItem";
-            this.aboutFiltersToolStripMenuItem.Size = new System.Drawing.Size(164, 22);
-            this.aboutFiltersToolStripMenuItem.Text = "Filters";
-            // 
-            // aboutOperatorsToolStripMenuItem
-            // 
-            this.aboutOperatorsToolStripMenuItem.Name = "aboutOperatorsToolStripMenuItem";
-            this.aboutOperatorsToolStripMenuItem.Size = new System.Drawing.Size(164, 22);
-            this.aboutOperatorsToolStripMenuItem.Text = "Operators";
-            // 
-            // settingsFiltersToolStripMenuItem
-            // 
-            this.settingsFiltersToolStripMenuItem.Name = "settingsFiltersToolStripMenuItem";
-            this.settingsFiltersToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.settingsFiltersToolStripMenuItem.Text = "Filters";
-            // 
-            // settingsOperatorsToolStripMenuItem
-            // 
-            this.settingsOperatorsToolStripMenuItem.Name = "settingsOperatorsToolStripMenuItem";
-            this.settingsOperatorsToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.settingsOperatorsToolStripMenuItem.Text = "Operators";
+            this.MainImgList.ColorDepth = System.Windows.Forms.ColorDepth.Depth32Bit;
+            this.MainImgList.ImageSize = new System.Drawing.Size(16, 16);
+            this.MainImgList.TransparentColor = System.Drawing.Color.White;
             // 
             // lvwFiles
             // 
@@ -349,12 +357,14 @@
             this.colAttributes,
             this.colStatus});
             this.lvwFiles.ContextMenuStrip = this.filesContextMenuStrip;
+            this.lvwFiles.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lvwFiles.FullRowSelect = true;
             this.lvwFiles.GridLines = true;
             this.lvwFiles.Location = new System.Drawing.Point(10, 24);
             this.lvwFiles.Name = "lvwFiles";
             this.lvwFiles.ShowItemToolTips = true;
             this.lvwFiles.Size = new System.Drawing.Size(984, 521);
+            this.lvwFiles.SmallImageList = this.MainImgList;
             this.lvwFiles.TabIndex = 2;
             this.lvwFiles.UseCompatibleStateImageBehavior = false;
             this.lvwFiles.View = System.Windows.Forms.View.Details;
@@ -370,7 +380,7 @@
             // colNb
             // 
             this.colNb.Text = "#";
-            this.colNb.Width = 50;
+            this.colNb.Width = 52;
             // 
             // colName
             // 
@@ -464,6 +474,7 @@
         private System.Windows.Forms.ToolStripMenuItem aboutOperatorsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem settingsFiltersToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem settingsOperatorsToolStripMenuItem;
+        private System.Windows.Forms.ImageList MainImgList;
     }
 }
 
