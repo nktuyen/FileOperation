@@ -12,10 +12,10 @@ using System.Windows.Forms;
 
 namespace FileOperation
 {
-    public partial class SettingsForm : Form
+    public partial class NameFilterSettingsForm : Form
     {
         public string Wildcard { get; set; }
-        public SettingsForm()
+        public NameFilterSettingsForm()
         {
             InitializeComponent();
             this.Wildcard = string.Empty;

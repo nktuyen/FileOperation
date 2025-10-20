@@ -121,6 +121,11 @@ namespace AttributesFilter
                     }
                 }
             }
+
+            if (radEquality.Checked)
+                this.ExactMatch = true;
+            else
+                this.ExactMatch = false;
         }
 
         private void lvwFIleAttributes_ItemChecked(object sender, ItemCheckedEventArgs e)
@@ -130,18 +135,12 @@ namespace AttributesFilter
 
         private void radEquality_CheckedChanged(object sender, EventArgs e)
         {
-            if (radEquality.Checked)
-                this.ExactMatch = true;
-            else
-                this.ExactMatch = false;
+            
         }
 
         private void radContains_CheckedChanged(object sender, EventArgs e)
         {
-            if (radEquality.Checked)
-                this.ExactMatch = true;
-            else
-                this.ExactMatch = false;
+            
         }
     }
 }

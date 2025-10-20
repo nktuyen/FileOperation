@@ -170,6 +170,22 @@ namespace FileOperation
                 deleteOperator.Initialize();
                 Operators.Add(deleteOperator);
 
+                if (deleteOperator.HasSettings)
+                {
+                    ToolStripMenuItem operSettingsItem = (ToolStripMenuItem)settingsOperatorsToolStripMenuItem.DropDownItems.Add(deleteOperator.Name);
+                    operSettingsItem.Tag = deleteOperator;
+                    operSettingsItem.Image = deleteOperator.Image;
+                    operSettingsItem.Click += new EventHandler(operSettingsMenuItemToolStripMenuItem_Click);
+                }
+
+                if (deleteOperator.HasAbout)
+                {
+                    ToolStripMenuItem operAboutItem = (ToolStripMenuItem)aboutOperatorsToolStripMenuItem.DropDownItems.Add(deleteOperator.Name);
+                    operAboutItem.Tag = deleteOperator;
+                    operAboutItem.Image = deleteOperator.Image;
+                    operAboutItem.Click += new EventHandler(operAboutMenuItemToolStripMenuItem_Click);
+                }
+
                 count++;
             }
 
@@ -191,7 +207,7 @@ namespace FileOperation
                     Type pluginType = null;
                     foreach (Type type in assembly.GetTypes())
                     {
-                        if (typeof(IFilter).IsAssignableFrom(type) && !type.IsInterface && !type.IsAbstract)
+                        if (typeof(IOperator).IsAssignableFrom(type) && !type.IsInterface && !type.IsAbstract)
                         {
                             pluginType = type;
                             break;
@@ -205,6 +221,22 @@ namespace FileOperation
                             oper.MainWnd = this;
                             oper.Initialize();
                             Operators.Add(oper);
+
+                            if (oper.HasSettings)
+                            {
+                                ToolStripMenuItem operSettingsItem = (ToolStripMenuItem)settingsOperatorsToolStripMenuItem.DropDownItems.Add(oper.Name);
+                                operSettingsItem.Tag = oper;
+                                operSettingsItem.Image = oper.Image;
+                                operSettingsItem.Click += new EventHandler(operSettingsMenuItemToolStripMenuItem_Click);
+                            }
+
+                            if (oper.HasAbout)
+                            {
+                                ToolStripMenuItem operAboutItem = (ToolStripMenuItem)aboutOperatorsToolStripMenuItem.DropDownItems.Add(oper.Name);
+                                operAboutItem.Tag = oper;
+                                operAboutItem.Image = oper.Image;
+                                operAboutItem.Click += new EventHandler(operAboutMenuItemToolStripMenuItem_Click);
+                            }
 
                             count++;
                         }
@@ -233,13 +265,20 @@ namespace FileOperation
                 filterItem.Tag = nameFilter;
                 filterItem.Click += new EventHandler(filterMenuItemToolStripMenuItem_Click);
 
-                ToolStripMenuItem filterSettingsItem = (ToolStripMenuItem)settingsFiltersToolStripMenuItem.DropDownItems.Add(nameFilter.Name);
-                filterSettingsItem.Tag = nameFilter;
-                filterSettingsItem.Click += new EventHandler(filterSettingsMenuItemToolStripMenuItem_Click);
+                if (nameFilter.HasSettings)
+                {
+                    ToolStripMenuItem filterSettingsItem = (ToolStripMenuItem)settingsFiltersToolStripMenuItem.DropDownItems.Add(nameFilter.Name);
+                    filterSettingsItem.Tag = nameFilter;
+                    filterSettingsItem.Click += new EventHandler(filterSettingsMenuItemToolStripMenuItem_Click);
+                }
 
-                ToolStripMenuItem filterAboutItem = (ToolStripMenuItem)aboutFiltersToolStripMenuItem.DropDownItems.Add(nameFilter.Name);
-                filterAboutItem.Tag = nameFilter;
-                filterAboutItem.Click += new EventHandler(filterAboutMenuItemToolStripMenuItem_Click);
+                if (nameFilter.HasAbout)
+                {
+                    ToolStripMenuItem filterAboutItem = (ToolStripMenuItem)aboutFiltersToolStripMenuItem.DropDownItems.Add(nameFilter.Name);
+                    filterAboutItem.Tag = nameFilter;
+                    filterAboutItem.Click += new EventHandler(filterAboutMenuItemToolStripMenuItem_Click);
+                }
+
                 count++;
             }
 
@@ -279,14 +318,23 @@ namespace FileOperation
                             filterItem.Checked = filter.Enabled;
                             filterItem.Tag = filter;
                             filterItem.Click += new EventHandler(filterMenuItemToolStripMenuItem_Click);
+                            
 
-                            ToolStripMenuItem filterSettingsItem = (ToolStripMenuItem)settingsFiltersToolStripMenuItem.DropDownItems.Add(filter.Name);
-                            filterSettingsItem.Tag = filter;
-                            filterSettingsItem.Click += new EventHandler(filterSettingsMenuItemToolStripMenuItem_Click);
+                            if (filter.HasSettings)
+                            {
+                                ToolStripMenuItem filterSettingsItem = (ToolStripMenuItem)settingsFiltersToolStripMenuItem.DropDownItems.Add(filter.Name);
+                                filterSettingsItem.Tag = filter;
+                                filterSettingsItem.Click += new EventHandler(filterSettingsMenuItemToolStripMenuItem_Click);
+                            }
 
-                            ToolStripMenuItem filterAboutItem = (ToolStripMenuItem)aboutFiltersToolStripMenuItem.DropDownItems.Add(filter.Name);
-                            filterAboutItem.Tag = filter;
-                            filterAboutItem.Click += new EventHandler(filterAboutMenuItemToolStripMenuItem_Click);
+                            if (filter.HasAbout)
+                            {
+                                ToolStripMenuItem filterAboutItem = (ToolStripMenuItem)aboutFiltersToolStripMenuItem.DropDownItems.Add(filter.Name);
+                                filterAboutItem.Tag = filter;
+                                filterAboutItem.Click += new EventHandler(filterAboutMenuItemToolStripMenuItem_Click);
+                            }
+
+                            count++;
                         }
                     }
                 }
@@ -332,9 +380,24 @@ namespace FileOperation
             }
         }
 
-        private void fileOpeartionToolStripMenuItem_Click(object sender, EventArgs e)
+        private void operSettingsMenuItemToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            ToolStripMenuItem menuItem = (ToolStripMenuItem)sender;
+            IOperator oper = (IOperator)menuItem.Tag;
+            if (oper != null)
+            {
+                oper.ShowSettings();
+            }
+        }
 
+        private void operAboutMenuItemToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ToolStripMenuItem menuItem = (ToolStripMenuItem)sender;
+            IOperator oper = (IOperator)menuItem.Tag;
+            if (oper != null)
+            {
+                oper.ShowAbout();
+            }
         }
 
         private void addFilesToolStripMenuItem_Click(object sender, EventArgs e)
@@ -911,10 +974,8 @@ namespace FileOperation
                                 item.SubItems[1].Text = oper.FilePath;
                             }
                         }
-                        item.SubItems[5].Text = "Success";
                     }
-                    else
-                        item.SubItems[5].Text = oper.ErrorMessage;
+                    item.SubItems[5].Text = oper.Status;
 
                 }
 
@@ -954,7 +1015,7 @@ namespace FileOperation
                 {
                     operItem.Tag = oper;
                     operItem.Click += new EventHandler(filesToolStripMenuItem_Click);
-                    operItem.Image = oper.Icon;
+                    operItem.Image = oper.Image;
                     if (!oper.InitializeContextMenu(lvwFiles.SelectedItems.Count > 1))
                         filesContextMenuStrip.Items.Remove(operItem);
                     else
@@ -1124,6 +1185,16 @@ namespace FileOperation
 
                     if (!satisfied)
                         continue;
+
+                    try
+                    {
+                        fi = new FileInfo(filePath);
+                    }
+                    catch (System.Exception ex)
+                    {
+                        Debug.Print(ex.Message);
+                        fi = null;
+                    }
 
                     count = lvwFiles.Items.Count;
                     count++;
@@ -1297,6 +1368,12 @@ namespace FileOperation
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
         {
             this.Close();
+        }
+
+        private void fileOpeartionToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            AboutForm frm = new AboutForm();
+            frm.ShowDialog();
         }
     }
 }

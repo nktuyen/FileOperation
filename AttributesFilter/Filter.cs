@@ -14,6 +14,22 @@ namespace AttributesFilter
         private FileAttributes Attributes { get; set; }
         public enum MatchingMode { EQuality, Containing }
         public MatchingMode Matching { get; set; }
+        public bool HasSettings
+        {
+            get
+            {
+                return true;
+            }
+        }
+
+        public bool HasAbout
+        {
+            get
+            {
+                return true;
+            }
+        }
+
         public string Name
         {
             get
@@ -21,7 +37,13 @@ namespace AttributesFilter
                 return "Attributes Filter";
             }
         }
-
+        public System.Drawing.Image Image
+        {
+            get
+            {
+                return null;
+            }
+        }
         public bool Enabled { get; set; }
         public System.Windows.Forms.IWin32Window MainWnd { get; set; }
         public MyFilter()

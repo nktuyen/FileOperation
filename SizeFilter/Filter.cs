@@ -22,6 +22,29 @@ namespace SizeFilter
         }
 
         public bool Enabled { get; set; }
+        public System.Drawing.Image Image
+        {
+            get
+            {
+                return null;
+            }
+        }
+        public bool HasSettings
+        {
+            get
+            {
+                return true;
+            }
+        }
+
+        public bool HasAbout
+        {
+            get
+            {
+                return true;
+            }
+        }
+
         public System.Windows.Forms.IWin32Window MainWnd { get; set; }
 
         public MyFilter()

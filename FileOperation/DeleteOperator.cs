@@ -10,8 +10,9 @@ namespace FileOperation
 {
     public class DeleteOperator : IOperator
     {
+        public bool MoveToTrash { get; set; }
         private bool MultiFiles { get; set; }
-        private string _errMessage = string.Empty;
+        private string _status = string.Empty;
         public string Name
         {
             get
@@ -26,20 +27,35 @@ namespace FileOperation
                 return "Delete File";
             }
         }
-        public string ErrorMessage
+        public string Status
         {
             get
             {
-                return _errMessage;
+                return _status;
             }
         }
-        public System.Drawing.Bitmap Icon
+        public System.Drawing.Image Image
         { 
             get
             {
                 return FileOperation.Properties.Resources.Cancel;
             }
             
+        }
+        public bool HasSettings
+        {
+            get
+            {
+                return true;
+            }
+        }
+
+        public bool HasAbout
+        {
+            get
+            {
+                return false;
+            }
         }
 
         public bool Enabled { get; set; }
@@ -49,6 +65,7 @@ namespace FileOperation
         public DeleteOperator()
         {
             this.Enabled = true;
+            this.MoveToTrash = true;
         }
 
         public bool Initialize()
@@ -77,7 +94,7 @@ namespace FileOperation
             if (confirm != DialogResult.Yes)
                 return false;
 
-            _errMessage = string.Empty;
+            _status = string.Empty;
             return true;
         }
 
@@ -85,12 +102,15 @@ namespace FileOperation
         {
             try
             {
-                System.IO.File.Delete(this.FilePath);
+                if (this.MoveToTrash)
+                    Microsoft.VisualBasic.FileIO.FileSystem.DeleteFile(FilePath, Microsoft.VisualBasic.FileIO.UIOption.OnlyErrorDialogs, Microsoft.VisualBasic.FileIO.RecycleOption.SendToRecycleBin);
+                else
+                    System.IO.File.Delete(this.FilePath);
                 this.FilePath = string.Empty;
             }
             catch (System.Exception ex)
             {
-                _errMessage = ex.Message;
+                _status = ex.Message;
                 return false;
             }
 
@@ -99,12 +119,21 @@ namespace FileOperation
 
         public  System.Windows.Forms.DialogResult ShowAbout(System.Windows.Forms.IWin32Window owner)
         {
-            return System.Windows.Forms.DialogResult.OK;
+            AboutForm frm = new AboutForm();
+            return frm.ShowDialog(owner);
         }
 
         public System.Windows.Forms.DialogResult ShowSettings(System.Windows.Forms.IWin32Window owner)
         {
-            return System.Windows.Forms.DialogResult.OK;
+            DeleteOperatorSettingsForm frm = new DeleteOperatorSettingsForm();
+            frm.MoveToTrash = this.MoveToTrash;
+            DialogResult res = frm.ShowDialog(owner);
+            if (res == DialogResult.OK)
+            {
+                this.MoveToTrash = frm.MoveToTrash;
+            }
+
+            return res;
         }
     }
 }

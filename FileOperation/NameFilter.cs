@@ -20,7 +20,29 @@ namespace FileOperation
         }
 
         public bool Enabled { get; set; }
+        public System.Drawing.Image Image
+        {
+            get
+            {
+                return null;
+            }
+        }
         public System.Windows.Forms.IWin32Window MainWnd { get; set; }
+        public bool HasSettings
+        {
+            get
+            {
+                return true;
+            }
+        }
+
+        public bool HasAbout
+        {
+            get
+            {
+                return false;
+            }
+        }
 
         public NameFilter()
         {
@@ -53,12 +75,13 @@ namespace FileOperation
 
         public System.Windows.Forms.DialogResult ShowAbout(System.Windows.Forms.IWin32Window owner)
         {
-            return System.Windows.Forms.DialogResult.OK;
+            AboutForm frm = new AboutForm();
+            return frm.ShowDialog(owner);
         }
 
         public System.Windows.Forms.DialogResult ShowSettings(System.Windows.Forms.IWin32Window owner)
         {
-            SettingsForm frm = new SettingsForm();
+            NameFilterSettingsForm frm = new NameFilterSettingsForm();
             frm.Wildcard = this.Wildcard;
             System.Windows.Forms.DialogResult res = frm.ShowDialog(owner);
             if (res == System.Windows.Forms.DialogResult.OK)

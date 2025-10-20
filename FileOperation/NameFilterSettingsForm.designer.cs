@@ -1,6 +1,6 @@
 ﻿namespace FileOperation
 {
-    public partial class SettingsForm
+    public partial class NameFilterSettingsForm
     {
         /// <summary>
         /// Required designer variable.
