@@ -934,6 +934,17 @@ namespace FileOperation
             {
                 btnCancel_Click(sender, e);
             }
+            else if (e.KeyCode == Keys.A && e.Control)
+            {
+                bool bSelectedAll = lvwFiles.SelectedItems.Count == lvwFiles.Items.Count;
+                foreach (ListViewItem item in lvwFiles.Items)
+                {
+                    if (bSelectedAll)
+                        item.Selected = false;
+                    else
+                        item.Selected = true;
+                }
+            }
             txtListViewItem.Visible = false;
         }
 
