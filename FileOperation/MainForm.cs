@@ -1168,6 +1168,7 @@ namespace FileOperation
             int count = lvwFiles.Items.Count;
             FileInfo fi = null;
             bool satisfied = false;
+            System.Drawing.Icon fileIcon = null;
             foreach (string filePath in paths)
             {
                 if (bgwDropFiles.CancellationPending)
@@ -1200,6 +1201,7 @@ namespace FileOperation
                     try
                     {
                         fi = new FileInfo(filePath);
+                        fileIcon = GetFileIcon(filePath);
                     }
                     catch (System.Exception ex)
                     {
@@ -1214,6 +1216,11 @@ namespace FileOperation
                         lvwFiles.Invoke(new MethodInvoker(delegate
                         {
                             ListViewItem item = lvwFiles.Items.Add(count.ToString());
+                            if (fileIcon != null)
+                            {
+                                item.ImageIndex = MainImgList.Images.Count;
+                                MainImgList.Images.Add(fileIcon);
+                            }
                             item.SubItems.Add(filePath);
                             if (fi != null)
                             {
@@ -1233,6 +1240,11 @@ namespace FileOperation
                     else
                     {
                         ListViewItem item = lvwFiles.Items.Add(count.ToString());
+                        if (fileIcon != null)
+                        {
+                            item.ImageIndex = MainImgList.Images.Count;
+                            MainImgList.Images.Add(fileIcon);
+                        }
                         item.SubItems.Add(filePath);
                         if (fi != null)
                         {
