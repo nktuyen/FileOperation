@@ -1169,12 +1169,23 @@ namespace FileOperation
             FileInfo fi = null;
             bool satisfied = false;
             System.Drawing.Icon fileIcon = null;
+            bool bIsDir = false;
             foreach (string filePath in paths)
             {
                 if (bgwDropFiles.CancellationPending)
                     break;
 
-                if ((System.IO.File.GetAttributes(filePath) & FileAttributes.Directory) != 0)
+                try
+                {
+                    bIsDir = ((System.IO.File.GetAttributes(filePath) & FileAttributes.Directory) == FileAttributes.Directory);
+                }
+                catch (System.Exception ex)
+                {
+                    Debug.Print(ex.Message);
+					continue;
+                }
+
+                if (bIsDir)
                 {
                     WalkDir(filePath, 0);
                 }
@@ -1260,6 +1271,8 @@ namespace FileOperation
                         }
                         item.SubItems.Add(string.Empty);//Status
                     }
+
+                    bgwDropFiles.ReportProgress(count, filePath);
                 }
             }
         }
