@@ -62,5 +62,15 @@ namespace DateFilter
             SettingsForm frm = new SettingsForm();
             return frm.ShowDialog(owner);
         }
+
+        public bool LoadSettings(Microsoft.Win32.RegistryKey regKey = null)
+        {
+            return false;
+        }
+
+        public bool SaveSettings(Microsoft.Win32.RegistryKey regKey = null)
+        {
+            return false;
+        }
     }
 }

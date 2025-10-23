@@ -15,6 +15,7 @@ using System.Timers;
 using System.Xml;
 using System.Text.RegularExpressions;
 using System.Runtime.InteropServices;
+using Microsoft.Win32;
 
 namespace FileOperation
 {
@@ -85,6 +86,8 @@ namespace FileOperation
         private List<IOperator> Operators { get; set; }
         private System.Timers.Timer Timer { get; set; }
         private string WorkingFile { get; set; }
+        private string RegistryKey { get; set; }
+
         public MainForm()
         {
             InitializeComponent();
@@ -158,7 +161,7 @@ namespace FileOperation
                 ctrl.Enabled = EnabledControlsMap[ctrl];
         }
 
-        private int LoadOperators()
+        private int LoadOperators(RegistryKey settingsKey = null)
         {
             int count = 0;
             Operators.Clear();
@@ -168,6 +171,7 @@ namespace FileOperation
             {
                 deleteOperator.MainWnd = this;
                 deleteOperator.Initialize();
+                deleteOperator.LoadSettings(settingsKey);
                 Operators.Add(deleteOperator);
 
                 if (deleteOperator.HasSettings)
@@ -220,6 +224,7 @@ namespace FileOperation
                         {
                             oper.MainWnd = this;
                             oper.Initialize();
+                            oper.LoadSettings(settingsKey);
                             Operators.Add(oper);
 
                             if (oper.HasSettings)
@@ -247,7 +252,7 @@ namespace FileOperation
             return count;
         }
 
-        private int LoadFilters()
+        private int LoadFilters(RegistryKey settingsKey = null)
         {
             int count = 0;
             Filters.Clear();
@@ -258,6 +263,7 @@ namespace FileOperation
             {
                 nameFilter.MainWnd = this;
                 nameFilter.Initialize();
+                nameFilter.LoadSettings();
                 Filters.Add(nameFilter);
 
                 ToolStripMenuItem filterItem = (ToolStripMenuItem)filterToolStripMenuItem.DropDownItems.Add(nameFilter.Name);
@@ -278,7 +284,7 @@ namespace FileOperation
                     filterAboutItem.Tag = nameFilter;
                     filterAboutItem.Click += new EventHandler(filterAboutMenuItemToolStripMenuItem_Click);
                 }
-
+                
                 count++;
             }
 
@@ -312,6 +318,7 @@ namespace FileOperation
                         {
                             filter.MainWnd = this;
                             filter.Initialize();
+                            filter.LoadSettings();
                             Filters.Add(filter);
 
                             ToolStripMenuItem filterItem = (ToolStripMenuItem)filterToolStripMenuItem.DropDownItems.Add(filter.Name);
@@ -345,8 +352,49 @@ namespace FileOperation
 
         private void MainForm_Load(object sender, EventArgs e)
         {
-            LoadFilters();
-            LoadOperators();
+            Assembly exeAssembly = null;
+            FileVersionInfo verInf = null;
+            RegistryKey mainKey = null;
+            RegistryKey filtersKey = null;
+            RegistryKey operatorsKey = null;
+
+            try
+            {
+                exeAssembly = Assembly.GetExecutingAssembly();
+                if (exeAssembly != null)
+                    verInf = FileVersionInfo.GetVersionInfo(exeAssembly.Location);
+                if (verInf != null)
+                    this.RegistryKey = string.Format("SOFTWARE\\{0}\\{1}\\",verInf.CompanyName, verInf.ProductName);
+                else
+                    this.RegistryKey = "SOFTWARE\\NKTUYEN\\FileOperator\\";
+
+                mainKey = Registry.CurrentUser.OpenSubKey(this.RegistryKey);
+                if (mainKey == null)
+                    mainKey = Registry.CurrentUser.CreateSubKey(this.RegistryKey);
+                if (mainKey != null)
+                {
+                    RegistryKey settingsKey = mainKey.OpenSubKey("Settings");
+                    if (settingsKey == null)
+                        settingsKey = mainKey.CreateSubKey("Settings");
+                    if (settingsKey != null)
+                    {
+                        filtersKey = settingsKey.OpenSubKey("Filters");
+                        if (filtersKey == null)
+                            filtersKey = settingsKey.CreateSubKey("Filters");
+
+                        operatorsKey = settingsKey.OpenSubKey("Operators");
+                        if (operatorsKey == null)
+                            operatorsKey = settingsKey.CreateSubKey("Operators");
+                    }
+                }
+            }
+            catch (System.Exception ex)
+            {
+                Debug.Print(ex.Message);
+            }
+
+            LoadFilters(filtersKey);
+            LoadOperators(operatorsKey);
         }
 
         private void filterAboutMenuItemToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1410,6 +1458,67 @@ namespace FileOperation
         {
             AboutForm frm = new AboutForm();
             frm.ShowDialog();
+        }
+
+        private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            Assembly exeAssembly = null;
+            FileVersionInfo verInf = null;
+            RegistryKey mainKey = null;
+            RegistryKey filtersKey = null;
+            RegistryKey operatorsKey = null;
+
+            try
+            {
+                exeAssembly = Assembly.GetExecutingAssembly();
+                if (exeAssembly != null)
+                    verInf = FileVersionInfo.GetVersionInfo(exeAssembly.Location);
+                if (verInf != null)
+                    this.RegistryKey = string.Format("SOFTWARE\\{0}\\{1}\\", verInf.CompanyName, verInf.ProductName);
+                else
+                    this.RegistryKey = "SOFTWARE\\NKTUYEN\\FileOperator\\";
+
+                mainKey = Registry.CurrentUser.OpenSubKey(this.RegistryKey);
+                if (mainKey == null)
+                    mainKey = Registry.CurrentUser.CreateSubKey(this.RegistryKey);
+                if (mainKey != null)
+                {
+                    RegistryKey settingsKey = mainKey.OpenSubKey("Settings");
+                    if (settingsKey == null)
+                        settingsKey = mainKey.CreateSubKey("Settings");
+                    if (settingsKey != null)
+                    {
+                        filtersKey = settingsKey.OpenSubKey("Filters", true);
+                        if (filtersKey == null)
+                            filtersKey = settingsKey.CreateSubKey("Filters");
+
+                        operatorsKey = settingsKey.OpenSubKey("Operators", true);
+                        if (operatorsKey == null)
+                            operatorsKey = settingsKey.CreateSubKey("Operators");
+                    }
+                }
+            }
+            catch (System.Exception ex)
+            {
+                Debug.Print(ex.Message);
+            }
+
+            if (filtersKey != null)
+            {
+                foreach (IFilter filter in this.Filters)
+                {
+                    filter.SaveSettings(filtersKey);
+                }
+            }
+
+
+            if (operatorsKey != null)
+            {
+                foreach (IOperator oper in this.Operators)
+                {
+                    oper.SaveSettings(operatorsKey);
+                }
+            }
         }
     }
 }

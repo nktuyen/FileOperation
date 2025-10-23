@@ -23,5 +23,7 @@ namespace Interfaces
         bool Operate();
         System.Windows.Forms.DialogResult ShowAbout(System.Windows.Forms.IWin32Window owner = null);
         System.Windows.Forms.DialogResult ShowSettings(System.Windows.Forms.IWin32Window owner = null);
+        bool LoadSettings(Microsoft.Win32.RegistryKey regKey = null);
+        bool SaveSettings(Microsoft.Win32.RegistryKey regKey = null);
     }
 }

@@ -135,5 +135,15 @@ namespace FileOperation
 
             return res;
         }
+
+        public bool LoadSettings(Microsoft.Win32.RegistryKey regKey = null)
+        {
+            return false;
+        }
+
+        public bool SaveSettings(Microsoft.Win32.RegistryKey regKey = null)
+        {
+            return false;
+        }
     }
 }

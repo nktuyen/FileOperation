@@ -53,6 +53,7 @@ namespace CopyTo
 
         public CopyToOperator()
         {
+            this.Destination = string.Empty;
             this.FileExistingAction = 1;//Ask
         }
 
@@ -70,7 +71,7 @@ namespace CopyTo
             MultiFiles = isMultiple;
             FolderBrowserDialog dlgFolder = new FolderBrowserDialog();
             dlgFolder.ShowNewFolderButton = true;
-            dlgFolder.SelectedPath = this.Description;
+            dlgFolder.SelectedPath = this.Destination;
             if (dlgFolder.ShowDialog(this.MainWnd) != DialogResult.OK)
                 return false;
             this.Destination = dlgFolder.SelectedPath;
@@ -151,6 +152,63 @@ namespace CopyTo
             }
 
             return res;
+        }
+
+        public bool LoadSettings(Microsoft.Win32.RegistryKey regKey = null)
+        {
+            if (regKey == null)
+                return false;
+            
+            object objDest = null;
+            object objFileExistAction = null;
+
+            try
+            {
+                Microsoft.Win32.RegistryKey myKey = regKey.OpenSubKey(this.Name);
+                if (myKey != null)
+                {
+                    objDest = myKey.GetValue("Destination");
+                    objFileExistAction = myKey.GetValue("FileExistingAction");
+
+                    this.Destination = objDest as string;
+                    this.FileExistingAction = (int)objFileExistAction;
+                }
+            }
+            catch (System.Exception ex)
+            {
+                Debug.Print(ex.Message);
+                regKey.Close();
+                return false;
+            }
+
+            regKey.Close();
+            return true;
+        }
+
+        public bool SaveSettings(Microsoft.Win32.RegistryKey regKey = null)
+        {
+            if (regKey == null)
+                return false;
+            try
+            {
+                Microsoft.Win32.RegistryKey myKey = regKey.OpenSubKey(this.Name, true);
+                if (myKey == null)
+                    myKey = regKey.CreateSubKey(this.Name);
+                if (myKey != null)
+                {
+                    myKey.SetValue("Destination", this.Destination);
+                    myKey.SetValue("FileExistingAction", this.FileExistingAction, Microsoft.Win32.RegistryValueKind.DWord);
+                }
+            }
+            catch (System.Exception ex)
+            {
+                Debug.Print(ex.Message);
+                regKey.Close();
+                return false;
+            }
+
+            regKey.Close();
+            return true;
         }
     }
 }
