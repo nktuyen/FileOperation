@@ -33,8 +33,8 @@
             this.btnOK = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.radEquality = new System.Windows.Forms.RadioButton();
             this.radContains = new System.Windows.Forms.RadioButton();
+            this.radEquality = new System.Windows.Forms.RadioButton();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -94,18 +94,6 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Matching mode";
             // 
-            // radEquality
-            // 
-            this.radEquality.AutoSize = true;
-            this.radEquality.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.radEquality.Location = new System.Drawing.Point(25, 19);
-            this.radEquality.Name = "radEquality";
-            this.radEquality.Size = new System.Drawing.Size(52, 17);
-            this.radEquality.TabIndex = 0;
-            this.radEquality.Text = "Exact";
-            this.radEquality.UseVisualStyleBackColor = true;
-            this.radEquality.CheckedChanged += new System.EventHandler(this.radEquality_CheckedChanged);
-            // 
             // radContains
             // 
             this.radContains.AutoSize = true;
@@ -120,6 +108,18 @@
             this.radContains.UseVisualStyleBackColor = true;
             this.radContains.CheckedChanged += new System.EventHandler(this.radContains_CheckedChanged);
             // 
+            // radEquality
+            // 
+            this.radEquality.AutoSize = true;
+            this.radEquality.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.radEquality.Location = new System.Drawing.Point(25, 19);
+            this.radEquality.Name = "radEquality";
+            this.radEquality.Size = new System.Drawing.Size(52, 17);
+            this.radEquality.TabIndex = 0;
+            this.radEquality.Text = "Exact";
+            this.radEquality.UseVisualStyleBackColor = true;
+            this.radEquality.CheckedChanged += new System.EventHandler(this.radEquality_CheckedChanged);
+            // 
             // SettingsForm
             // 
             this.AcceptButton = this.btnOK;
@@ -131,6 +131,7 @@
             this.Controls.Add(this.btnOK);
             this.Controls.Add(this.lvwFIleAttributes);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.KeyPreview = true;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "SettingsForm";
@@ -138,6 +139,7 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "SettingsForm";
             this.Load += new System.EventHandler(this.SettingsForm_Load);
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.SettingsForm_KeyDown);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.ResumeLayout(false);

@@ -16,11 +16,16 @@ namespace SizeFilter
     {
         public long SizeFrom { get; set; }
         public long SizeTo { get; set; }
+        public SizeUnit UnitFrom { get; set; }
+        public SizeUnit UnitTo { get; set; }
+
         public SettingsForm()
         {
             InitializeComponent();
             this.SizeFrom = 0;
             this.SizeTo = -1;
+            this.UnitFrom = SizeUnit.bytes;
+            this.UnitTo = SizeUnit.bytes;
         }
 
         private void SettingsForm_Load(object sender, EventArgs e)
@@ -40,9 +45,7 @@ namespace SizeFilter
                 Debug.Print(ex.Message);
                 this.Text = "Settings";
             }
-
-            cbUnitFrom.SelectedIndex = 0;
-            cbUnitTo.SelectedIndex = 0;
+            
             txtSizeFrom.Text = this.SizeFrom.ToString();
             if (this.SizeTo < 0)
             {
@@ -56,18 +59,105 @@ namespace SizeFilter
                 txtSizeTo.Text = this.SizeTo.ToString();
                 chkSizeTo_CheckedChanged(sender, e);
             }
+
+            if (this.SizeFrom >= Math.Pow(1024,1))
+            {
+                if (this.SizeFrom >= Math.Pow(1024, 2))
+                {
+                    if (this.SizeFrom >= Math.Pow(1024, 3))
+                    {
+                        if (this.SizeFrom >= Math.Pow(1024, 4))
+                        {
+                            if (this.SizeFrom >= Math.Pow(1024, 5))
+                            {
+                                cbUnitFrom.SelectedIndex = 5;
+                                txtSizeFrom.Text = (((double)this.SizeFrom / Math.Pow(1024, 5))).ToString("0.###");
+                            }
+                            else
+                            {
+                                cbUnitFrom.SelectedIndex = 4;
+                                txtSizeFrom.Text =  (((double)this.SizeFrom / Math.Pow(1024, 4))).ToString("0.###");
+                            }
+                        }
+                        else
+                        {
+                            cbUnitFrom.SelectedIndex = 3;
+                            txtSizeFrom.Text = (((double)this.SizeFrom / Math.Pow(1024, 3))).ToString("0.###");
+                        }
+                    }
+                    else
+                    {
+                        cbUnitFrom.SelectedIndex = 2;
+                        txtSizeFrom.Text = (((double)this.SizeFrom / Math.Pow(1024, 2))).ToString("0.###");
+                    }
+                }
+                else
+                {
+                    cbUnitFrom.SelectedIndex = 1;
+                    txtSizeFrom.Text = (((double)this.SizeFrom / Math.Pow(1024, 1))).ToString("0.###");
+                }
+            }
+            else
+            {
+                cbUnitFrom.SelectedIndex = 0;
+                txtSizeFrom.Text = this.SizeFrom.ToString();
+            }
+
+            //Size to
+            if (this.SizeTo >= Math.Pow(1024, 1))
+            {
+                if (this.SizeTo >= Math.Pow(1024, 2))
+                {
+                    if (this.SizeTo >= Math.Pow(1024, 3))
+                    {
+                        if (this.SizeTo >= Math.Pow(1024, 4))
+                        {
+                            if (this.SizeTo >= Math.Pow(1024, 5))
+                            {
+                                cbUnitTo.SelectedIndex = 5;
+                                txtSizeTo.Text = (((double)this.SizeTo / Math.Pow(1024, 5))).ToString("0.###");
+                            }
+                            else
+                            {
+                                cbUnitTo.SelectedIndex = 4;
+                                txtSizeTo.Text = (((double)this.SizeTo / Math.Pow(1024, 4))).ToString("0.###");
+                            }
+                        }
+                        else
+                        {
+                            cbUnitTo.SelectedIndex = 3;
+                            txtSizeTo.Text = (((double)this.SizeTo / Math.Pow(1024, 3))).ToString("0.###");
+                        }
+                    }
+                    else
+                    {
+                        cbUnitTo.SelectedIndex = 2;
+                        txtSizeTo.Text = (((double)this.SizeTo / Math.Pow(1024, 2))).ToString("0.###");
+                    }
+                }
+                else
+                {
+                    cbUnitTo.SelectedIndex = 1;
+                    txtSizeTo.Text = (((double)this.SizeTo / Math.Pow(1024, 1))).ToString("0.###");
+                }
+            }
+            else
+            {
+                cbUnitTo.SelectedIndex = 0;
+                txtSizeTo.Text = this.SizeTo.ToString();
+            }
         }
 
         private void btnOK_Click(object sender, EventArgs e)
         {
-            long lValue = 0;
-            long.TryParse(txtSizeFrom.Text, out lValue);
-            this.SizeFrom = lValue * (long)Math.Pow(1024, cbUnitFrom.SelectedIndex);
+            double lValue = 0;
+            double.TryParse(txtSizeFrom.Text, out lValue);
+            this.SizeFrom = (long)(lValue * Math.Pow(1024, cbUnitFrom.SelectedIndex));
             if (chkSizeTo.Checked)
             {
-                long lToValue = 0;
-                long.TryParse(txtSizeTo.Text, out lToValue);
-                this.SizeTo = lToValue * (long)Math.Pow(1024, cbUnitTo.SelectedIndex);
+                double lToValue = 0;
+                double.TryParse(txtSizeTo.Text, out lToValue);
+                this.SizeTo = (long)(lToValue * Math.Pow(1024, cbUnitTo.SelectedIndex));
             }
             else
                 this.SizeTo = -1;
@@ -106,11 +196,19 @@ namespace SizeFilter
         private void cbUnitFrom_SelectedIndexChanged(object sender, EventArgs e)
         {
             btnOK.Enabled = txtSizeFrom.TextLength > 0 && (!txtSizeTo.Enabled || txtSizeTo.TextLength > 0);
+            this.UnitFrom = (SizeUnit)cbUnitFrom.SelectedIndex;
         }
 
         private void cbUnitTo_SelectedIndexChanged(object sender, EventArgs e)
         {
             btnOK.Enabled = txtSizeFrom.TextLength > 0 && (!txtSizeTo.Enabled || txtSizeTo.TextLength > 0);
+            this.UnitTo = (SizeUnit)cbUnitTo.SelectedIndex;
+        }
+
+        private void SettingsForm_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Escape)
+                this.Close();
         }
     }
 }

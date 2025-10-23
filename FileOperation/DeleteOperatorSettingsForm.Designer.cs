@@ -76,6 +76,7 @@
             this.Controls.Add(this.radPermanentDelete);
             this.Controls.Add(this.radMoveToTrash);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.KeyPreview = true;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "DeleteOperatorSettingsForm";
@@ -83,6 +84,7 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Settings";
             this.Load += new System.EventHandler(this.DeleteOperatorSettingsForm_Load);
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.DeleteOperatorSettingsForm_KeyDown);
             this.ResumeLayout(false);
             this.PerformLayout();
 

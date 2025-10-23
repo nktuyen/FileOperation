@@ -110,12 +110,60 @@ namespace AttributesFilter
 
         public bool LoadSettings(Microsoft.Win32.RegistryKey regKey = null)
         {
-            return false;
+            if (regKey == null)
+                return false;
+
+            object objAttributes = null;
+            object objMatchingMode = null;
+
+            try
+            {
+                Microsoft.Win32.RegistryKey myKey = regKey.OpenSubKey(this.Name);
+                if (myKey != null)
+                {
+                    objAttributes = myKey.GetValue("Attributes");
+                    objMatchingMode = myKey.GetValue("MatchingMode");
+
+                    this.Attributes = (FileAttributes)objAttributes;
+                    this.Matching = (MatchingMode)objMatchingMode;
+
+                    myKey.Close();
+                }
+            }
+            catch (System.Exception ex)
+            {
+                Debug.Print(ex.Message);
+                return false;
+            }
+
+            return true;
         }
 
         public bool SaveSettings(Microsoft.Win32.RegistryKey regKey = null)
         {
-            return false;
+            if (regKey == null)
+                return false;
+            try
+            {
+                Microsoft.Win32.RegistryKey myKey = regKey.OpenSubKey(this.Name, true);
+                if (myKey == null)
+                    myKey = regKey.CreateSubKey(this.Name);
+
+                if (myKey != null)
+                {
+                    myKey.SetValue("Attributes", this.Attributes, Microsoft.Win32.RegistryValueKind.DWord);
+                    myKey.SetValue("MatchingMode", this.Matching, Microsoft.Win32.RegistryValueKind.DWord);
+
+                    myKey.Close();
+                }
+            }
+            catch (System.Exception ex)
+            {
+                Debug.Print(ex.Message);
+                return false;
+            }
+
+            return true;
         }
     }
 }

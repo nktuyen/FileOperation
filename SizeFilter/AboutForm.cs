@@ -37,5 +37,11 @@ namespace SizeFilter
                 this.Text = "About";
             }
         }
+
+        private void AboutForm_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Escape)
+                this.Close();
+        }
     }
 }

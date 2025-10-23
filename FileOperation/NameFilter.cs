@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Interfaces;
 using System.Text.RegularExpressions;
+using System.Diagnostics;
 
 namespace FileOperation
 {
@@ -94,12 +95,54 @@ namespace FileOperation
 
         public bool LoadSettings(Microsoft.Win32.RegistryKey regKey = null)
         {
-            return false;
+            if (regKey == null)
+                return false;
+
+            object objWildcard = null;
+
+            try
+            {
+                Microsoft.Win32.RegistryKey myKey = regKey.OpenSubKey(this.Name);
+                if (myKey != null)
+                {
+                    objWildcard = myKey.GetValue("Wildcard");
+                    this.Wildcard = objWildcard as string;
+
+                    myKey.Close();
+                }
+            }
+            catch (System.Exception ex)
+            {
+                Debug.Print(ex.Message);
+                return false;
+            }
+
+            return true;
         }
 
         public bool SaveSettings(Microsoft.Win32.RegistryKey regKey = null)
         {
-            return false;
+            if (regKey == null)
+                return false;
+            try
+            {
+                Microsoft.Win32.RegistryKey myKey = regKey.OpenSubKey(this.Name, true);
+                if (myKey == null)
+                    myKey = regKey.CreateSubKey(this.Name);
+
+                if (myKey != null)
+                {
+                    myKey.SetValue("Wildcard", this.Wildcard, Microsoft.Win32.RegistryValueKind.String);
+                    myKey.Close();
+                }
+            }
+            catch (System.Exception ex)
+            {
+                Debug.Print(ex.Message);
+                return false;
+            }
+
+            return true;
         }
     }
 }

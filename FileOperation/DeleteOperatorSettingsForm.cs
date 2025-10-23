@@ -33,5 +33,11 @@ namespace FileOperation
             else
                 this.MoveToTrash = false;
         }
+
+        private void DeleteOperatorSettingsForm_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Escape)
+                this.Close();
+        }
     }
 }

@@ -9,10 +9,13 @@ using System.Diagnostics;
 
 namespace SizeFilter
 {
+    public enum SizeUnit { bytes = 0, KB, MB, GB, TB, PB };
+
     public class MyFilter : IFilter
     {
         private long SizeFrom { get; set; }
         private long SizeTo { get; set; }
+
         public string Name
         {
             get
@@ -103,12 +106,60 @@ namespace SizeFilter
 
         public bool LoadSettings(Microsoft.Win32.RegistryKey regKey = null)
         {
-            return false;
+            if (regKey == null)
+                return false;
+
+            object objSizeFrom = null;
+            object objSizeTo = null;
+
+            try
+            {
+                Microsoft.Win32.RegistryKey myKey = regKey.OpenSubKey(this.Name);
+                if (myKey != null)
+                {
+                    objSizeFrom = myKey.GetValue("SizeFrom");
+                    objSizeTo = myKey.GetValue("SizeTo");
+
+                    this.SizeFrom = (long)objSizeFrom;
+                    this.SizeTo = (long)objSizeTo;
+
+                    myKey.Close();
+                }
+            }
+            catch (System.Exception ex)
+            {
+                Debug.Print(ex.Message);
+                return false;
+            }
+
+            return true;
         }
 
         public bool SaveSettings(Microsoft.Win32.RegistryKey regKey = null)
         {
-            return false;
+            if (regKey == null)
+                return false;
+            try
+            {
+                Microsoft.Win32.RegistryKey myKey = regKey.OpenSubKey(this.Name, true);
+                if (myKey == null)
+                    myKey = regKey.CreateSubKey(this.Name);
+
+                if (myKey != null)
+                {
+                    myKey.SetValue("SizeFrom", this.SizeFrom, Microsoft.Win32.RegistryValueKind.QWord);
+                    myKey.SetValue("SizeTo", this.SizeTo, Microsoft.Win32.RegistryValueKind.QWord);
+
+                    myKey.Close();
+                }
+            }
+            catch (System.Exception ex)
+            {
+                Debug.Print(ex.Message);
+                return false;
+            }
+
+            return true;
         }
     }
 }

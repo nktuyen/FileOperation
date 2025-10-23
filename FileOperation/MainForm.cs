@@ -19,8 +19,6 @@ using Microsoft.Win32;
 
 namespace FileOperation
 {
-   
-
     public partial class MainForm : Form
     {
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Auto)]
@@ -81,6 +79,7 @@ namespace FileOperation
         [DllImport("user32.dll", SetLastError = true)]
         static extern bool DestroyIcon(IntPtr hIcon);
 
+        private const int STATUS_COLUMN_INDEX = 6;
         private Dictionary<Control, bool> EnabledControlsMap { get; set; }
         private List<IFilter> Filters { get; set; }
         private List<IOperator> Operators { get; set; }
@@ -263,7 +262,7 @@ namespace FileOperation
             {
                 nameFilter.MainWnd = this;
                 nameFilter.Initialize();
-                nameFilter.LoadSettings();
+                nameFilter.LoadSettings(settingsKey);
                 Filters.Add(nameFilter);
 
                 ToolStripMenuItem filterItem = (ToolStripMenuItem)filterToolStripMenuItem.DropDownItems.Add(nameFilter.Name);
@@ -318,7 +317,7 @@ namespace FileOperation
                         {
                             filter.MainWnd = this;
                             filter.Initialize();
-                            filter.LoadSettings();
+                            filter.LoadSettings(settingsKey);
                             Filters.Add(filter);
 
                             ToolStripMenuItem filterItem = (ToolStripMenuItem)filterToolStripMenuItem.DropDownItems.Add(filter.Name);
@@ -581,9 +580,11 @@ namespace FileOperation
                             item.SubItems.Add(fi.Extension.StartsWith(".")?fi.Extension.Substring(1): fi.Extension);
                             item.SubItems.Add(AutoFileSize(fi.Length));
                             item.SubItems.Add(fi.Attributes.ToString());
+                            item.SubItems.Add(fi.CreationTime.ToLocalTime().ToString());
                         }
                         else
                         {
+                            item.SubItems.Add(string.Empty);
                             item.SubItems.Add(string.Empty);
                             item.SubItems.Add(string.Empty);
                             item.SubItems.Add(string.Empty);
@@ -605,9 +606,11 @@ namespace FileOperation
                         item.SubItems.Add(fi.Extension.StartsWith(".") ? fi.Extension.Substring(1) : fi.Extension);
                         item.SubItems.Add(AutoFileSize(fi.Length));
                         item.SubItems.Add(fi.Attributes.ToString());
+                        item.SubItems.Add(fi.CreationTime.ToLocalTime().ToString());
                     }
                     else
                     {
+                        item.SubItems.Add(string.Empty);
                         item.SubItems.Add(string.Empty);
                         item.SubItems.Add(string.Empty);
                         item.SubItems.Add(string.Empty);
@@ -815,9 +818,11 @@ namespace FileOperation
                                 item.SubItems.Add(fi.Extension.StartsWith(".") ? fi.Extension.Substring(1) : fi.Extension);
                                 item.SubItems.Add(AutoFileSize(fi.Length));
                                 item.SubItems.Add(fi.Attributes.ToString());
+                                item.SubItems.Add(fi.CreationTime.ToLocalTime().ToString());
                             }
                             else
                             {
+                                item.SubItems.Add(string.Empty);
                                 item.SubItems.Add(string.Empty);
                                 item.SubItems.Add(string.Empty);
                                 item.SubItems.Add(string.Empty);
@@ -839,9 +844,11 @@ namespace FileOperation
                             item.SubItems.Add(fi.Extension.StartsWith(".") ? fi.Extension.Substring(1) : fi.Extension);
                             item.SubItems.Add(AutoFileSize(fi.Length));
                             item.SubItems.Add(fi.Attributes.ToString());
+                            item.SubItems.Add(fi.CreationTime.ToLocalTime().ToString());
                         }
                         else
                         {
+                            item.SubItems.Add(string.Empty);
                             item.SubItems.Add(string.Empty);
                             item.SubItems.Add(string.Empty);
                             item.SubItems.Add(string.Empty);
@@ -1017,7 +1024,7 @@ namespace FileOperation
                 List<ListViewItem> deletedItems =new List<ListViewItem>();
                 foreach (ListViewItem item in lvwFiles.SelectedItems)
                 {
-                    item.SubItems[5].Text=string.Empty;
+                    item.SubItems[STATUS_COLUMN_INDEX].Text=string.Empty;
                     string filePath = item.SubItems[1].Text;
                     oper.FilePath = filePath;
                     if (oper.Operate())
@@ -1034,7 +1041,7 @@ namespace FileOperation
                             }
                         }
                     }
-                    item.SubItems[5].Text = oper.Status;
+                    item.SubItems[STATUS_COLUMN_INDEX].Text = oper.Status;
 
                 }
 
@@ -1286,9 +1293,11 @@ namespace FileOperation
                                 item.SubItems.Add(fi.Extension.StartsWith(".") ? fi.Extension.Substring(1) : fi.Extension);
                                 item.SubItems.Add(AutoFileSize(fi.Length));
                                 item.SubItems.Add(fi.Attributes.ToString());
+                                item.SubItems.Add(fi.CreationTime.ToLocalTime().ToString());
                             }
                             else
                             {
+                                item.SubItems.Add(string.Empty);
                                 item.SubItems.Add(string.Empty);
                                 item.SubItems.Add(string.Empty);
                                 item.SubItems.Add(string.Empty);
@@ -1310,9 +1319,11 @@ namespace FileOperation
                             item.SubItems.Add(fi.Extension.StartsWith(".") ? fi.Extension.Substring(1) : fi.Extension);
                             item.SubItems.Add(AutoFileSize(fi.Length));
                             item.SubItems.Add(fi.Attributes.ToString());
+                            item.SubItems.Add(fi.CreationTime.ToLocalTime().ToString());
                         }
                         else
                         {
+                            item.SubItems.Add(string.Empty);
                             item.SubItems.Add(string.Empty);
                             item.SubItems.Add(string.Empty);
                             item.SubItems.Add(string.Empty);

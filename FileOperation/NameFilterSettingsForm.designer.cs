@@ -72,6 +72,7 @@
             this.Controls.Add(this.txtWildcard);
             this.Controls.Add(this.label1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.KeyPreview = true;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "NameFilterSettingsForm";
@@ -79,6 +80,7 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Settings";
             this.Load += new System.EventHandler(this.SettingsForm_Load);
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.NameFilterSettingsForm_KeyDown);
             this.ResumeLayout(false);
             this.PerformLayout();
 

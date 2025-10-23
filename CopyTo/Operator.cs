@@ -10,7 +10,7 @@ using System.Diagnostics;
 
 namespace CopyTo
 {
-    public class CopyToOperator : IOperator
+    public class MyOperator : IOperator
     {
         public string Name { get { return "Copy To"; } }
         public string Description { get { return "Copy files to specified directory"; } }
@@ -51,7 +51,7 @@ namespace CopyTo
         public string FilePath { get; set; }
         public System.Windows.Forms.IWin32Window MainWnd { get; set; }
 
-        public CopyToOperator()
+        public MyOperator()
         {
             this.Destination = string.Empty;
             this.FileExistingAction = 1;//Ask
@@ -172,16 +172,16 @@ namespace CopyTo
 
                     this.Destination = objDest as string;
                     this.FileExistingAction = (int)objFileExistAction;
+
+                    myKey.Close();
                 }
             }
             catch (System.Exception ex)
             {
                 Debug.Print(ex.Message);
-                regKey.Close();
                 return false;
             }
 
-            regKey.Close();
             return true;
         }
 
@@ -189,6 +189,7 @@ namespace CopyTo
         {
             if (regKey == null)
                 return false;
+
             try
             {
                 Microsoft.Win32.RegistryKey myKey = regKey.OpenSubKey(this.Name, true);
@@ -198,16 +199,16 @@ namespace CopyTo
                 {
                     myKey.SetValue("Destination", this.Destination);
                     myKey.SetValue("FileExistingAction", this.FileExistingAction, Microsoft.Win32.RegistryValueKind.DWord);
+                    
+                    myKey.Close();
                 }
             }
             catch (System.Exception ex)
             {
                 Debug.Print(ex.Message);
-                regKey.Close();
                 return false;
             }
-
-            regKey.Close();
+            
             return true;
         }
     }

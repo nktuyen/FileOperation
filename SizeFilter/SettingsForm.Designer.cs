@@ -33,11 +33,11 @@
             this.cbUnitTo = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
             this.txtSizeFrom = new System.Windows.Forms.TextBox();
+            this.contextMenuStripFrom = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.txtSizeTo = new System.Windows.Forms.TextBox();
+            this.contextMenuStripTo = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.chkSizeTo = new System.Windows.Forms.CheckBox();
             this.btnOK = new System.Windows.Forms.Button();
-            this.contextMenuStripFrom = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.contextMenuStripTo = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.SuspendLayout();
             // 
             // cbUnitFrom
@@ -96,6 +96,11 @@
             this.txtSizeFrom.TextChanged += new System.EventHandler(this.txtSizeFrom_TextChanged);
             this.txtSizeFrom.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtSizeFrom_KeyPress);
             // 
+            // contextMenuStripFrom
+            // 
+            this.contextMenuStripFrom.Name = "contextMenuStripFrom";
+            this.contextMenuStripFrom.Size = new System.Drawing.Size(61, 4);
+            // 
             // txtSizeTo
             // 
             this.txtSizeTo.ContextMenuStrip = this.contextMenuStripTo;
@@ -107,6 +112,11 @@
             this.txtSizeTo.TabIndex = 4;
             this.txtSizeTo.TextChanged += new System.EventHandler(this.txtSizeTo_TextChanged);
             this.txtSizeTo.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtSizeTo_KeyPress);
+            // 
+            // contextMenuStripTo
+            // 
+            this.contextMenuStripTo.Name = "contextMenuStripTo";
+            this.contextMenuStripTo.Size = new System.Drawing.Size(61, 4);
             // 
             // chkSizeTo
             // 
@@ -130,16 +140,6 @@
             this.btnOK.UseVisualStyleBackColor = true;
             this.btnOK.Click += new System.EventHandler(this.btnOK_Click);
             // 
-            // contextMenuStripFrom
-            // 
-            this.contextMenuStripFrom.Name = "contextMenuStripFrom";
-            this.contextMenuStripFrom.Size = new System.Drawing.Size(61, 4);
-            // 
-            // contextMenuStripTo
-            // 
-            this.contextMenuStripTo.Name = "contextMenuStripTo";
-            this.contextMenuStripTo.Size = new System.Drawing.Size(61, 4);
-            // 
             // SettingsForm
             // 
             this.AcceptButton = this.btnOK;
@@ -154,6 +154,7 @@
             this.Controls.Add(this.cbUnitTo);
             this.Controls.Add(this.cbUnitFrom);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.KeyPreview = true;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "SettingsForm";
@@ -161,6 +162,7 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Settings";
             this.Load += new System.EventHandler(this.SettingsForm_Load);
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.SettingsForm_KeyDown);
             this.ResumeLayout(false);
             this.PerformLayout();
 

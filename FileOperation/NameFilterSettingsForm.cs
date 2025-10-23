@@ -51,5 +51,11 @@ namespace FileOperation
         {
             this.Wildcard = txtWildcard.Text;
         }
+
+        private void NameFilterSettingsForm_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Escape)
+                this.Close();
+        }
     }
 }

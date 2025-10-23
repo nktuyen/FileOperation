@@ -70,6 +70,7 @@
             this.colExtension = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.colSize = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.colAttributes = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.colCreatedTime = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.colStatus = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.MainMenu.SuspendLayout();
             this.SuspendLayout();
@@ -83,7 +84,7 @@
             this.helpToolStripMenuItem});
             this.MainMenu.Location = new System.Drawing.Point(0, 0);
             this.MainMenu.Name = "MainMenu";
-            this.MainMenu.Size = new System.Drawing.Size(1008, 24);
+            this.MainMenu.Size = new System.Drawing.Size(1350, 24);
             this.MainMenu.TabIndex = 1;
             // 
             // fileToolStripMenuItem
@@ -271,7 +272,7 @@
             // MainProgressbar
             // 
             this.MainProgressbar.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.MainProgressbar.Location = new System.Drawing.Point(776, 546);
+            this.MainProgressbar.Location = new System.Drawing.Point(1118, 546);
             this.MainProgressbar.Name = "MainProgressbar";
             this.MainProgressbar.Size = new System.Drawing.Size(200, 14);
             this.MainProgressbar.Style = System.Windows.Forms.ProgressBarStyle.Marquee;
@@ -283,7 +284,7 @@
             this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnCancel.BackgroundImage = global::FileOperation.Properties.Resources.Cancel;
             this.btnCancel.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.btnCancel.Location = new System.Drawing.Point(977, 545);
+            this.btnCancel.Location = new System.Drawing.Point(1319, 545);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(16, 16);
             this.btnCancel.TabIndex = 4;
@@ -299,7 +300,7 @@
             this.lblStatus.AutoEllipsis = true;
             this.lblStatus.Location = new System.Drawing.Point(10, 547);
             this.lblStatus.Name = "lblStatus";
-            this.lblStatus.Size = new System.Drawing.Size(752, 14);
+            this.lblStatus.Size = new System.Drawing.Size(1094, 14);
             this.lblStatus.TabIndex = 5;
             // 
             // filesContextMenuStrip
@@ -355,6 +356,7 @@
             this.colExtension,
             this.colSize,
             this.colAttributes,
+            this.colCreatedTime,
             this.colStatus});
             this.lvwFiles.ContextMenuStrip = this.filesContextMenuStrip;
             this.lvwFiles.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -363,7 +365,7 @@
             this.lvwFiles.Location = new System.Drawing.Point(10, 24);
             this.lvwFiles.Name = "lvwFiles";
             this.lvwFiles.ShowItemToolTips = true;
-            this.lvwFiles.Size = new System.Drawing.Size(984, 521);
+            this.lvwFiles.Size = new System.Drawing.Size(1326, 521);
             this.lvwFiles.SmallImageList = this.MainImgList;
             this.lvwFiles.TabIndex = 2;
             this.lvwFiles.UseCompatibleStateImageBehavior = false;
@@ -385,7 +387,7 @@
             // colName
             // 
             this.colName.Text = "Name";
-            this.colName.Width = 410;
+            this.colName.Width = 550;
             // 
             // colExtension
             // 
@@ -402,6 +404,11 @@
             this.colAttributes.Text = "Attributes";
             this.colAttributes.Width = 200;
             // 
+            // colCreatedTime
+            // 
+            this.colCreatedTime.Text = "Created Time";
+            this.colCreatedTime.Width = 200;
+            // 
             // colStatus
             // 
             this.colStatus.Text = "Status";
@@ -412,7 +419,7 @@
             this.AllowDrop = true;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1008, 561);
+            this.ClientSize = new System.Drawing.Size(1350, 561);
             this.Controls.Add(this.txtListViewItem);
             this.Controls.Add(this.lblStatus);
             this.Controls.Add(this.btnCancel);
@@ -463,7 +470,7 @@
         private System.Windows.Forms.Button btnCancel;
         private System.Windows.Forms.Label lblStatus;
         private System.Windows.Forms.ToolStripMenuItem removeAllFilesToolstripMenu;
-        private System.Windows.Forms.ColumnHeader colStatus;
+        private System.Windows.Forms.ColumnHeader colCreatedTime;
         private System.Windows.Forms.ContextMenuStrip filesContextMenuStrip;
         private System.Windows.Forms.TextBox txtListViewItem;
         private System.ComponentModel.BackgroundWorker bgwDropFiles;
@@ -477,6 +484,7 @@
         private System.Windows.Forms.ToolStripMenuItem settingsFiltersToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem settingsOperatorsToolStripMenuItem;
         private System.Windows.Forms.ImageList MainImgList;
+        private System.Windows.Forms.ColumnHeader colStatus;
     }
 }
 

@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Interfaces;
 using System.Windows.Forms;
+using System.Diagnostics;
 
 namespace FileOperation
 {
@@ -138,12 +139,54 @@ namespace FileOperation
 
         public bool LoadSettings(Microsoft.Win32.RegistryKey regKey = null)
         {
-            return false;
+            if (regKey == null)
+                return false;
+
+            object objMoveToTrash = null;
+
+            try
+            {
+                Microsoft.Win32.RegistryKey myKey = regKey.OpenSubKey(this.Name);
+                if (myKey != null)
+                {
+                    objMoveToTrash = myKey.GetValue("MoveToTrash");
+                    this.MoveToTrash = ((int)objMoveToTrash != 0);
+
+                    myKey.Close();
+                }
+            }
+            catch (System.Exception ex)
+            {
+                Debug.Print(ex.Message);
+                return false;
+            }
+
+            return true;
         }
 
         public bool SaveSettings(Microsoft.Win32.RegistryKey regKey = null)
         {
-            return false;
+            if (regKey == null)
+                return false;
+            try
+            {
+                Microsoft.Win32.RegistryKey myKey = regKey.OpenSubKey(this.Name, true);
+                if (myKey == null)
+                    myKey = regKey.CreateSubKey(this.Name);
+
+                if (myKey != null)
+                {
+                    myKey.SetValue("MoveToTrash", this.MoveToTrash ? 1 : 0, Microsoft.Win32.RegistryValueKind.DWord);
+                    myKey.Close();
+                }
+            }
+            catch (System.Exception ex)
+            {
+                Debug.Print(ex.Message);
+                return false;
+            }
+
+            return true;
         }
     }
 }

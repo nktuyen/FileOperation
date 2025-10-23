@@ -29,9 +29,9 @@
         private void InitializeComponent()
         {
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.radIgnoreExistFile = new System.Windows.Forms.RadioButton();
-            this.radAsk = new System.Windows.Forms.RadioButton();
             this.radOverwrite = new System.Windows.Forms.RadioButton();
+            this.radAsk = new System.Windows.Forms.RadioButton();
+            this.radIgnoreExistFile = new System.Windows.Forms.RadioButton();
             this.btnOK = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
@@ -48,15 +48,15 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Overwritten";
             // 
-            // radIgnoreExistFile
+            // radOverwrite
             // 
-            this.radIgnoreExistFile.AutoSize = true;
-            this.radIgnoreExistFile.Location = new System.Drawing.Point(58, 20);
-            this.radIgnoreExistFile.Name = "radIgnoreExistFile";
-            this.radIgnoreExistFile.Size = new System.Drawing.Size(55, 17);
-            this.radIgnoreExistFile.TabIndex = 0;
-            this.radIgnoreExistFile.Text = "Ignore";
-            this.radIgnoreExistFile.UseVisualStyleBackColor = true;
+            this.radOverwrite.AutoSize = true;
+            this.radOverwrite.Location = new System.Drawing.Point(58, 66);
+            this.radOverwrite.Name = "radOverwrite";
+            this.radOverwrite.Size = new System.Drawing.Size(70, 17);
+            this.radOverwrite.TabIndex = 0;
+            this.radOverwrite.Text = "Overwrite";
+            this.radOverwrite.UseVisualStyleBackColor = true;
             // 
             // radAsk
             // 
@@ -70,15 +70,15 @@
             this.radAsk.Text = "Ask";
             this.radAsk.UseVisualStyleBackColor = true;
             // 
-            // radOverwrite
+            // radIgnoreExistFile
             // 
-            this.radOverwrite.AutoSize = true;
-            this.radOverwrite.Location = new System.Drawing.Point(58, 66);
-            this.radOverwrite.Name = "radOverwrite";
-            this.radOverwrite.Size = new System.Drawing.Size(70, 17);
-            this.radOverwrite.TabIndex = 0;
-            this.radOverwrite.Text = "Overwrite";
-            this.radOverwrite.UseVisualStyleBackColor = true;
+            this.radIgnoreExistFile.AutoSize = true;
+            this.radIgnoreExistFile.Location = new System.Drawing.Point(58, 20);
+            this.radIgnoreExistFile.Name = "radIgnoreExistFile";
+            this.radIgnoreExistFile.Size = new System.Drawing.Size(55, 17);
+            this.radIgnoreExistFile.TabIndex = 0;
+            this.radIgnoreExistFile.Text = "Ignore";
+            this.radIgnoreExistFile.UseVisualStyleBackColor = true;
             // 
             // btnOK
             // 
@@ -100,6 +100,7 @@
             this.Controls.Add(this.btnOK);
             this.Controls.Add(this.groupBox1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.KeyPreview = true;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "SettingsForm";
@@ -107,6 +108,7 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Settings";
             this.Load += new System.EventHandler(this.SettingsForm_Load);
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.SettingsForm_KeyDown);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.ResumeLayout(false);
