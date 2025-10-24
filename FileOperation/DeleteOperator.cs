@@ -30,6 +30,7 @@ namespace FileOperation
             this.Title = "Delete";
             this.Description = "Delete selected files from disk";
             this.Image = Properties.Resources.Cancel;
+            this.HasSettings = true;
             this.Enabled = true;
             this.MoveToTrash = true;
         }

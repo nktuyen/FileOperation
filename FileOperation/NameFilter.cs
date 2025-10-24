@@ -28,6 +28,7 @@ namespace FileOperation
             this.Title = "Name Filter";
             this.Description = "Filter files' names by wildcard";
             this.Image = null;
+            this.HasSettings = true;
             this.Enabled = true;
             this.Wildcard = string.Empty;
         }

@@ -72,6 +72,8 @@
             this.colAttributes = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.colCreatedTime = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.colStatus = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripSeparator();
+            this.loadRecentFileAtStartupToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.MainMenu.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -173,7 +175,9 @@
             // 
             this.settingsToolstripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.settingsFiltersToolStripMenuItem,
-            this.settingsOperatorsToolStripMenuItem});
+            this.settingsOperatorsToolStripMenuItem,
+            this.toolStripMenuItem3,
+            this.loadRecentFileAtStartupToolStripMenuItem});
             this.settingsToolstripMenuItem.Name = "settingsToolstripMenuItem";
             this.settingsToolstripMenuItem.Size = new System.Drawing.Size(61, 20);
             this.settingsToolstripMenuItem.Text = "&Settings";
@@ -181,13 +185,13 @@
             // settingsFiltersToolStripMenuItem
             // 
             this.settingsFiltersToolStripMenuItem.Name = "settingsFiltersToolStripMenuItem";
-            this.settingsFiltersToolStripMenuItem.Size = new System.Drawing.Size(126, 22);
+            this.settingsFiltersToolStripMenuItem.Size = new System.Drawing.Size(208, 22);
             this.settingsFiltersToolStripMenuItem.Text = "Filters";
             // 
             // settingsOperatorsToolStripMenuItem
             // 
             this.settingsOperatorsToolStripMenuItem.Name = "settingsOperatorsToolStripMenuItem";
-            this.settingsOperatorsToolStripMenuItem.Size = new System.Drawing.Size(126, 22);
+            this.settingsOperatorsToolStripMenuItem.Size = new System.Drawing.Size(208, 22);
             this.settingsOperatorsToolStripMenuItem.Text = "Operators";
             // 
             // helpToolStripMenuItem
@@ -362,6 +366,7 @@
             this.lvwFiles.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lvwFiles.FullRowSelect = true;
             this.lvwFiles.GridLines = true;
+            this.lvwFiles.HideSelection = false;
             this.lvwFiles.Location = new System.Drawing.Point(10, 24);
             this.lvwFiles.Name = "lvwFiles";
             this.lvwFiles.ShowItemToolTips = true;
@@ -413,6 +418,18 @@
             // 
             this.colStatus.Text = "Status";
             this.colStatus.Width = 100;
+            // 
+            // toolStripMenuItem3
+            // 
+            this.toolStripMenuItem3.Name = "toolStripMenuItem3";
+            this.toolStripMenuItem3.Size = new System.Drawing.Size(205, 6);
+            // 
+            // loadRecentFileAtStartupToolStripMenuItem
+            // 
+            this.loadRecentFileAtStartupToolStripMenuItem.Name = "loadRecentFileAtStartupToolStripMenuItem";
+            this.loadRecentFileAtStartupToolStripMenuItem.Size = new System.Drawing.Size(208, 22);
+            this.loadRecentFileAtStartupToolStripMenuItem.Text = "Load recent file at startup";
+            this.loadRecentFileAtStartupToolStripMenuItem.Click += new System.EventHandler(this.loadRecentFileAtStartupToolStripMenuItem_Click);
             // 
             // MainForm
             // 
@@ -485,6 +502,8 @@
         private System.Windows.Forms.ToolStripMenuItem settingsOperatorsToolStripMenuItem;
         private System.Windows.Forms.ImageList MainImgList;
         private System.Windows.Forms.ColumnHeader colStatus;
+        private System.Windows.Forms.ToolStripSeparator toolStripMenuItem3;
+        private System.Windows.Forms.ToolStripMenuItem loadRecentFileAtStartupToolStripMenuItem;
     }
 }
 

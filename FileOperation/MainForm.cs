@@ -16,6 +16,7 @@ using System.Xml;
 using System.Text.RegularExpressions;
 using System.Runtime.InteropServices;
 using Microsoft.Win32;
+using System.Security.AccessControl;
 
 namespace FileOperation
 {
@@ -86,7 +87,7 @@ namespace FileOperation
         private System.Timers.Timer Timer { get; set; }
         private string WorkingFile { get; set; }
         private string RegistryKey { get; set; }
-
+        private bool LoadRecentFile { get; set; }
         public MainForm()
         {
             InitializeComponent();
@@ -251,6 +252,63 @@ namespace FileOperation
             return count;
         }
 
+        public bool LoadSettings(Microsoft.Win32.RegistryKey regKey = null)
+        {
+            if (regKey == null)
+                return false;
+
+            object objWorkingFile = null;
+            object objLoadRecentFile = null;
+
+            try
+            {
+                objWorkingFile = regKey.GetValue("WorkingFile");
+                objLoadRecentFile = regKey.GetValue("LoadRecentFile");
+
+
+                if(objWorkingFile != null)
+                    this.WorkingFile = objWorkingFile as string;
+                if (!System.IO.File.Exists(this.WorkingFile))
+                    this.WorkingFile = string.Empty;
+
+                if (objLoadRecentFile != null)
+                    this.LoadRecentFile = ((int)objLoadRecentFile != 0);
+
+                regKey.Close();
+            }
+            catch (System.Exception ex)
+            {
+                Debug.Print(ex.Message);
+                return false;
+            }
+
+            return true;
+        }
+
+        public bool SaveSettings(Microsoft.Win32.RegistryKey regKey = null)
+        {
+            if (regKey == null)
+                return false;
+
+            try
+            {
+                if (regKey != null)
+                {
+                    regKey.SetValue("WorkingFile", this.WorkingFile, Microsoft.Win32.RegistryValueKind.String);
+                    regKey.SetValue("LoadRecentFile", this.LoadRecentFile ? 1 : 0, Microsoft.Win32.RegistryValueKind.DWord);
+
+                    regKey.Close();
+                }
+            }
+            catch (System.Exception ex)
+            {
+                Debug.Print(ex.Message);
+                return false;
+            }
+
+            return true;
+        }
+
         private int LoadFilters(RegistryKey settingsKey = null)
         {
             int count = 0;
@@ -356,7 +414,8 @@ namespace FileOperation
             RegistryKey mainKey = null;
             RegistryKey filtersKey = null;
             RegistryKey operatorsKey = null;
-
+            RegistryKey othersKey = null;
+            RegistryKey settingsKey = null;
             try
             {
                 exeAssembly = Assembly.GetExecutingAssembly();
@@ -372,18 +431,22 @@ namespace FileOperation
                     mainKey = Registry.CurrentUser.CreateSubKey(this.RegistryKey);
                 if (mainKey != null)
                 {
-                    RegistryKey settingsKey = mainKey.OpenSubKey("Settings");
+                    settingsKey = mainKey.OpenSubKey("Settings", true);
                     if (settingsKey == null)
-                        settingsKey = mainKey.CreateSubKey("Settings");
+                        settingsKey = mainKey.CreateSubKey("Settings",  RegistryKeyPermissionCheck.ReadWriteSubTree);
                     if (settingsKey != null)
                     {
                         filtersKey = settingsKey.OpenSubKey("Filters");
                         if (filtersKey == null)
-                            filtersKey = settingsKey.CreateSubKey("Filters");
+                            filtersKey = settingsKey.CreateSubKey("Filters", RegistryKeyPermissionCheck.ReadWriteSubTree);
 
                         operatorsKey = settingsKey.OpenSubKey("Operators");
                         if (operatorsKey == null)
-                            operatorsKey = settingsKey.CreateSubKey("Operators");
+                            operatorsKey = settingsKey.CreateSubKey("Operators", RegistryKeyPermissionCheck.ReadWriteSubTree);
+
+                        othersKey = settingsKey.OpenSubKey("Others", true);
+                        if (othersKey == null)
+                            othersKey = settingsKey.CreateSubKey("Others", RegistryKeyPermissionCheck.ReadWriteSubTree);
                     }
                 }
             }
@@ -392,8 +455,44 @@ namespace FileOperation
                 Debug.Print(ex.Message);
             }
 
+            LoadSettings(othersKey);
             LoadFilters(filtersKey);
             LoadOperators(operatorsKey);
+
+            loadRecentFileAtStartupToolStripMenuItem.Checked = this.LoadRecentFile;
+            if(this.LoadRecentFile && this.WorkingFile != string.Empty)
+            {
+                List<string> files = new List<string>();
+                using (StreamReader fileStream = new StreamReader(this.WorkingFile, Encoding.UTF8))
+                {
+                    string line = string.Empty;
+                    while ((line = fileStream.ReadLine()) != null)
+                    {
+                        line = line.Trim();
+                        if (line.Length > 0)
+                        {
+                            try
+                            {
+                                if (Regex.IsMatch(line, @"^(?:[a-zA-Z]\:|\\\\[\w\.]+\\[\w.$]+)\\(?:[\w]+\\)*"))
+                                {
+                                    files.Add(line);
+                                }
+                            }
+                            catch (System.Exception ex)
+                            {
+                                Debug.Print(ex.Message);
+                                continue;
+                            }
+                        }
+                    }
+                }
+
+                lvwFiles.Items.Clear();
+                MainImgList.Images.Clear();
+                if (bgwAddFiles.IsBusy)
+                    bgwAddFiles.CancelAsync();
+                bgwAddFiles.RunWorkerAsync(files.ToArray());
+            }
         }
 
         private void filterAboutMenuItemToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1460,13 +1559,12 @@ namespace FileOperation
                     }
                 }
             }
-
+            this.WorkingFile = dlgOpenList.FileName;
             lvwFiles.Items.Clear();
             MainImgList.Images.Clear();
             if (bgwAddFiles.IsBusy)
                 bgwAddFiles.CancelAsync();
             bgwAddFiles.RunWorkerAsync(files.ToArray());
-            this.WorkingFile = dlgFileOpen.FileName;
         }
 
         private void saveListToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1505,7 +1603,8 @@ namespace FileOperation
             RegistryKey mainKey = null;
             RegistryKey filtersKey = null;
             RegistryKey operatorsKey = null;
-
+            RegistryKey othersKey = null;
+            RegistryKey settingsKey = null;
             try
             {
                 exeAssembly = Assembly.GetExecutingAssembly();
@@ -1518,21 +1617,25 @@ namespace FileOperation
 
                 mainKey = Registry.CurrentUser.OpenSubKey(this.RegistryKey);
                 if (mainKey == null)
-                    mainKey = Registry.CurrentUser.CreateSubKey(this.RegistryKey);
+                    mainKey = Registry.CurrentUser.CreateSubKey(this.RegistryKey, RegistryKeyPermissionCheck.ReadWriteSubTree);
                 if (mainKey != null)
                 {
-                    RegistryKey settingsKey = mainKey.OpenSubKey("Settings");
+                    settingsKey = mainKey.OpenSubKey("Settings");
                     if (settingsKey == null)
-                        settingsKey = mainKey.CreateSubKey("Settings");
+                        settingsKey = mainKey.CreateSubKey("Settings", RegistryKeyPermissionCheck.ReadWriteSubTree);
                     if (settingsKey != null)
                     {
                         filtersKey = settingsKey.OpenSubKey("Filters", true);
                         if (filtersKey == null)
-                            filtersKey = settingsKey.CreateSubKey("Filters");
+                            filtersKey = settingsKey.CreateSubKey("Filters", RegistryKeyPermissionCheck.ReadWriteSubTree);
 
                         operatorsKey = settingsKey.OpenSubKey("Operators", true);
                         if (operatorsKey == null)
-                            operatorsKey = settingsKey.CreateSubKey("Operators");
+                            operatorsKey = settingsKey.CreateSubKey("Operators", RegistryKeyPermissionCheck.ReadWriteSubTree);
+
+                        othersKey = settingsKey.OpenSubKey("Others",true);
+                        if (othersKey == null)
+                            othersKey = settingsKey.CreateSubKey("Others", RegistryKeyPermissionCheck.ReadWriteSubTree);
                     }
                 }
             }
@@ -1557,6 +1660,17 @@ namespace FileOperation
                     oper.SaveSettings(operatorsKey);
                 }
             }
+
+            if(othersKey != null)
+            {
+                SaveSettings(othersKey);
+            }
+        }
+
+        private void loadRecentFileAtStartupToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.LoadRecentFile = !this.LoadRecentFile;
+            loadRecentFileAtStartupToolStripMenuItem.Checked = this.LoadRecentFile;
         }
     }
 }

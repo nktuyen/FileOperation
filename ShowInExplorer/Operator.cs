@@ -8,6 +8,7 @@ using System.Diagnostics;
 using System.Windows.Forms;
 using Microsoft.Win32;
 using System.IO;
+using System.Security.Policy;
 
 namespace ShowInExplorer
 {
@@ -35,6 +36,7 @@ namespace ShowInExplorer
             this.HasAbout = true;
             this.HasSettings = true;
             this.Image = Properties.Resources.WindowsExplorer;
+            this.ShowSelectedState = true;
         }
 
         public bool Initialize()
