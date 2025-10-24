@@ -9,6 +9,7 @@ namespace Interfaces
     public interface IOperator
     {
         string Name { get; }
+        string Title { get; }
         string Description { get; }
         string Status { get; }
         System.Drawing.Image Image { get; }

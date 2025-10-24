@@ -12,41 +12,22 @@ namespace FileOperation
     public class NameFilter : IFilter
     {
         private string Wildcard { get; set; }
-        public string Name
-        {
-            get
-            {
-                return "Name Filter";
-            }
-        }
+        public string Name { get;private set; }
+        public string Title { get;private set;}
+        public string Description { get;private set;}
 
         public bool Enabled { get; set; }
-        public System.Drawing.Image Image
-        {
-            get
-            {
-                return null;
-            }
-        }
+        public System.Drawing.Image Image { get;private set ; }
         public System.Windows.Forms.IWin32Window MainWnd { get; set; }
-        public bool HasSettings
-        {
-            get
-            {
-                return true;
-            }
-        }
-
-        public bool HasAbout
-        {
-            get
-            {
-                return false;
-            }
-        }
+        public bool HasSettings { get; private set; }
+        public bool HasAbout { get;private set; }
 
         public NameFilter()
         {
+            this.Name = "NameFilter";
+            this.Title = "Name Filter";
+            this.Description = "Filter files' names by wildcard";
+            this.Image = null;
             this.Enabled = true;
             this.Wildcard = string.Empty;
         }

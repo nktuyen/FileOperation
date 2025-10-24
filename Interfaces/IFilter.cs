@@ -10,6 +10,8 @@ namespace Interfaces
     public interface IFilter
     {
         string Name { get; }
+        string Title { get; }
+        string Description { get; }
         bool Enabled { get; set; }
         bool HasSettings { get; }
         bool HasAbout{ get; }

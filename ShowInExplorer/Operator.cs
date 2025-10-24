@@ -13,36 +13,29 @@ namespace ShowInExplorer
 {
     public class MyOperator : IOperator
     {
+        public string Name{ get; private set; }
+        public string Title { get;private set; }
+
+        public string Description{get;private set;}
+        public string Status{ get; private set; }
+        public System.Drawing.Image Image { get; private set; }
+        public bool Enabled { get; set; }
+        public bool HasSettings { get;private set; }
+        public bool HasAbout {  get;private set; } 
+        public string FilePath { get; set; }
+        public IWin32Window MainWnd { get; set; }
+        private bool MultipleFiles { get; set; }
+        private bool ShowSelectedState { get; set; }
+
         public MyOperator()
         {
-            this.Name = "Show in Explorer";
+            this.Name = "ShowInExplorer";
+            this.Title = "Show in Explorer";
             this.Description = "Show selected files in Windows Explorer";
             this.HasAbout = true;
             this.HasSettings = true;
             this.Image = Properties.Resources.WindowsExplorer;
         }
-
-        public string Name{ get; private set; }
-
-        public string Description
-        {
-            get;private set;
-        }
-
-        public string Status{ get; private set; }
-
-        public System.Drawing.Image Image { get; private set; }
-
-        public bool Enabled { get; set; }
-
-        public bool HasSettings { get;private set; }
-
-        public bool HasAbout {  get;private set; } 
-
-        public string FilePath { get; set; }
-        public IWin32Window MainWnd { get; set; }
-        private bool MultipleFiles { get; set; }
-        private bool ShowSelectedState { get; set; }
 
         public bool Initialize()
         {

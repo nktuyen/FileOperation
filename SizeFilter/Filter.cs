@@ -16,42 +16,26 @@ namespace SizeFilter
         private long SizeFrom { get; set; }
         private long SizeTo { get; set; }
 
-        public string Name
-        {
-            get
-            {
-                return "Size Filter";
-            }
-        }
+        public string Name { get; private set; }
+        public string Title { get;private set; }
+        public string Description { get; private set; }
 
         public bool Enabled { get; set; }
-        public System.Drawing.Image Image
-        {
-            get
-            {
-                return null;
-            }
-        }
-        public bool HasSettings
-        {
-            get
-            {
-                return true;
-            }
-        }
+        public System.Drawing.Image Image { get;private set; }
+        public bool HasSettings { get;private set; }
 
-        public bool HasAbout
-        {
-            get
-            {
-                return true;
-            }
-        }
+        public bool HasAbout { get;private set; }
 
         public System.Windows.Forms.IWin32Window MainWnd { get; set; }
 
         public MyFilter()
         {
+            this.Name = "SizeFilter";
+            this.Title = "Size Filter";
+            this.Description = "Filter files by size";
+            this.Image = null;
+            this.HasAbout = true;
+            this.HasSettings = true;
             this.SizeFrom = 0;
             this.SizeTo = -1;
         }

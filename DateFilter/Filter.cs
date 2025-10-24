@@ -16,41 +16,25 @@ namespace DateFilter
         private bool UseDateTo { get; set; }
  
 
-        public string Name
-        {
-            get
-            {
-                return "Date Filter";
-            }
-        }
-        public bool HasSettings
-        {
-            get
-            {
-                return true;
-            }
-        }
+        public string Name { get; private set; }
+        public string Title { get;private set; }
+        public string Description { get; private set; }
+        public bool HasSettings { get; private set; }
 
-        public bool HasAbout
-        {
-            get
-            {
-                return true;
-            }
-        }
+        public bool HasAbout { get; private set; }
 
         public bool Enabled { get; set; }
         public System.Windows.Forms.IWin32Window MainWnd { get; set; }
-        public System.Drawing.Image Image 
-        {
-            get
-            {
-                return null;
-            }
-        }
+        public System.Drawing.Image Image { get;private set; }
 
         public MyFilter()
         {
+            this.Name = "DateFilter";
+            this.Title = "Date Filter";
+            this.Description = "Filter files by created date";
+            this.Image = null;
+            this.HasAbout = true;
+            this.HasSettings = true;
             this.DateFrom = DateTime.Now;
             this.DateTo = DateTime.Now;
             this.UseDateTo = true;

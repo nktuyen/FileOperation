@@ -13,58 +13,23 @@ namespace FileOperation
     {
         public bool MoveToTrash { get; set; }
         private bool MultiFiles { get; set; }
-        private string _status = string.Empty;
-        public string Name
-        {
-            get
-            {
-                return "Delete";
-            }
-        }
-        public string Description 
-        {
-            get
-            {
-                return "Delete File";
-            }
-        }
-        public string Status
-        {
-            get
-            {
-                return _status;
-            }
-        }
-        public System.Drawing.Image Image
-        { 
-            get
-            {
-                return FileOperation.Properties.Resources.Cancel;
-            }
-            
-        }
-        public bool HasSettings
-        {
-            get
-            {
-                return true;
-            }
-        }
-
-        public bool HasAbout
-        {
-            get
-            {
-                return false;
-            }
-        }
-
+        public string Name { get; private set; }
+        public string Title { get; private set; }
+        public string Description { get;private set; }
+        public string Status { get;private set;}
+        public System.Drawing.Image Image { get; private set; }
+        public bool HasSettings { get; private set; }
+        public bool HasAbout { get;private set; }
         public bool Enabled { get; set; }
         public string FilePath { get; set; }
         public System.Windows.Forms.IWin32Window MainWnd { get; set; }
 
         public DeleteOperator()
         {
+            this.Name = "Delete";
+            this.Title = "Delete";
+            this.Description = "Delete selected files from disk";
+            this.Image = Properties.Resources.Cancel;
             this.Enabled = true;
             this.MoveToTrash = true;
         }
@@ -95,7 +60,7 @@ namespace FileOperation
             if (confirm != DialogResult.Yes)
                 return false;
 
-            _status = string.Empty;
+            this.Status = string.Empty;
             return true;
         }
 
@@ -111,7 +76,7 @@ namespace FileOperation
             }
             catch (System.Exception ex)
             {
-                _status = ex.Message;
+                this.Status = ex.Message;
                 return false;
             }
 

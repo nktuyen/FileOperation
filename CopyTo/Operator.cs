@@ -12,47 +12,30 @@ namespace CopyTo
 {
     public class MyOperator : IOperator
     {
-        public string Name { get { return "Copy To"; } }
-        public string Description { get { return "Copy files to specified directory"; } }
-        private string _status = string.Empty;
+        public string Name { get; private set; }
+        public string Title { get;private set; }
+        public string Description { get; private set; }
         private bool MultiFiles { get; set; }
         private string Destination { get; set; }
         public int FileExistingAction { get; set; }
-        private DialogResult FileExistingConfirmation { get; set; }
-        private int FileExistingConfirmCount { get; set; }
-        public bool HasSettings {
-            get
-            {
-                return true;
-            }
-        }
-        public bool HasAbout
-        {
-            get
-            {
-                return true;
-            }
-        }
-        public string Status
-        {
-            get
-            {
-                return _status;
-            }
-        }
-        public System.Drawing.Image Image 
-        {
-            get
-            {
-                return Properties.Resources.CopyTo;
-            }
-        }
+        private DialogResult LastConfirmResult { get; set; }
+        private int LastConfirmCount { get; set; }
+        public bool HasSettings { get; private set; }
+        public bool HasAbout { get; private set; }
+        public string Status { get; private set; }
+        public System.Drawing.Image Image { get; private set; }
         public bool Enabled { get; set; }
         public string FilePath { get; set; }
         public System.Windows.Forms.IWin32Window MainWnd { get; set; }
 
         public MyOperator()
         {
+            this.Name = "CopyTo";
+            this.Title = "Copy To";
+            this.Description = "Copy selected files to specified directory";
+            this.HasAbout = true;
+            this.HasSettings = true;
+            this.Image = Properties.Resources.CopyTo;
             this.Destination = string.Empty;
             this.FileExistingAction = 1;//Ask
         }
@@ -75,9 +58,9 @@ namespace CopyTo
             if (dlgFolder.ShowDialog(this.MainWnd) != DialogResult.OK)
                 return false;
             this.Destination = dlgFolder.SelectedPath;
-            this._status = string.Empty;
-            this.FileExistingConfirmation = DialogResult.No;
-            this.FileExistingConfirmCount = 0;
+            this.Status = string.Empty;
+            this.LastConfirmResult = DialogResult.No;
+            this.LastConfirmCount = 0;
             return true;
         }
 
@@ -92,38 +75,55 @@ namespace CopyTo
                 {
                     if (this.FileExistingAction == 0)//Ignore
                     {
-                        this._status = "Existing => Ignored due to settings";
+                        this.Status = "Existing => Ignored due to settings";
                         return true;
                     }
                     else if (this.FileExistingAction == 1)//Ask
                     {
-                        if (this.FileExistingConfirmCount < 3)
+                        if (this.LastConfirmCount < 3)
                         {
-                            this.FileExistingConfirmation = MessageBox.Show(string.Format("{0} is already exist.\nDo you want to overwrite it?", fi.Name), "File Exist", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-                            this.FileExistingConfirmCount++;
+                            DialogResult res = MessageBox.Show(string.Format("{0} is already exist.\nDo you want to overwrite it?", fi.Name), "File Exist", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+                            if (this.LastConfirmCount <= 0)
+                            {
+                                this.LastConfirmCount = 1;
+                            }
+                            else
+                            {
+                                if(this.LastConfirmResult != res)
+                                {
+                                    this.LastConfirmCount = 0; //Reset count due to difference button was confirmed
+                                }
+                                else
+                                {
+                                    this.LastConfirmCount++;
+                                }
+                            }
+
+                            this.LastConfirmResult = res; //Store recent confirmation
                         }
 
-                        if (this.FileExistingConfirmation == DialogResult.No)
+                        if (this.LastConfirmResult == DialogResult.No)
                         {
-                            this._status = "Existing => Ignored due to User confirmed";
+                            this.Status = "Existing => Ignored due to User confirmed";
                             return true;
                         }
                         else
-                            this._status = string.Format("Copied to {0} (overwrite due to User confirmed)", newPath);
+                            this.Status = string.Format("Copied to {0} (overwrite due to User confirmed)", newPath);
                     }
                     else if (this.FileExistingAction == 2)//Overwrite
                     {
-                        this._status = string.Format("Copied to {0} (overwrite due to settings)", newPath);
+                        this.Status = string.Format("Copied to {0} (overwrite due to settings)", newPath);
                     }
                 }
                 else
-                    this._status = string.Format("Copied to {0}", newPath);
+                    this.Status = string.Format("Copied to {0}", newPath);
                 System.IO.File.Copy(fi.FullName, newPath, true);
             }
             catch (System.Exception ex)
             {
                 Debug.Print(ex.Message);
-                _status = ex.Message;
+                this.Status = ex.Message;
                 return false;
             }
             return true;

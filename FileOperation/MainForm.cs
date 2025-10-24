@@ -175,7 +175,7 @@ namespace FileOperation
 
                 if (deleteOperator.HasSettings)
                 {
-                    ToolStripMenuItem operSettingsItem = (ToolStripMenuItem)settingsOperatorsToolStripMenuItem.DropDownItems.Add(deleteOperator.Name);
+                    ToolStripMenuItem operSettingsItem = (ToolStripMenuItem)settingsOperatorsToolStripMenuItem.DropDownItems.Add(deleteOperator.Title);
                     operSettingsItem.Tag = deleteOperator;
                     operSettingsItem.Image = deleteOperator.Image;
                     operSettingsItem.Click += new EventHandler(operSettingsMenuItemToolStripMenuItem_Click);
@@ -183,7 +183,7 @@ namespace FileOperation
 
                 if (deleteOperator.HasAbout)
                 {
-                    ToolStripMenuItem operAboutItem = (ToolStripMenuItem)aboutOperatorsToolStripMenuItem.DropDownItems.Add(deleteOperator.Name);
+                    ToolStripMenuItem operAboutItem = (ToolStripMenuItem)aboutOperatorsToolStripMenuItem.DropDownItems.Add(deleteOperator.Title);
                     operAboutItem.Tag = deleteOperator;
                     operAboutItem.Image = deleteOperator.Image;
                     operAboutItem.Click += new EventHandler(operAboutMenuItemToolStripMenuItem_Click);
@@ -228,7 +228,7 @@ namespace FileOperation
 
                             if (oper.HasSettings)
                             {
-                                ToolStripMenuItem operSettingsItem = (ToolStripMenuItem)settingsOperatorsToolStripMenuItem.DropDownItems.Add(oper.Name);
+                                ToolStripMenuItem operSettingsItem = (ToolStripMenuItem)settingsOperatorsToolStripMenuItem.DropDownItems.Add(oper.Title);
                                 operSettingsItem.Tag = oper;
                                 operSettingsItem.Image = oper.Image;
                                 operSettingsItem.Click += new EventHandler(operSettingsMenuItemToolStripMenuItem_Click);
@@ -236,7 +236,7 @@ namespace FileOperation
 
                             if (oper.HasAbout)
                             {
-                                ToolStripMenuItem operAboutItem = (ToolStripMenuItem)aboutOperatorsToolStripMenuItem.DropDownItems.Add(oper.Name);
+                                ToolStripMenuItem operAboutItem = (ToolStripMenuItem)aboutOperatorsToolStripMenuItem.DropDownItems.Add(oper.Title);
                                 operAboutItem.Tag = oper;
                                 operAboutItem.Image = oper.Image;
                                 operAboutItem.Click += new EventHandler(operAboutMenuItemToolStripMenuItem_Click);
@@ -265,21 +265,21 @@ namespace FileOperation
                 nameFilter.LoadSettings(settingsKey);
                 Filters.Add(nameFilter);
 
-                ToolStripMenuItem filterItem = (ToolStripMenuItem)filterToolStripMenuItem.DropDownItems.Add(nameFilter.Name);
+                ToolStripMenuItem filterItem = (ToolStripMenuItem)filterToolStripMenuItem.DropDownItems.Add(nameFilter.Title);
                 filterItem.Checked = nameFilter.Enabled;
                 filterItem.Tag = nameFilter;
                 filterItem.Click += new EventHandler(filterMenuItemToolStripMenuItem_Click);
 
                 if (nameFilter.HasSettings)
                 {
-                    ToolStripMenuItem filterSettingsItem = (ToolStripMenuItem)settingsFiltersToolStripMenuItem.DropDownItems.Add(nameFilter.Name);
+                    ToolStripMenuItem filterSettingsItem = (ToolStripMenuItem)settingsFiltersToolStripMenuItem.DropDownItems.Add(nameFilter.Title);
                     filterSettingsItem.Tag = nameFilter;
                     filterSettingsItem.Click += new EventHandler(filterSettingsMenuItemToolStripMenuItem_Click);
                 }
 
                 if (nameFilter.HasAbout)
                 {
-                    ToolStripMenuItem filterAboutItem = (ToolStripMenuItem)aboutFiltersToolStripMenuItem.DropDownItems.Add(nameFilter.Name);
+                    ToolStripMenuItem filterAboutItem = (ToolStripMenuItem)aboutFiltersToolStripMenuItem.DropDownItems.Add(nameFilter.Title);
                     filterAboutItem.Tag = nameFilter;
                     filterAboutItem.Click += new EventHandler(filterAboutMenuItemToolStripMenuItem_Click);
                 }
@@ -320,7 +320,7 @@ namespace FileOperation
                             filter.LoadSettings(settingsKey);
                             Filters.Add(filter);
 
-                            ToolStripMenuItem filterItem = (ToolStripMenuItem)filterToolStripMenuItem.DropDownItems.Add(filter.Name);
+                            ToolStripMenuItem filterItem = (ToolStripMenuItem)filterToolStripMenuItem.DropDownItems.Add(filter.Title);
                             filterItem.Checked = filter.Enabled;
                             filterItem.Tag = filter;
                             filterItem.Click += new EventHandler(filterMenuItemToolStripMenuItem_Click);
@@ -328,14 +328,14 @@ namespace FileOperation
 
                             if (filter.HasSettings)
                             {
-                                ToolStripMenuItem filterSettingsItem = (ToolStripMenuItem)settingsFiltersToolStripMenuItem.DropDownItems.Add(filter.Name);
+                                ToolStripMenuItem filterSettingsItem = (ToolStripMenuItem)settingsFiltersToolStripMenuItem.DropDownItems.Add(filter.Title);
                                 filterSettingsItem.Tag = filter;
                                 filterSettingsItem.Click += new EventHandler(filterSettingsMenuItemToolStripMenuItem_Click);
                             }
 
                             if (filter.HasAbout)
                             {
-                                ToolStripMenuItem filterAboutItem = (ToolStripMenuItem)aboutFiltersToolStripMenuItem.DropDownItems.Add(filter.Name);
+                                ToolStripMenuItem filterAboutItem = (ToolStripMenuItem)aboutFiltersToolStripMenuItem.DropDownItems.Add(filter.Title);
                                 filterAboutItem.Tag = filter;
                                 filterAboutItem.Click += new EventHandler(filterAboutMenuItemToolStripMenuItem_Click);
                             }

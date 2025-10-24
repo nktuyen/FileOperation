@@ -5,10 +5,10 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("DateFilter")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("Date Filter")]
+[assembly: AssemblyDescription("Filter files by created date")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("NKTUYEN")]
 [assembly: AssemblyProduct("DateFilter")]
 [assembly: AssemblyCopyright("Copyright ©  2025")]
 [assembly: AssemblyTrademark("")]
