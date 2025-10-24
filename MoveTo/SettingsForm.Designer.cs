@@ -1,4 +1,4 @@
-﻿namespace CopyTo
+﻿namespace MoveTo
 {
     partial class SettingsForm
     {
@@ -64,10 +64,10 @@
             this.radAsk.Checked = true;
             this.radAsk.Location = new System.Drawing.Point(58, 43);
             this.radAsk.Name = "radAsk";
-            this.radAsk.Size = new System.Drawing.Size(98, 17);
+            this.radAsk.Size = new System.Drawing.Size(101, 17);
             this.radAsk.TabIndex = 0;
             this.radAsk.TabStop = true;
-            this.radAsk.Text = "Ask to overwite";
+            this.radAsk.Text = "Ask to overwrite";
             this.radAsk.UseVisualStyleBackColor = true;
             // 
             // radIgnoreExistFile

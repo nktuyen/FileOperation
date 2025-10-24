@@ -1175,7 +1175,7 @@ namespace FileOperation
 
             foreach (IOperator oper in Operators)
             {
-                ToolStripItem operItem = filesContextMenuStrip.Items.Add(oper.Name);
+                ToolStripItem operItem = filesContextMenuStrip.Items.Add(oper.Title);
                 if (operItem != null)
                 {
                     operItem.Tag = oper;
