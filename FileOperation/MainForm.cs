@@ -1107,13 +1107,13 @@ namespace FileOperation
            {
                if (hittestInfo.Location == ListViewHitTestLocations.Label)
                {
-                   if (hittestInfo.Item.SubItems.IndexOf(hittestInfo.SubItem) > 0)
+                   if (hittestInfo.Item.SubItems.IndexOf(hittestInfo.SubItem) == 1)
                    {
                        txtListViewItem.Parent = lvwFiles;
-                       txtListViewItem.ReadOnly = true;
+                       txtListViewItem.ReadOnly = false;
                        txtListViewItem.Font = lvwFiles.Font;
                        txtListViewItem.Location = hittestInfo.SubItem.Bounds.Location;
-                       txtListViewItem.Size = hittestInfo.SubItem.Bounds.Size;
+                       txtListViewItem.Size = new Size(hittestInfo.SubItem.Bounds.Size.Width, hittestInfo.SubItem.Bounds.Size.Height - 1);
                        txtListViewItem.Visible = true;
                        txtListViewItem.Text = hittestInfo.SubItem.Text;
                        txtListViewItem.Focus();
@@ -1126,6 +1126,33 @@ namespace FileOperation
         {
             if (e.KeyCode == Keys.Escape)
                 txtListViewItem.Visible = false;
+            else if (e.KeyCode == Keys.Return)
+            {
+                ListViewItem selItem = lvwFiles.SelectedItems[0];
+                if (selItem == null)
+                {
+                    txtListViewItem.Visible = false;
+                    return;
+                }
+                string oldFilePath = selItem.SubItems[1].Text;
+                string newFilePath = txtListViewItem.Text;
+                if (string.Compare(oldFilePath, newFilePath, true) != 0)//Changed
+                {
+                    try
+                    {
+                        System.IO.File.Move(oldFilePath, newFilePath);
+                        selItem.SubItems[1].Text = newFilePath;
+                        selItem.SubItems[STATUS_COLUMN_INDEX].Text = string.Empty;
+                        txtListViewItem.Visible = false;
+                    }
+                    catch (System.Exception ex)
+                    {
+                        MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        selItem.SubItems[STATUS_COLUMN_INDEX].Text = ex.Message;
+                        txtListViewItem.Focus();
+                    }
+                }
+            }
         }
 
         private void lvwFiles_SelectedIndexChanged(object sender, EventArgs e)
