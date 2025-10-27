@@ -23,7 +23,7 @@ namespace ShowInExplorer
         public bool Enabled { get; set; }
         public bool HasSettings { get;private set; }
         public bool HasAbout {  get;private set; } 
-        public string FilePath { get; set; }
+        public string CurrentFilePath { get; set; }
         public IWin32Window MainWnd { get; set; }
         private bool MultipleFiles { get; set; }
         private bool ShowSelectedState { get; set; }
@@ -44,9 +44,9 @@ namespace ShowInExplorer
             return true;
         }
 
-        public bool InitializeContextMenu(bool isMultiple = false)
+        public bool InitializeContextMenu(long fileCount)
         {
-            if(isMultiple)
+            if(fileCount > 1)
                 this.Enabled = false;
             else
                 this.Enabled = true;
@@ -58,13 +58,13 @@ namespace ShowInExplorer
             Process proc = new Process();
             proc.StartInfo = new ProcessStartInfo("explorer.exe");
             if (this.ShowSelectedState)
-                proc.StartInfo.Arguments = "/select,\"" + this.FilePath + "\"";
+                proc.StartInfo.Arguments = "/select,\"" + this.CurrentFilePath + "\"";
             else
             {
                 FileInfo fi = null;
                 try
                 {
-                    fi = new FileInfo(this.FilePath);
+                    fi = new FileInfo(this.CurrentFilePath);
                     proc.StartInfo.Arguments = fi.DirectoryName;
                 }
                 catch (System.Exception ex)
@@ -88,9 +88,9 @@ namespace ShowInExplorer
             return true;
         }
 
-        public bool PreOperate(bool isMultiple = false)
+        public bool PreOperate(long fileCount)
         {
-            this.MultipleFiles = isMultiple;
+            this.MultipleFiles = fileCount > 1;
             return true;
         }
 

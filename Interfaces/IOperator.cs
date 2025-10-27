@@ -16,11 +16,11 @@ namespace Interfaces
         bool Enabled { get; set; }
         bool HasSettings { get; }
         bool HasAbout { get; }
-        string FilePath { get; set; }
+        string CurrentFilePath { get; set; }
         System.Windows.Forms.IWin32Window MainWnd { get; set; }
         bool Initialize();
-        bool InitializeContextMenu(bool isMultiple = false);
-        bool PreOperate(bool isMultiple = false);
+        bool InitializeContextMenu(long fileCount);
+        bool PreOperate(long fileCount);
         bool Operate();
         System.Windows.Forms.DialogResult ShowAbout(System.Windows.Forms.IWin32Window owner = null);
         System.Windows.Forms.DialogResult ShowSettings(System.Windows.Forms.IWin32Window owner = null);

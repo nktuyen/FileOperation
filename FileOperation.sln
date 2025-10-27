@@ -1,8 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.14.36616.10 d17.14
-MinimumVisualStudioVersion = 10.0.40219.1
+# Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileOperation", "FileOperation\FileOperation.csproj", "{96736B20-DE63-4685-A33D-805D5D8630C2}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Interfaces", "Interfaces\Interfaces.csproj", "{54FC86EC-D50C-429B-9EA6-7521B9115EDC}"
@@ -22,6 +20,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShowInExplorer", "ShowInExplorer\ShowInExplorer.csproj", "{7CFCBF18-84D2-441D-B9CC-4B90D955BB28}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MoveTo", "MoveTo\MoveTo.csproj", "{0AEDF23F-5683-403E-8AC0-24282A125C57}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BulkRename", "BulkRename\BulkRename.csproj", "{C511EC54-B039-4CD7-937C-30AA9A38E606}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -95,6 +95,12 @@ Global
 		{0AEDF23F-5683-403E-8AC0-24282A125C57}.Release|Any CPU.Build.0 = Release|Any CPU
 		{0AEDF23F-5683-403E-8AC0-24282A125C57}.Release|x64.ActiveCfg = Release|Any CPU
 		{0AEDF23F-5683-403E-8AC0-24282A125C57}.Release|x64.Build.0 = Release|Any CPU
+		{C511EC54-B039-4CD7-937C-30AA9A38E606}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C511EC54-B039-4CD7-937C-30AA9A38E606}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C511EC54-B039-4CD7-937C-30AA9A38E606}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{C511EC54-B039-4CD7-937C-30AA9A38E606}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C511EC54-B039-4CD7-937C-30AA9A38E606}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C511EC54-B039-4CD7-937C-30AA9A38E606}.Release|x64.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -106,5 +112,6 @@ Global
 		{00550B36-7BFB-478E-8A38-0A0A155F0518} = {447878C8-2CC5-4665-8F7D-9DEAE04DE296}
 		{7CFCBF18-84D2-441D-B9CC-4B90D955BB28} = {447878C8-2CC5-4665-8F7D-9DEAE04DE296}
 		{0AEDF23F-5683-403E-8AC0-24282A125C57} = {447878C8-2CC5-4665-8F7D-9DEAE04DE296}
+		{C511EC54-B039-4CD7-937C-30AA9A38E606} = {447878C8-2CC5-4665-8F7D-9DEAE04DE296}
 	EndGlobalSection
 EndGlobal

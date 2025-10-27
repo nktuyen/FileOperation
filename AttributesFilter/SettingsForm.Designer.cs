@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SettingsForm));
             this.lvwFIleAttributes = new System.Windows.Forms.ListView();
             this.colAttribute = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.btnOK = new System.Windows.Forms.Button();
@@ -46,6 +47,7 @@
             this.lvwFIleAttributes.FullRowSelect = true;
             this.lvwFIleAttributes.GridLines = true;
             this.lvwFIleAttributes.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
+            this.lvwFIleAttributes.HideSelection = false;
             this.lvwFIleAttributes.Location = new System.Drawing.Point(12, 28);
             this.lvwFIleAttributes.MultiSelect = false;
             this.lvwFIleAttributes.Name = "lvwFIleAttributes";
@@ -131,6 +133,7 @@
             this.Controls.Add(this.btnOK);
             this.Controls.Add(this.lvwFIleAttributes);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.KeyPreview = true;
             this.MaximizeBox = false;
             this.MinimizeBox = false;

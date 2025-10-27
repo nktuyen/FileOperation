@@ -1118,25 +1118,25 @@ namespace FileOperation
                 oper = (IOperator)operItem.Tag;
             if(oper != null)
             {
-                if(!oper.PreOperate(lvwFiles.SelectedItems.Count > 1))
+                if(!oper.PreOperate(lvwFiles.SelectedItems.Count))
                     return;
                 List<ListViewItem> deletedItems =new List<ListViewItem>();
                 foreach (ListViewItem item in lvwFiles.SelectedItems)
                 {
                     item.SubItems[STATUS_COLUMN_INDEX].Text=string.Empty;
                     string filePath = item.SubItems[1].Text;
-                    oper.FilePath = filePath;
+                    oper.CurrentFilePath = filePath;
                     if (oper.Operate())
                     {
-                        if (oper.FilePath.Length <= 0) //Deleted
+                        if (oper.CurrentFilePath.Length <= 0) //Deleted
                         {
                             deletedItems.Add(item);
                         }
                         else
                         {
-                            if (oper.FilePath != filePath) //Name changed
+                            if (oper.CurrentFilePath != filePath) //Name changed
                             {
-                                item.SubItems[1].Text = oper.FilePath;
+                                item.SubItems[1].Text = oper.CurrentFilePath;
                             }
                         }
                     }
@@ -1181,7 +1181,7 @@ namespace FileOperation
                     operItem.Tag = oper;
                     operItem.Click += new EventHandler(filesToolStripMenuItem_Click);
                     operItem.Image = oper.Image;
-                    if (!oper.InitializeContextMenu(lvwFiles.SelectedItems.Count > 1))
+                    if (!oper.InitializeContextMenu(lvwFiles.SelectedItems.Count))
                         filesContextMenuStrip.Items.Remove(operItem);
                     else
                         operItem.Enabled = oper.Enabled;
@@ -1233,14 +1233,14 @@ namespace FileOperation
                     txtListViewItem.Visible = false;
                     return;
                 }
-                string oldFilePath = selItem.SubItems[1].Text;
-                string newFilePath = txtListViewItem.Text;
-                if (string.Compare(oldFilePath, newFilePath, true) != 0)//Changed
+                string oldCurrentFilePath = selItem.SubItems[1].Text;
+                string newCurrentFilePath = txtListViewItem.Text;
+                if (string.Compare(oldCurrentFilePath, newCurrentFilePath, true) != 0)//Changed
                 {
                     try
                     {
-                        System.IO.File.Move(oldFilePath, newFilePath);
-                        selItem.SubItems[1].Text = newFilePath;
+                        System.IO.File.Move(oldCurrentFilePath, newCurrentFilePath);
+                        selItem.SubItems[1].Text = newCurrentFilePath;
                         selItem.SubItems[STATUS_COLUMN_INDEX].Text = string.Empty;
                         txtListViewItem.Visible = false;
                     }

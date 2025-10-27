@@ -25,7 +25,7 @@ namespace MoveTo
         public string Status { get; private set; }
         public System.Drawing.Image Image { get; private set; }
         public bool Enabled { get; set; }
-        public string FilePath { get; set; }
+        public string CurrentFilePath { get; set; }
         public System.Windows.Forms.IWin32Window MainWnd { get; set; }
 
         public MyOperator()
@@ -44,14 +44,14 @@ namespace MoveTo
         {
             return true;
         }
-        public bool InitializeContextMenu(bool isMultiple)
+        public bool InitializeContextMenu(long fileCount)
         {
             this.Enabled = true;
             return true;
         }
-        public bool PreOperate(bool isMultiple)
+        public bool PreOperate(long fileCount)
         {
-            MultiFiles = isMultiple;
+            MultiFiles = fileCount > 1;
             FolderBrowserDialog dlgFolder = new FolderBrowserDialog();
             dlgFolder.ShowNewFolderButton = true;
             dlgFolder.SelectedPath = this.Destination;
@@ -69,7 +69,7 @@ namespace MoveTo
             FileInfo fi = null;
             try
             {
-                fi = new FileInfo(this.FilePath);
+                fi = new FileInfo(this.CurrentFilePath);
                 string newPath = System.IO.Path.Combine(this.Destination, fi.Name);
                 if (System.IO.File.Exists(newPath))
                 {

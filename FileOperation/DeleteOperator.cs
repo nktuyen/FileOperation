@@ -21,7 +21,7 @@ namespace FileOperation
         public bool HasSettings { get; private set; }
         public bool HasAbout { get;private set; }
         public bool Enabled { get; set; }
-        public string FilePath { get; set; }
+        public string CurrentFilePath { get; set; }
         public System.Windows.Forms.IWin32Window MainWnd { get; set; }
 
         public DeleteOperator()
@@ -40,16 +40,16 @@ namespace FileOperation
             return true;
         }
 
-        public bool InitializeContextMenu(bool isMultiple)
+        public bool InitializeContextMenu(long fileCount)
         {
             return true;
         }
 
-        public bool PreOperate(bool isMultiple)
+        public bool PreOperate(long fileCount)
         {
-            MultiFiles = isMultiple;
+            MultiFiles = fileCount> 1;
             DialogResult confirm = 0;
-            if (isMultiple)
+            if (fileCount > 1)
             {
                 confirm = MessageBox.Show("Are you sure to delete selected files?", "Multiple Deletion", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             }
@@ -70,10 +70,10 @@ namespace FileOperation
             try
             {
                 if (this.MoveToTrash)
-                    Microsoft.VisualBasic.FileIO.FileSystem.DeleteFile(FilePath, Microsoft.VisualBasic.FileIO.UIOption.OnlyErrorDialogs, Microsoft.VisualBasic.FileIO.RecycleOption.SendToRecycleBin);
+                    Microsoft.VisualBasic.FileIO.FileSystem.DeleteFile(CurrentFilePath, Microsoft.VisualBasic.FileIO.UIOption.OnlyErrorDialogs, Microsoft.VisualBasic.FileIO.RecycleOption.SendToRecycleBin);
                 else
-                    System.IO.File.Delete(this.FilePath);
-                this.FilePath = string.Empty;
+                    System.IO.File.Delete(this.CurrentFilePath);
+                this.CurrentFilePath = string.Empty;
             }
             catch (System.Exception ex)
             {
