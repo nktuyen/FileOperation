@@ -25,6 +25,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MoveTo", "Operators\MoveTo\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShowInExplorer", "Operators\ShowInExplorer\ShowInExplorer.csproj", "{7CFCBF18-84D2-441D-B9CC-4B90D955BB28}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TagFilter", "Filters\TagFilter\TagFilter.csproj", "{4D507A16-2E62-40B6-8548-0ECFE7E00AC7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -105,6 +107,14 @@ Global
 		{7CFCBF18-84D2-441D-B9CC-4B90D955BB28}.Release|Any CPU.Build.0 = Release|Any CPU
 		{7CFCBF18-84D2-441D-B9CC-4B90D955BB28}.Release|x64.ActiveCfg = Release|Any CPU
 		{7CFCBF18-84D2-441D-B9CC-4B90D955BB28}.Release|x64.Build.0 = Release|Any CPU
+		{4D507A16-2E62-40B6-8548-0ECFE7E00AC7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4D507A16-2E62-40B6-8548-0ECFE7E00AC7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4D507A16-2E62-40B6-8548-0ECFE7E00AC7}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{4D507A16-2E62-40B6-8548-0ECFE7E00AC7}.Debug|x64.Build.0 = Debug|Any CPU
+		{4D507A16-2E62-40B6-8548-0ECFE7E00AC7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4D507A16-2E62-40B6-8548-0ECFE7E00AC7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4D507A16-2E62-40B6-8548-0ECFE7E00AC7}.Release|x64.ActiveCfg = Release|Any CPU
+		{4D507A16-2E62-40B6-8548-0ECFE7E00AC7}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -117,6 +127,7 @@ Global
 		{00550B36-7BFB-478E-8A38-0A0A155F0518} = {447878C8-2CC5-4665-8F7D-9DEAE04DE296}
 		{0AEDF23F-5683-403E-8AC0-24282A125C57} = {447878C8-2CC5-4665-8F7D-9DEAE04DE296}
 		{7CFCBF18-84D2-441D-B9CC-4B90D955BB28} = {447878C8-2CC5-4665-8F7D-9DEAE04DE296}
+		{4D507A16-2E62-40B6-8548-0ECFE7E00AC7} = {15D5224D-F095-4BCD-9BCB-33FF1F3BADB9}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D1CBC573-931B-43CB-AD7B-F1B396C53E39}

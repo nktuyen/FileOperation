@@ -27,6 +27,7 @@ namespace MoveTo
         public bool Enabled { get; set; }
         public string CurrentFilePath { get; set; }
         public System.Windows.Forms.IWin32Window MainWnd { get; set; }
+        public int BrowserDialogStyle { get; set; }
 
         public MyOperator()
         {
@@ -38,6 +39,7 @@ namespace MoveTo
             this.Image = Properties.Resources.MoveTo;
             this.Destination = string.Empty;
             this.FileExistingAction = 1;//Ask
+            this.BrowserDialogStyle = 0;    //File dialog
         }
 
         public bool Initialize()
@@ -52,12 +54,26 @@ namespace MoveTo
         public bool PreOperate(long fileCount)
         {
             MultiFiles = fileCount > 1;
-            FolderBrowserDialog dlgFolder = new FolderBrowserDialog();
-            dlgFolder.ShowNewFolderButton = true;
-            dlgFolder.SelectedPath = this.Destination;
-            if (dlgFolder.ShowDialog(this.MainWnd) != DialogResult.OK)
-                return false;
-            this.Destination = dlgFolder.SelectedPath;
+
+            if (this.BrowserDialogStyle == 0)
+            {
+                OpenFileDialog dlgFile = new OpenFileDialog();
+                dlgFile.CheckFileExists = true;
+                dlgFile.CheckPathExists = true;
+                dlgFile.Title = "Choose Destination Directory";
+                if (dlgFile.ShowDialog() != DialogResult.OK)
+                    return false;
+                this.Destination = Path.GetDirectoryName(dlgFile.FileName);
+            }
+            else
+            {
+                FolderBrowserDialog dlgFolder = new FolderBrowserDialog();
+                dlgFolder.ShowNewFolderButton = true;
+                dlgFolder.SelectedPath = this.Destination;
+                if (dlgFolder.ShowDialog(this.MainWnd) != DialogResult.OK)
+                    return false;
+                this.Destination = dlgFolder.SelectedPath;
+            }
             this.Status = string.Empty;
             this.LastConfirmResult = DialogResult.No;
             this.LastConfirmCount = 0;

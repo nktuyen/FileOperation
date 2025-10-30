@@ -1,22 +1,23 @@
-﻿using System;
+﻿using Interfaces;
+using Microsoft.Win32;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using Interfaces;
-using System.Diagnostics;
-using System.Timers;
-using System.Xml;
-using System.Text.RegularExpressions;
 using System.Runtime.InteropServices;
-using Microsoft.Win32;
 using System.Security.AccessControl;
+using System.Security.Cryptography;
+using System.Text;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
+using System.Timers;
+using System.Windows.Forms;
+using System.Xml;
 
 namespace FileOperation
 {
@@ -86,8 +87,11 @@ namespace FileOperation
         private List<IOperator> Operators { get; set; }
         private System.Timers.Timer Timer { get; set; }
         private string WorkingFile { get; set; }
-        private string RegistryKey { get; set; }
+        private string RegistryKeyPath { get; set; }
         private bool LoadRecentFile { get; set; }
+        private List<string> RecentFiles { get;set; }
+        private ToolStripMenuItem LoadRecentListToolStripMenuItem { get; set; }
+        private List<System.Drawing.Image> RecentMenuImages { get; set; }
         public MainForm()
         {
             InitializeComponent();
@@ -95,6 +99,19 @@ namespace FileOperation
             Filters = new List<IFilter>();
             Operators=new List<IOperator>();
             WorkingFile = string.Empty;
+            RecentFiles = new List<string>();
+
+            RecentMenuImages = new List<Image>();
+            RecentMenuImages.Add(Properties.Resources._1);
+            RecentMenuImages.Add(Properties.Resources._2);
+            RecentMenuImages.Add(Properties.Resources._3);
+            RecentMenuImages.Add(Properties.Resources._4);
+            RecentMenuImages.Add(Properties.Resources._5);
+            RecentMenuImages.Add(Properties.Resources._6);
+            RecentMenuImages.Add(Properties.Resources._7);
+            RecentMenuImages.Add(Properties.Resources._8);
+            RecentMenuImages.Add(Properties.Resources._9);
+            RecentMenuImages.Add(Properties.Resources._10);
         }
 
         private System.Drawing.Icon GetFileIcon(string name)
@@ -252,6 +269,38 @@ namespace FileOperation
             return count;
         }
 
+        private string[] LoadRecentListFiles(RegistryKey regKey, int max = 10)
+        {
+            List<string> recentFiles = new List<string>(); 
+            if (regKey == null)
+                return recentFiles.ToArray();
+
+            object objValueData = null;
+            string filePath = string.Empty;
+            try
+            {
+                foreach (string valueName in regKey.GetValueNames())
+                {
+                    objValueData = regKey.GetValue(valueName);
+                    if (objValueData != null)
+                    { 
+                        filePath = objValueData as string;
+                        if (System.IO.File.Exists(filePath))
+                        {
+                            if (recentFiles.Count < max)
+                                recentFiles.Add(objValueData as string);
+                        }
+                    }
+                }
+            }
+            catch (System.Exception ex)
+            {
+                Debug.Print(ex.Message);
+            }
+
+            return recentFiles.ToArray();
+        }
+
         public bool LoadSettings(Microsoft.Win32.RegistryKey regKey = null)
         {
             if (regKey == null)
@@ -407,6 +456,51 @@ namespace FileOperation
             return count;
         }
 
+        private void RecentMenuItemClicked(object sender, EventArgs e)
+        {
+            ToolStripItem recentItem = sender as ToolStripItem;
+            if (recentItem != null)
+            {
+                string filePath = recentItem.Text;
+                if (!System.IO.File.Exists(filePath))
+                {
+                    MessageBox.Show("The recent file is not exist", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                List<string> files = new List<string>();
+                using (StreamReader fileStream = new StreamReader(filePath, Encoding.UTF8))
+                {
+                    string line = string.Empty;
+                    while ((line = fileStream.ReadLine()) != null)
+                    {
+                        line = line.Trim();
+                        if (line.Length > 0)
+                        {
+                            try
+                            {
+                                if (Regex.IsMatch(line, @"^(?:[a-zA-Z]\:|\\\\[\w\.]+\\[\w.$]+)\\(?:[\w]+\\)*"))
+                                {
+                                    files.Add(line);
+                                }
+                            }
+                            catch (System.Exception ex)
+                            {
+                                Debug.Print(ex.Message);
+                                continue;
+                            }
+                        }
+                    }
+                }
+                this.WorkingFile = dlgOpenList.FileName;
+                lvwFiles.Items.Clear();
+                MainImgList.Images.Clear();
+                if (bgwAddFiles.IsBusy)
+                    bgwAddFiles.CancelAsync();
+                bgwAddFiles.RunWorkerAsync(files.ToArray());
+            }
+        }
+
         private void MainForm_Load(object sender, EventArgs e)
         {
             Assembly exeAssembly = null;
@@ -416,24 +510,29 @@ namespace FileOperation
             RegistryKey operatorsKey = null;
             RegistryKey othersKey = null;
             RegistryKey settingsKey = null;
+            RegistryKey recentListFilesKey = null;
             try
             {
                 exeAssembly = Assembly.GetExecutingAssembly();
                 if (exeAssembly != null)
                     verInf = FileVersionInfo.GetVersionInfo(exeAssembly.Location);
                 if (verInf != null)
-                    this.RegistryKey = string.Format("SOFTWARE\\{0}\\{1}\\",verInf.CompanyName, verInf.ProductName);
+                    this.RegistryKeyPath = string.Format("SOFTWARE\\{0}\\{1}\\",verInf.CompanyName, verInf.ProductName);
                 else
-                    this.RegistryKey = "SOFTWARE\\NKTUYEN\\FileOperator\\";
+                    this.RegistryKeyPath = "SOFTWARE\\NKTUYEN\\FileOperator\\";
 
-                mainKey = Registry.CurrentUser.OpenSubKey(this.RegistryKey);
+                mainKey = Registry.CurrentUser.OpenSubKey(this.RegistryKeyPath);
                 if (mainKey == null)
-                    mainKey = Registry.CurrentUser.CreateSubKey(this.RegistryKey);
+                    mainKey = Registry.CurrentUser.CreateSubKey(this.RegistryKeyPath);
                 if (mainKey != null)
                 {
+                    recentListFilesKey = mainKey.OpenSubKey("Recents", true);
+                    if (recentListFilesKey == null)
+                        recentListFilesKey = mainKey.CreateSubKey("Recents", RegistryKeyPermissionCheck.ReadWriteSubTree);
+
                     settingsKey = mainKey.OpenSubKey("Settings", true);
                     if (settingsKey == null)
-                        settingsKey = mainKey.CreateSubKey("Settings",  RegistryKeyPermissionCheck.ReadWriteSubTree);
+                        settingsKey = mainKey.CreateSubKey("Settings", RegistryKeyPermissionCheck.ReadWriteSubTree);
                     if (settingsKey != null)
                     {
                         filtersKey = settingsKey.OpenSubKey("Filters");
@@ -458,6 +557,29 @@ namespace FileOperation
             LoadSettings(othersKey);
             LoadFilters(filtersKey);
             LoadOperators(operatorsKey);
+
+            string[] recentFiles = LoadRecentListFiles(recentListFilesKey, this.RecentMenuImages.Count);
+            if (recentFiles.Length > 0)
+            {
+                if (this.LoadRecentListToolStripMenuItem == null)
+                {
+                    this.LoadRecentListToolStripMenuItem = new ToolStripMenuItem();
+                    this.LoadRecentListToolStripMenuItem.Text = "Load Recent List";
+                }
+                fileToolStripMenuItem.DropDownItems.Insert(5, this.LoadRecentListToolStripMenuItem);
+
+                int imageIndex = 0;
+                ToolStripItem recentItem = null;
+                foreach (string file in recentFiles)
+                {
+                    recentItem = this.LoadRecentListToolStripMenuItem.DropDownItems.Add(file);
+                    recentItem.Image = this.RecentMenuImages[imageIndex];
+                    recentItem.Click += new EventHandler(RecentMenuItemClicked);
+                    imageIndex++;
+                    if (!this.RecentFiles.Contains(file))
+                        this.RecentFiles.Add(file);
+                }
+            }
 
             loadRecentFileAtStartupToolStripMenuItem.Checked = this.LoadRecentFile;
             if(this.LoadRecentFile && this.WorkingFile != string.Empty)
@@ -1533,8 +1655,11 @@ namespace FileOperation
         {
             dlgOpenList.Title = "Open list file";
             dlgOpenList.Filter = "All Files(*.*)|*.*|Text Files(*.txt)|*.txt||";
+            dlgOpenList.Filter = "All Files(*.*)|*.*|Text Files(*.txt)|*.txt||";
             if (dlgOpenList.ShowDialog() != DialogResult.OK)
                 return;
+            this.RecentFiles.Add(dlgOpenList.FileName);
+
             List<string> files = new List<string>();
             using (StreamReader fileStream = new StreamReader(dlgOpenList.FileName, Encoding.UTF8))
             {
@@ -1573,8 +1698,8 @@ namespace FileOperation
             dlgSaveList.Filter = "All Files(*.*)|*.*|Text Files(*.txt)|*.txt||";
             if (dlgSaveList.ShowDialog() != DialogResult.OK)
                 return;
-            this.WorkingFile = dlgFileOpen.FileName;
-            using (StreamWriter writer = new StreamWriter(dlgSaveList.FileName, false, Encoding.UTF8))
+            this.WorkingFile = dlgSaveList.FileName;
+            using (StreamWriter writer = new StreamWriter(this.WorkingFile, false, Encoding.UTF8))
             {
                 foreach (ListViewItem item in lvwFiles.Items)
                 {
@@ -1582,6 +1707,20 @@ namespace FileOperation
                     writer.WriteLine(filePath);
                 }
                 writer.Flush();
+            }
+
+            if((!this.RecentFiles.Contains(this.WorkingFile)) && (this.RecentFiles.Count<this.RecentMenuImages.Count))
+            {
+                int imageIndex = this.RecentFiles.Count;
+                this.RecentFiles.Add(this.WorkingFile);
+                if (this.LoadRecentListToolStripMenuItem == null)
+                {
+                    this.LoadRecentListToolStripMenuItem = new ToolStripMenuItem();
+                    this.LoadRecentListToolStripMenuItem.Text = "Load Recent List";
+                }
+                ToolStripItem recentItem = this.LoadRecentListToolStripMenuItem.DropDownItems.Add(this.WorkingFile);
+                recentItem.Image = this.RecentMenuImages[imageIndex];
+                recentItem.Click += new EventHandler(RecentMenuItemClicked);
             }
         }
 
@@ -1605,21 +1744,26 @@ namespace FileOperation
             RegistryKey operatorsKey = null;
             RegistryKey othersKey = null;
             RegistryKey settingsKey = null;
+            RegistryKey recetnFilesKey = null;
             try
             {
                 exeAssembly = Assembly.GetExecutingAssembly();
                 if (exeAssembly != null)
                     verInf = FileVersionInfo.GetVersionInfo(exeAssembly.Location);
                 if (verInf != null)
-                    this.RegistryKey = string.Format("SOFTWARE\\{0}\\{1}\\", verInf.CompanyName, verInf.ProductName);
+                    this.RegistryKeyPath = string.Format("SOFTWARE\\{0}\\{1}\\", verInf.CompanyName, verInf.ProductName);
                 else
-                    this.RegistryKey = "SOFTWARE\\NKTUYEN\\FileOperator\\";
+                    this.RegistryKeyPath = "SOFTWARE\\NKTUYEN\\FileOperator\\";
 
-                mainKey = Registry.CurrentUser.OpenSubKey(this.RegistryKey);
+                mainKey = Registry.CurrentUser.OpenSubKey(this.RegistryKeyPath);
                 if (mainKey == null)
-                    mainKey = Registry.CurrentUser.CreateSubKey(this.RegistryKey, RegistryKeyPermissionCheck.ReadWriteSubTree);
+                    mainKey = Registry.CurrentUser.CreateSubKey(this.RegistryKeyPath, RegistryKeyPermissionCheck.ReadWriteSubTree);
                 if (mainKey != null)
                 {
+                    recetnFilesKey = mainKey.OpenSubKey("Recents", true);
+                    if (recetnFilesKey == null)
+                        recetnFilesKey = mainKey.CreateSubKey("Recents", RegistryKeyPermissionCheck.ReadWriteSubTree);
+
                     settingsKey = mainKey.OpenSubKey("Settings");
                     if (settingsKey == null)
                         settingsKey = mainKey.CreateSubKey("Settings", RegistryKeyPermissionCheck.ReadWriteSubTree);
@@ -1664,6 +1808,16 @@ namespace FileOperation
             if(othersKey != null)
             {
                 SaveSettings(othersKey);
+            }
+
+            if(recetnFilesKey != null)
+            {
+                int count = 1;
+                foreach(string file in this.RecentFiles)
+                {
+                    recetnFilesKey.SetValue(count.ToString(), file, RegistryValueKind.String);
+                    count++;
+                }
             }
         }
 

@@ -71,7 +71,6 @@ namespace DateFilter
                 Debug.Print(ex.Message);
                 return false;
             }
-            return false;
         }
 
         public System.Windows.Forms.DialogResult ShowAbout(System.Windows.Forms.IWin32Window owner)

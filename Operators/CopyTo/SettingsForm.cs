@@ -13,6 +13,8 @@ namespace CopyTo
     public partial class SettingsForm : Form
     {
         public int FileExistingAction { get; set; }
+        public int BrowserDialogStyle { get; set; }
+
         public SettingsForm()
         {
             InitializeComponent();
@@ -26,6 +28,11 @@ namespace CopyTo
                 this.FileExistingAction = 1;
             else if (radOverwrite.Checked)
                 this.FileExistingAction = 2;
+
+            if (radioButtonFileDialogStyle.Checked)
+                this.BrowserDialogStyle = 0;
+            else
+                this.BrowserDialogStyle = 1;
         }
 
         private void SettingsForm_Load(object sender, EventArgs e)
@@ -42,6 +49,11 @@ namespace CopyTo
             {
                 radOverwrite.Checked = true;
             }
+
+            if (this.BrowserDialogStyle == 0)
+                radioButtonFileDialogStyle.Checked = true;
+            else
+                radioButtonFolderDialogStyle.Checked = true;
         }
 
         private void SettingsForm_KeyDown(object sender, KeyEventArgs e)
