@@ -63,7 +63,7 @@
             this.btnOK.Location = new System.Drawing.Point(468, 295);
             this.btnOK.Name = "btnOK";
             this.btnOK.Size = new System.Drawing.Size(75, 23);
-            this.btnOK.TabIndex = 2;
+            this.btnOK.TabIndex = 7;
             this.btnOK.Text = "OK";
             this.btnOK.UseVisualStyleBackColor = true;
             this.btnOK.Click += new System.EventHandler(this.btnOK_Click);
@@ -82,7 +82,7 @@
             this.lvwMediaTypes.ShowGroups = false;
             this.lvwMediaTypes.ShowItemToolTips = true;
             this.lvwMediaTypes.Size = new System.Drawing.Size(165, 88);
-            this.lvwMediaTypes.TabIndex = 3;
+            this.lvwMediaTypes.TabIndex = 0;
             this.lvwMediaTypes.UseCompatibleStateImageBehavior = false;
             this.lvwMediaTypes.View = System.Windows.Forms.View.Details;
             // 
@@ -196,7 +196,7 @@
             0});
             this.upDownSecondMax.Name = "upDownSecondMax";
             this.upDownSecondMax.Size = new System.Drawing.Size(40, 20);
-            this.upDownSecondMax.TabIndex = 1;
+            this.upDownSecondMax.TabIndex = 6;
             // 
             // upDownMinuteMax
             // 
@@ -209,7 +209,7 @@
             0});
             this.upDownMinuteMax.Name = "upDownMinuteMax";
             this.upDownMinuteMax.Size = new System.Drawing.Size(40, 20);
-            this.upDownMinuteMax.TabIndex = 1;
+            this.upDownMinuteMax.TabIndex = 5;
             // 
             // upDownSecondMin
             // 
@@ -222,7 +222,7 @@
             0});
             this.upDownSecondMin.Name = "upDownSecondMin";
             this.upDownSecondMin.Size = new System.Drawing.Size(40, 20);
-            this.upDownSecondMin.TabIndex = 1;
+            this.upDownSecondMin.TabIndex = 3;
             // 
             // upDownHourMax
             // 
@@ -235,7 +235,7 @@
             0});
             this.upDownHourMax.Name = "upDownHourMax";
             this.upDownHourMax.Size = new System.Drawing.Size(40, 20);
-            this.upDownHourMax.TabIndex = 1;
+            this.upDownHourMax.TabIndex = 4;
             this.upDownHourMax.Value = new decimal(new int[] {
             1,
             0,
@@ -253,7 +253,7 @@
             0});
             this.upDownMinuteMin.Name = "upDownMinuteMin";
             this.upDownMinuteMin.Size = new System.Drawing.Size(40, 20);
-            this.upDownMinuteMin.TabIndex = 1;
+            this.upDownMinuteMin.TabIndex = 2;
             // 
             // label6
             // 

@@ -28,15 +28,14 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SettingsForm));
             this.cbUnitFrom = new System.Windows.Forms.ComboBox();
             this.cbUnitTo = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
             this.txtSizeFrom = new System.Windows.Forms.TextBox();
-            this.contextMenuStripFrom = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.contextMenuStripFrom = new System.Windows.Forms.ContextMenuStrip();
             this.txtSizeTo = new System.Windows.Forms.TextBox();
-            this.contextMenuStripTo = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.contextMenuStripTo = new System.Windows.Forms.ContextMenuStrip();
             this.chkSizeTo = new System.Windows.Forms.CheckBox();
             this.btnOK = new System.Windows.Forms.Button();
             this.SuspendLayout();
@@ -55,7 +54,7 @@
             this.cbUnitFrom.Location = new System.Drawing.Point(148, 30);
             this.cbUnitFrom.Name = "cbUnitFrom";
             this.cbUnitFrom.Size = new System.Drawing.Size(60, 21);
-            this.cbUnitFrom.TabIndex = 0;
+            this.cbUnitFrom.TabIndex = 1;
             this.cbUnitFrom.SelectedIndexChanged += new System.EventHandler(this.cbUnitFrom_SelectedIndexChanged);
             // 
             // cbUnitTo
@@ -73,7 +72,7 @@
             this.cbUnitTo.Location = new System.Drawing.Point(369, 30);
             this.cbUnitTo.Name = "cbUnitTo";
             this.cbUnitTo.Size = new System.Drawing.Size(60, 21);
-            this.cbUnitTo.TabIndex = 0;
+            this.cbUnitTo.TabIndex = 4;
             this.cbUnitTo.SelectedIndexChanged += new System.EventHandler(this.cbUnitTo_SelectedIndexChanged);
             // 
             // label1
@@ -92,7 +91,7 @@
             this.txtSizeFrom.MaxLength = 20;
             this.txtSizeFrom.Name = "txtSizeFrom";
             this.txtSizeFrom.Size = new System.Drawing.Size(100, 20);
-            this.txtSizeFrom.TabIndex = 2;
+            this.txtSizeFrom.TabIndex = 0;
             this.txtSizeFrom.Text = "0";
             this.txtSizeFrom.TextChanged += new System.EventHandler(this.txtSizeFrom_TextChanged);
             this.txtSizeFrom.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtSizeFrom_KeyPress);
@@ -110,7 +109,7 @@
             this.txtSizeTo.MaxLength = 20;
             this.txtSizeTo.Name = "txtSizeTo";
             this.txtSizeTo.Size = new System.Drawing.Size(100, 20);
-            this.txtSizeTo.TabIndex = 4;
+            this.txtSizeTo.TabIndex = 3;
             this.txtSizeTo.TextChanged += new System.EventHandler(this.txtSizeTo_TextChanged);
             this.txtSizeTo.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtSizeTo_KeyPress);
             // 
@@ -125,7 +124,7 @@
             this.chkSizeTo.Location = new System.Drawing.Point(224, 32);
             this.chkSizeTo.Name = "chkSizeTo";
             this.chkSizeTo.Size = new System.Drawing.Size(42, 17);
-            this.chkSizeTo.TabIndex = 5;
+            this.chkSizeTo.TabIndex = 2;
             this.chkSizeTo.Text = "To:";
             this.chkSizeTo.UseVisualStyleBackColor = true;
             this.chkSizeTo.CheckedChanged += new System.EventHandler(this.chkSizeTo_CheckedChanged);
@@ -136,7 +135,7 @@
             this.btnOK.Location = new System.Drawing.Point(185, 68);
             this.btnOK.Name = "btnOK";
             this.btnOK.Size = new System.Drawing.Size(78, 30);
-            this.btnOK.TabIndex = 6;
+            this.btnOK.TabIndex = 5;
             this.btnOK.Text = "OK";
             this.btnOK.UseVisualStyleBackColor = true;
             this.btnOK.Click += new System.EventHandler(this.btnOK_Click);

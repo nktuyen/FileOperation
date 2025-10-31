@@ -52,7 +52,7 @@
             this.datePickerTo.MinDate = new System.DateTime(1900, 1, 1, 0, 0, 0, 0);
             this.datePickerTo.Name = "datePickerTo";
             this.datePickerTo.Size = new System.Drawing.Size(200, 20);
-            this.datePickerTo.TabIndex = 0;
+            this.datePickerTo.TabIndex = 2;
             // 
             // label1
             // 
@@ -82,7 +82,7 @@
             this.chkDateTo.Location = new System.Drawing.Point(287, 40);
             this.chkDateTo.Name = "chkDateTo";
             this.chkDateTo.Size = new System.Drawing.Size(42, 17);
-            this.chkDateTo.TabIndex = 4;
+            this.chkDateTo.TabIndex = 1;
             this.chkDateTo.Text = "To:";
             this.chkDateTo.UseVisualStyleBackColor = true;
             this.chkDateTo.CheckedChanged += new System.EventHandler(this.chkDateTo_CheckedChanged);

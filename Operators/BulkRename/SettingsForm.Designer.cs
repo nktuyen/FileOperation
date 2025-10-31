@@ -28,11 +28,10 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SettingsForm));
             this.label1 = new System.Windows.Forms.Label();
             this.txtNameTemplate = new System.Windows.Forms.TextBox();
-            this.contextMenuNameTemplate = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.contextMenuNameTemplate = new System.Windows.Forms.ContextMenuStrip();
             this.undoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
             this.cutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -54,6 +53,7 @@
             this.sECONDToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.wEEKDAYToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.fileIndextoolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.parentDirectoryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.nameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.titleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -61,7 +61,14 @@
             this.sizeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.attributesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.createdDateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.yearToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.monthToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.dayToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.hourToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.minuteToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.secondToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.firstFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.firstFileIndexStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.firstFileParentDirectoryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.firstFileNameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.firstFileTitleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -69,22 +76,14 @@
             this.firstFileSizeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.firstFileAttributesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.fileFileCreatedDateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.fileCountToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.btnOK = new System.Windows.Forms.Button();
-            this.yearToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.monthToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.dayToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.hourToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.minuteToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.secondToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.firstFileYearToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.firstFileMonthToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.firstFiledayToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.firstFileHourToolStripMenuIte = new System.Windows.Forms.ToolStripMenuItem();
             this.firstFileMinuteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.firstFileSecondToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.firstFileIndexStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.fileIndextoolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.fileCountToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.btnOK = new System.Windows.Forms.Button();
             this.contextMenuNameTemplate.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -103,7 +102,7 @@
             this.txtNameTemplate.Location = new System.Drawing.Point(99, 20);
             this.txtNameTemplate.Name = "txtNameTemplate";
             this.txtNameTemplate.Size = new System.Drawing.Size(323, 20);
-            this.txtNameTemplate.TabIndex = 1;
+            this.txtNameTemplate.TabIndex = 0;
             this.txtNameTemplate.TextChanged += new System.EventHandler(this.txtNameTemplate_TextChanged);
             // 
             // contextMenuNameTemplate
@@ -119,7 +118,7 @@
             this.selectAllToolStripMenuItem,
             this.insertContextVariablesToolStripMenuItem});
             this.contextMenuNameTemplate.Name = "contextMenuNameTemplate";
-            this.contextMenuNameTemplate.Size = new System.Drawing.Size(198, 192);
+            this.contextMenuNameTemplate.Size = new System.Drawing.Size(198, 170);
             this.contextMenuNameTemplate.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuNameTemplate_Opening);
             // 
             // undoToolStripMenuItem
@@ -198,20 +197,20 @@
             this.cOMPUTERNAMEToolStripMenuItem,
             this.uSERNAMEToolStripMenuItem});
             this.systemToolStripMenuItem.Name = "systemToolStripMenuItem";
-            this.systemToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.systemToolStripMenuItem.Size = new System.Drawing.Size(129, 22);
             this.systemToolStripMenuItem.Text = "&System";
             // 
             // cOMPUTERNAMEToolStripMenuItem
             // 
             this.cOMPUTERNAMEToolStripMenuItem.Name = "cOMPUTERNAMEToolStripMenuItem";
-            this.cOMPUTERNAMEToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.cOMPUTERNAMEToolStripMenuItem.Size = new System.Drawing.Size(173, 22);
             this.cOMPUTERNAMEToolStripMenuItem.Text = "COMPUTER NAME";
             this.cOMPUTERNAMEToolStripMenuItem.Click += new System.EventHandler(this.cOMPUTERNAMEToolStripMenuItem_Click);
             // 
             // uSERNAMEToolStripMenuItem
             // 
             this.uSERNAMEToolStripMenuItem.Name = "uSERNAMEToolStripMenuItem";
-            this.uSERNAMEToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.uSERNAMEToolStripMenuItem.Size = new System.Drawing.Size(173, 22);
             this.uSERNAMEToolStripMenuItem.Text = "USERNAME";
             this.uSERNAMEToolStripMenuItem.Click += new System.EventHandler(this.uSERNAMEToolStripMenuItem_Click);
             // 
@@ -226,55 +225,55 @@
             this.sECONDToolStripMenuItem,
             this.wEEKDAYToolStripMenuItem});
             this.dateTimeToolStripMenuItem.Name = "dateTimeToolStripMenuItem";
-            this.dateTimeToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.dateTimeToolStripMenuItem.Size = new System.Drawing.Size(129, 22);
             this.dateTimeToolStripMenuItem.Text = "&Date/Time";
             // 
             // yEARToolStripMenuItem
             // 
             this.yEARToolStripMenuItem.Name = "yEARToolStripMenuItem";
-            this.yEARToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.yEARToolStripMenuItem.Size = new System.Drawing.Size(129, 22);
             this.yEARToolStripMenuItem.Text = "YEAR";
             this.yEARToolStripMenuItem.Click += new System.EventHandler(this.yEARToolStripMenuItem_Click);
             // 
             // mONTHToolStripMenuItem
             // 
             this.mONTHToolStripMenuItem.Name = "mONTHToolStripMenuItem";
-            this.mONTHToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.mONTHToolStripMenuItem.Size = new System.Drawing.Size(129, 22);
             this.mONTHToolStripMenuItem.Text = "MONTH";
             this.mONTHToolStripMenuItem.Click += new System.EventHandler(this.mONTHToolStripMenuItem_Click);
             // 
             // cURRENTDAYToolStripMenuItem
             // 
             this.cURRENTDAYToolStripMenuItem.Name = "cURRENTDAYToolStripMenuItem";
-            this.cURRENTDAYToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.cURRENTDAYToolStripMenuItem.Size = new System.Drawing.Size(129, 22);
             this.cURRENTDAYToolStripMenuItem.Text = "DAY";
             this.cURRENTDAYToolStripMenuItem.Click += new System.EventHandler(this.cURRENTDAYToolStripMenuItem_Click);
             // 
             // hOURToolStripMenuItem
             // 
             this.hOURToolStripMenuItem.Name = "hOURToolStripMenuItem";
-            this.hOURToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.hOURToolStripMenuItem.Size = new System.Drawing.Size(129, 22);
             this.hOURToolStripMenuItem.Text = "HOUR";
             this.hOURToolStripMenuItem.Click += new System.EventHandler(this.hOURToolStripMenuItem_Click);
             // 
             // mINUTEToolStripMenuItem
             // 
             this.mINUTEToolStripMenuItem.Name = "mINUTEToolStripMenuItem";
-            this.mINUTEToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.mINUTEToolStripMenuItem.Size = new System.Drawing.Size(129, 22);
             this.mINUTEToolStripMenuItem.Text = "MINUTE";
             this.mINUTEToolStripMenuItem.Click += new System.EventHandler(this.mINUTEToolStripMenuItem_Click);
             // 
             // sECONDToolStripMenuItem
             // 
             this.sECONDToolStripMenuItem.Name = "sECONDToolStripMenuItem";
-            this.sECONDToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.sECONDToolStripMenuItem.Size = new System.Drawing.Size(129, 22);
             this.sECONDToolStripMenuItem.Text = "SECOND";
             this.sECONDToolStripMenuItem.Click += new System.EventHandler(this.sECONDToolStripMenuItem_Click);
             // 
             // wEEKDAYToolStripMenuItem
             // 
             this.wEEKDAYToolStripMenuItem.Name = "wEEKDAYToolStripMenuItem";
-            this.wEEKDAYToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.wEEKDAYToolStripMenuItem.Size = new System.Drawing.Size(129, 22);
             this.wEEKDAYToolStripMenuItem.Text = "WEEK DAY";
             this.wEEKDAYToolStripMenuItem.Click += new System.EventHandler(this.wEEKDAYToolStripMenuItem_Click);
             // 
@@ -290,48 +289,55 @@
             this.attributesToolStripMenuItem,
             this.createdDateToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            this.fileToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.fileToolStripMenuItem.Size = new System.Drawing.Size(129, 22);
             this.fileToolStripMenuItem.Text = "&File";
+            // 
+            // fileIndextoolStripMenuItem
+            // 
+            this.fileIndextoolStripMenuItem.Name = "fileIndextoolStripMenuItem";
+            this.fileIndextoolStripMenuItem.Size = new System.Drawing.Size(159, 22);
+            this.fileIndextoolStripMenuItem.Text = "&Index";
+            this.fileIndextoolStripMenuItem.Click += new System.EventHandler(this.fileIndextoolStripMenuItem_Click);
             // 
             // parentDirectoryToolStripMenuItem
             // 
             this.parentDirectoryToolStripMenuItem.Name = "parentDirectoryToolStripMenuItem";
-            this.parentDirectoryToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.parentDirectoryToolStripMenuItem.Size = new System.Drawing.Size(159, 22);
             this.parentDirectoryToolStripMenuItem.Text = "Parent Directory";
             this.parentDirectoryToolStripMenuItem.Click += new System.EventHandler(this.parentDirectoryToolStripMenuItem_Click);
             // 
             // nameToolStripMenuItem
             // 
             this.nameToolStripMenuItem.Name = "nameToolStripMenuItem";
-            this.nameToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.nameToolStripMenuItem.Size = new System.Drawing.Size(159, 22);
             this.nameToolStripMenuItem.Text = "Name";
             this.nameToolStripMenuItem.Click += new System.EventHandler(this.nameToolStripMenuItem_Click);
             // 
             // titleToolStripMenuItem
             // 
             this.titleToolStripMenuItem.Name = "titleToolStripMenuItem";
-            this.titleToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.titleToolStripMenuItem.Size = new System.Drawing.Size(159, 22);
             this.titleToolStripMenuItem.Text = "Title";
             this.titleToolStripMenuItem.Click += new System.EventHandler(this.titleToolStripMenuItem_Click);
             // 
             // extensionToolStripMenuItem
             // 
             this.extensionToolStripMenuItem.Name = "extensionToolStripMenuItem";
-            this.extensionToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.extensionToolStripMenuItem.Size = new System.Drawing.Size(159, 22);
             this.extensionToolStripMenuItem.Text = "Extension";
             this.extensionToolStripMenuItem.Click += new System.EventHandler(this.extensionToolStripMenuItem_Click);
             // 
             // sizeToolStripMenuItem
             // 
             this.sizeToolStripMenuItem.Name = "sizeToolStripMenuItem";
-            this.sizeToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.sizeToolStripMenuItem.Size = new System.Drawing.Size(159, 22);
             this.sizeToolStripMenuItem.Text = "Size";
             this.sizeToolStripMenuItem.Click += new System.EventHandler(this.sizeToolStripMenuItem_Click);
             // 
             // attributesToolStripMenuItem
             // 
             this.attributesToolStripMenuItem.Name = "attributesToolStripMenuItem";
-            this.attributesToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.attributesToolStripMenuItem.Size = new System.Drawing.Size(159, 22);
             this.attributesToolStripMenuItem.Text = "Attributes";
             this.attributesToolStripMenuItem.Click += new System.EventHandler(this.attributesToolStripMenuItem_Click);
             // 
@@ -345,9 +351,51 @@
             this.minuteToolStripMenuItem1,
             this.secondToolStripMenuItem1});
             this.createdDateToolStripMenuItem.Name = "createdDateToolStripMenuItem";
-            this.createdDateToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.createdDateToolStripMenuItem.Size = new System.Drawing.Size(159, 22);
             this.createdDateToolStripMenuItem.Text = "Created Date";
             this.createdDateToolStripMenuItem.Click += new System.EventHandler(this.createdDateToolStripMenuItem_Click);
+            // 
+            // yearToolStripMenuItem1
+            // 
+            this.yearToolStripMenuItem1.Name = "yearToolStripMenuItem1";
+            this.yearToolStripMenuItem1.Size = new System.Drawing.Size(113, 22);
+            this.yearToolStripMenuItem1.Text = "Year";
+            this.yearToolStripMenuItem1.Click += new System.EventHandler(this.yearToolStripMenuItem1_Click);
+            // 
+            // monthToolStripMenuItem1
+            // 
+            this.monthToolStripMenuItem1.Name = "monthToolStripMenuItem1";
+            this.monthToolStripMenuItem1.Size = new System.Drawing.Size(113, 22);
+            this.monthToolStripMenuItem1.Text = "Month";
+            this.monthToolStripMenuItem1.Click += new System.EventHandler(this.monthToolStripMenuItem1_Click);
+            // 
+            // dayToolStripMenuItem
+            // 
+            this.dayToolStripMenuItem.Name = "dayToolStripMenuItem";
+            this.dayToolStripMenuItem.Size = new System.Drawing.Size(113, 22);
+            this.dayToolStripMenuItem.Text = "Day";
+            this.dayToolStripMenuItem.Click += new System.EventHandler(this.dayToolStripMenuItem_Click);
+            // 
+            // hourToolStripMenuItem1
+            // 
+            this.hourToolStripMenuItem1.Name = "hourToolStripMenuItem1";
+            this.hourToolStripMenuItem1.Size = new System.Drawing.Size(113, 22);
+            this.hourToolStripMenuItem1.Text = "Hour";
+            this.hourToolStripMenuItem1.Click += new System.EventHandler(this.hourToolStripMenuItem1_Click);
+            // 
+            // minuteToolStripMenuItem1
+            // 
+            this.minuteToolStripMenuItem1.Name = "minuteToolStripMenuItem1";
+            this.minuteToolStripMenuItem1.Size = new System.Drawing.Size(113, 22);
+            this.minuteToolStripMenuItem1.Text = "Minute";
+            this.minuteToolStripMenuItem1.Click += new System.EventHandler(this.minuteToolStripMenuItem1_Click);
+            // 
+            // secondToolStripMenuItem1
+            // 
+            this.secondToolStripMenuItem1.Name = "secondToolStripMenuItem1";
+            this.secondToolStripMenuItem1.Size = new System.Drawing.Size(113, 22);
+            this.secondToolStripMenuItem1.Text = "Second";
+            this.secondToolStripMenuItem1.Click += new System.EventHandler(this.secondToolStripMenuItem1_Click);
             // 
             // firstFileToolStripMenuItem
             // 
@@ -361,48 +409,55 @@
             this.firstFileAttributesToolStripMenuItem,
             this.fileFileCreatedDateToolStripMenuItem});
             this.firstFileToolStripMenuItem.Name = "firstFileToolStripMenuItem";
-            this.firstFileToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.firstFileToolStripMenuItem.Size = new System.Drawing.Size(129, 22);
             this.firstFileToolStripMenuItem.Text = "F&irst File";
+            // 
+            // firstFileIndexStripMenuItem
+            // 
+            this.firstFileIndexStripMenuItem.Name = "firstFileIndexStripMenuItem";
+            this.firstFileIndexStripMenuItem.Size = new System.Drawing.Size(159, 22);
+            this.firstFileIndexStripMenuItem.Text = "Index";
+            this.firstFileIndexStripMenuItem.Click += new System.EventHandler(this.firstFileIndexStripMenuItem_Click);
             // 
             // firstFileParentDirectoryToolStripMenuItem
             // 
             this.firstFileParentDirectoryToolStripMenuItem.Name = "firstFileParentDirectoryToolStripMenuItem";
-            this.firstFileParentDirectoryToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.firstFileParentDirectoryToolStripMenuItem.Size = new System.Drawing.Size(159, 22);
             this.firstFileParentDirectoryToolStripMenuItem.Text = "Parent Directory";
             this.firstFileParentDirectoryToolStripMenuItem.Click += new System.EventHandler(this.firstFileParentDirectoryToolStripMenuItem_Click);
             // 
             // firstFileNameToolStripMenuItem
             // 
             this.firstFileNameToolStripMenuItem.Name = "firstFileNameToolStripMenuItem";
-            this.firstFileNameToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.firstFileNameToolStripMenuItem.Size = new System.Drawing.Size(159, 22);
             this.firstFileNameToolStripMenuItem.Text = "Name";
             this.firstFileNameToolStripMenuItem.Click += new System.EventHandler(this.firstFileNameToolStripMenuItem_Click);
             // 
             // firstFileTitleToolStripMenuItem
             // 
             this.firstFileTitleToolStripMenuItem.Name = "firstFileTitleToolStripMenuItem";
-            this.firstFileTitleToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.firstFileTitleToolStripMenuItem.Size = new System.Drawing.Size(159, 22);
             this.firstFileTitleToolStripMenuItem.Text = "Title";
             this.firstFileTitleToolStripMenuItem.Click += new System.EventHandler(this.firstFileTitleToolStripMenuItem_Click);
             // 
             // firstFileExtensionToolStripMenuItem
             // 
             this.firstFileExtensionToolStripMenuItem.Name = "firstFileExtensionToolStripMenuItem";
-            this.firstFileExtensionToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.firstFileExtensionToolStripMenuItem.Size = new System.Drawing.Size(159, 22);
             this.firstFileExtensionToolStripMenuItem.Text = "Extension";
             this.firstFileExtensionToolStripMenuItem.Click += new System.EventHandler(this.firstFileExtensionToolStripMenuItem_Click);
             // 
             // firstFileSizeToolStripMenuItem
             // 
             this.firstFileSizeToolStripMenuItem.Name = "firstFileSizeToolStripMenuItem";
-            this.firstFileSizeToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.firstFileSizeToolStripMenuItem.Size = new System.Drawing.Size(159, 22);
             this.firstFileSizeToolStripMenuItem.Text = "Size";
             this.firstFileSizeToolStripMenuItem.Click += new System.EventHandler(this.firstFileSizeToolStripMenuItem_Click);
             // 
             // firstFileAttributesToolStripMenuItem
             // 
             this.firstFileAttributesToolStripMenuItem.Name = "firstFileAttributesToolStripMenuItem";
-            this.firstFileAttributesToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.firstFileAttributesToolStripMenuItem.Size = new System.Drawing.Size(159, 22);
             this.firstFileAttributesToolStripMenuItem.Text = "Attributes";
             this.firstFileAttributesToolStripMenuItem.Click += new System.EventHandler(this.firstFileAttributesToolStripMenuItem_Click);
             // 
@@ -416,14 +471,56 @@
             this.firstFileMinuteToolStripMenuItem,
             this.firstFileSecondToolStripMenuItem});
             this.fileFileCreatedDateToolStripMenuItem.Name = "fileFileCreatedDateToolStripMenuItem";
-            this.fileFileCreatedDateToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.fileFileCreatedDateToolStripMenuItem.Size = new System.Drawing.Size(159, 22);
             this.fileFileCreatedDateToolStripMenuItem.Text = "Created Date";
             this.fileFileCreatedDateToolStripMenuItem.Click += new System.EventHandler(this.fileFileCreatedDateToolStripMenuItem_Click);
+            // 
+            // firstFileYearToolStripMenuItem
+            // 
+            this.firstFileYearToolStripMenuItem.Name = "firstFileYearToolStripMenuItem";
+            this.firstFileYearToolStripMenuItem.Size = new System.Drawing.Size(113, 22);
+            this.firstFileYearToolStripMenuItem.Text = "Year";
+            this.firstFileYearToolStripMenuItem.Click += new System.EventHandler(this.firstFileYearToolStripMenuItem_Click);
+            // 
+            // firstFileMonthToolStripMenuItem
+            // 
+            this.firstFileMonthToolStripMenuItem.Name = "firstFileMonthToolStripMenuItem";
+            this.firstFileMonthToolStripMenuItem.Size = new System.Drawing.Size(113, 22);
+            this.firstFileMonthToolStripMenuItem.Text = "Month";
+            this.firstFileMonthToolStripMenuItem.Click += new System.EventHandler(this.firstFileMonthToolStripMenuItem_Click);
+            // 
+            // firstFiledayToolStripMenuItem
+            // 
+            this.firstFiledayToolStripMenuItem.Name = "firstFiledayToolStripMenuItem";
+            this.firstFiledayToolStripMenuItem.Size = new System.Drawing.Size(113, 22);
+            this.firstFiledayToolStripMenuItem.Text = "Day";
+            this.firstFiledayToolStripMenuItem.Click += new System.EventHandler(this.firstFiledayToolStripMenuItem_Click);
+            // 
+            // firstFileHourToolStripMenuIte
+            // 
+            this.firstFileHourToolStripMenuIte.Name = "firstFileHourToolStripMenuIte";
+            this.firstFileHourToolStripMenuIte.Size = new System.Drawing.Size(113, 22);
+            this.firstFileHourToolStripMenuIte.Text = "Hour";
+            this.firstFileHourToolStripMenuIte.Click += new System.EventHandler(this.firstFileHourToolStripMenuIte_Click);
+            // 
+            // firstFileMinuteToolStripMenuItem
+            // 
+            this.firstFileMinuteToolStripMenuItem.Name = "firstFileMinuteToolStripMenuItem";
+            this.firstFileMinuteToolStripMenuItem.Size = new System.Drawing.Size(113, 22);
+            this.firstFileMinuteToolStripMenuItem.Text = "Minute";
+            this.firstFileMinuteToolStripMenuItem.Click += new System.EventHandler(this.firstFileMinuteToolStripMenuItem_Click);
+            // 
+            // firstFileSecondToolStripMenuItem
+            // 
+            this.firstFileSecondToolStripMenuItem.Name = "firstFileSecondToolStripMenuItem";
+            this.firstFileSecondToolStripMenuItem.Size = new System.Drawing.Size(113, 22);
+            this.firstFileSecondToolStripMenuItem.Text = "Second";
+            this.firstFileSecondToolStripMenuItem.Click += new System.EventHandler(this.firstFileSecondToolStripMenuItem_Click);
             // 
             // fileCountToolStripMenuItem
             // 
             this.fileCountToolStripMenuItem.Name = "fileCountToolStripMenuItem";
-            this.fileCountToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.fileCountToolStripMenuItem.Size = new System.Drawing.Size(129, 22);
             this.fileCountToolStripMenuItem.Text = "File Cou&nt";
             this.fileCountToolStripMenuItem.Click += new System.EventHandler(this.fileCountToolStripMenuItem_Click);
             // 
@@ -434,108 +531,10 @@
             this.btnOK.Location = new System.Drawing.Point(424, 19);
             this.btnOK.Name = "btnOK";
             this.btnOK.Size = new System.Drawing.Size(38, 23);
-            this.btnOK.TabIndex = 2;
+            this.btnOK.TabIndex = 1;
             this.btnOK.Text = "OK";
             this.btnOK.UseVisualStyleBackColor = true;
             this.btnOK.Click += new System.EventHandler(this.btnOK_Click);
-            // 
-            // yearToolStripMenuItem1
-            // 
-            this.yearToolStripMenuItem1.Name = "yearToolStripMenuItem1";
-            this.yearToolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
-            this.yearToolStripMenuItem1.Text = "Year";
-            this.yearToolStripMenuItem1.Click += new System.EventHandler(this.yearToolStripMenuItem1_Click);
-            // 
-            // monthToolStripMenuItem1
-            // 
-            this.monthToolStripMenuItem1.Name = "monthToolStripMenuItem1";
-            this.monthToolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
-            this.monthToolStripMenuItem1.Text = "Month";
-            this.monthToolStripMenuItem1.Click += new System.EventHandler(this.monthToolStripMenuItem1_Click);
-            // 
-            // dayToolStripMenuItem
-            // 
-            this.dayToolStripMenuItem.Name = "dayToolStripMenuItem";
-            this.dayToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.dayToolStripMenuItem.Text = "Day";
-            this.dayToolStripMenuItem.Click += new System.EventHandler(this.dayToolStripMenuItem_Click);
-            // 
-            // hourToolStripMenuItem1
-            // 
-            this.hourToolStripMenuItem1.Name = "hourToolStripMenuItem1";
-            this.hourToolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
-            this.hourToolStripMenuItem1.Text = "Hour";
-            this.hourToolStripMenuItem1.Click += new System.EventHandler(this.hourToolStripMenuItem1_Click);
-            // 
-            // minuteToolStripMenuItem1
-            // 
-            this.minuteToolStripMenuItem1.Name = "minuteToolStripMenuItem1";
-            this.minuteToolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
-            this.minuteToolStripMenuItem1.Text = "Minute";
-            this.minuteToolStripMenuItem1.Click += new System.EventHandler(this.minuteToolStripMenuItem1_Click);
-            // 
-            // secondToolStripMenuItem1
-            // 
-            this.secondToolStripMenuItem1.Name = "secondToolStripMenuItem1";
-            this.secondToolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
-            this.secondToolStripMenuItem1.Text = "Second";
-            this.secondToolStripMenuItem1.Click += new System.EventHandler(this.secondToolStripMenuItem1_Click);
-            // 
-            // firstFileYearToolStripMenuItem
-            // 
-            this.firstFileYearToolStripMenuItem.Name = "firstFileYearToolStripMenuItem";
-            this.firstFileYearToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.firstFileYearToolStripMenuItem.Text = "Year";
-            this.firstFileYearToolStripMenuItem.Click += new System.EventHandler(this.firstFileYearToolStripMenuItem_Click);
-            // 
-            // firstFileMonthToolStripMenuItem
-            // 
-            this.firstFileMonthToolStripMenuItem.Name = "firstFileMonthToolStripMenuItem";
-            this.firstFileMonthToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.firstFileMonthToolStripMenuItem.Text = "Month";
-            this.firstFileMonthToolStripMenuItem.Click += new System.EventHandler(this.firstFileMonthToolStripMenuItem_Click);
-            // 
-            // firstFiledayToolStripMenuItem
-            // 
-            this.firstFiledayToolStripMenuItem.Name = "firstFiledayToolStripMenuItem";
-            this.firstFiledayToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.firstFiledayToolStripMenuItem.Text = "Day";
-            this.firstFiledayToolStripMenuItem.Click += new System.EventHandler(this.firstFiledayToolStripMenuItem_Click);
-            // 
-            // firstFileHourToolStripMenuIte
-            // 
-            this.firstFileHourToolStripMenuIte.Name = "firstFileHourToolStripMenuIte";
-            this.firstFileHourToolStripMenuIte.Size = new System.Drawing.Size(180, 22);
-            this.firstFileHourToolStripMenuIte.Text = "Hour";
-            this.firstFileHourToolStripMenuIte.Click += new System.EventHandler(this.firstFileHourToolStripMenuIte_Click);
-            // 
-            // firstFileMinuteToolStripMenuItem
-            // 
-            this.firstFileMinuteToolStripMenuItem.Name = "firstFileMinuteToolStripMenuItem";
-            this.firstFileMinuteToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.firstFileMinuteToolStripMenuItem.Text = "Minute";
-            this.firstFileMinuteToolStripMenuItem.Click += new System.EventHandler(this.firstFileMinuteToolStripMenuItem_Click);
-            // 
-            // firstFileSecondToolStripMenuItem
-            // 
-            this.firstFileSecondToolStripMenuItem.Name = "firstFileSecondToolStripMenuItem";
-            this.firstFileSecondToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.firstFileSecondToolStripMenuItem.Text = "Second";
-            this.firstFileSecondToolStripMenuItem.Click += new System.EventHandler(this.firstFileSecondToolStripMenuItem_Click);
-            // 
-            // firstFileIndexStripMenuItem
-            // 
-            this.firstFileIndexStripMenuItem.Name = "firstFileIndexStripMenuItem";
-            this.firstFileIndexStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.firstFileIndexStripMenuItem.Text = "Index";
-            this.firstFileIndexStripMenuItem.Click += new System.EventHandler(this.firstFileIndexStripMenuItem_Click);
-            // 
-            // fileIndextoolStripMenuItem
-            // 
-            this.fileIndextoolStripMenuItem.Name = "fileIndextoolStripMenuItem";
-            this.fileIndextoolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.fileIndextoolStripMenuItem.Text = "&Index";
-            this.fileIndextoolStripMenuItem.Click += new System.EventHandler(this.fileIndextoolStripMenuItem_Click);
             // 
             // SettingsForm
             // 

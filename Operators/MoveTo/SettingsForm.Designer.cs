@@ -58,7 +58,7 @@
             this.radOverwrite.Location = new System.Drawing.Point(58, 66);
             this.radOverwrite.Name = "radOverwrite";
             this.radOverwrite.Size = new System.Drawing.Size(70, 17);
-            this.radOverwrite.TabIndex = 0;
+            this.radOverwrite.TabIndex = 2;
             this.radOverwrite.Text = "Overwrite";
             this.radOverwrite.UseVisualStyleBackColor = true;
             // 
@@ -69,7 +69,7 @@
             this.radAsk.Location = new System.Drawing.Point(58, 43);
             this.radAsk.Name = "radAsk";
             this.radAsk.Size = new System.Drawing.Size(101, 17);
-            this.radAsk.TabIndex = 0;
+            this.radAsk.TabIndex = 1;
             this.radAsk.TabStop = true;
             this.radAsk.Text = "Ask to overwrite";
             this.radAsk.UseVisualStyleBackColor = true;
@@ -90,7 +90,7 @@
             this.btnOK.Location = new System.Drawing.Point(222, 17);
             this.btnOK.Name = "btnOK";
             this.btnOK.Size = new System.Drawing.Size(50, 27);
-            this.btnOK.TabIndex = 1;
+            this.btnOK.TabIndex = 5;
             this.btnOK.Text = "OK";
             this.btnOK.UseVisualStyleBackColor = true;
             this.btnOK.Click += new System.EventHandler(this.btnOK_Click);
@@ -112,7 +112,7 @@
             this.radioButtonFolderDialogStyle.Location = new System.Drawing.Point(42, 42);
             this.radioButtonFolderDialogStyle.Name = "radioButtonFolderDialogStyle";
             this.radioButtonFolderDialogStyle.Size = new System.Drawing.Size(113, 17);
-            this.radioButtonFolderDialogStyle.TabIndex = 0;
+            this.radioButtonFolderDialogStyle.TabIndex = 4;
             this.radioButtonFolderDialogStyle.Text = "Folder Dialog Style";
             this.radioButtonFolderDialogStyle.UseVisualStyleBackColor = true;
             // 
@@ -123,7 +123,7 @@
             this.radioButtonFileDialogStyle.Location = new System.Drawing.Point(42, 19);
             this.radioButtonFileDialogStyle.Name = "radioButtonFileDialogStyle";
             this.radioButtonFileDialogStyle.Size = new System.Drawing.Size(100, 17);
-            this.radioButtonFileDialogStyle.TabIndex = 0;
+            this.radioButtonFileDialogStyle.TabIndex = 3;
             this.radioButtonFileDialogStyle.TabStop = true;
             this.radioButtonFileDialogStyle.Text = "File Dialog Style";
             this.radioButtonFileDialogStyle.UseVisualStyleBackColor = true;

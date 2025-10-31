@@ -47,7 +47,7 @@
             this.txtWildcard.Location = new System.Drawing.Point(70, 18);
             this.txtWildcard.Name = "txtWildcard";
             this.txtWildcard.Size = new System.Drawing.Size(254, 20);
-            this.txtWildcard.TabIndex = 1;
+            this.txtWildcard.TabIndex = 0;
             this.txtWildcard.TextChanged += new System.EventHandler(this.txtWildcard_TextChanged);
             // 
             // btnOK
@@ -57,7 +57,7 @@
             this.btnOK.Location = new System.Drawing.Point(330, 16);
             this.btnOK.Name = "btnOK";
             this.btnOK.Size = new System.Drawing.Size(47, 23);
-            this.btnOK.TabIndex = 2;
+            this.btnOK.TabIndex = 1;
             this.btnOK.Text = "OK";
             this.btnOK.UseVisualStyleBackColor = true;
             this.btnOK.Click += new System.EventHandler(this.btnOK_Click);

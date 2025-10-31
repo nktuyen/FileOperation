@@ -69,7 +69,7 @@
             this.btnOK.Location = new System.Drawing.Point(184, 28);
             this.btnOK.Name = "btnOK";
             this.btnOK.Size = new System.Drawing.Size(44, 28);
-            this.btnOK.TabIndex = 1;
+            this.btnOK.TabIndex = 3;
             this.btnOK.Text = "OK";
             this.btnOK.UseVisualStyleBackColor = true;
             this.btnOK.Click += new System.EventHandler(this.btnOK_Click);
@@ -99,13 +99,11 @@
             // radContains
             // 
             this.radContains.AutoSize = true;
-            this.radContains.Checked = true;
             this.radContains.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.radContains.Location = new System.Drawing.Point(83, 19);
             this.radContains.Name = "radContains";
             this.radContains.Size = new System.Drawing.Size(66, 17);
-            this.radContains.TabIndex = 0;
-            this.radContains.TabStop = true;
+            this.radContains.TabIndex = 2;
             this.radContains.Text = "Contains";
             this.radContains.UseVisualStyleBackColor = true;
             this.radContains.CheckedChanged += new System.EventHandler(this.radContains_CheckedChanged);
@@ -113,11 +111,13 @@
             // radEquality
             // 
             this.radEquality.AutoSize = true;
+            this.radEquality.Checked = true;
             this.radEquality.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.radEquality.Location = new System.Drawing.Point(25, 19);
             this.radEquality.Name = "radEquality";
             this.radEquality.Size = new System.Drawing.Size(52, 17);
-            this.radEquality.TabIndex = 0;
+            this.radEquality.TabIndex = 1;
+            this.radEquality.TabStop = true;
             this.radEquality.Text = "Exact";
             this.radEquality.UseVisualStyleBackColor = true;
             this.radEquality.CheckedChanged += new System.EventHandler(this.radEquality_CheckedChanged);
