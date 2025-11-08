@@ -28,10 +28,11 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SettingsForm));
             this.label1 = new System.Windows.Forms.Label();
             this.txtNameTemplate = new System.Windows.Forms.TextBox();
-            this.contextMenuNameTemplate = new System.Windows.Forms.ContextMenuStrip();
+            this.contextMenuNameTemplate = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.undoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
             this.cutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -527,7 +528,6 @@
             // btnOK
             // 
             this.btnOK.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.btnOK.Enabled = false;
             this.btnOK.Location = new System.Drawing.Point(424, 19);
             this.btnOK.Name = "btnOK";
             this.btnOK.Size = new System.Drawing.Size(38, 23);

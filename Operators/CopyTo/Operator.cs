@@ -20,13 +20,12 @@ namespace CopyTo
         public int FileExistingAction { get; set; }
         private DialogResult LastConfirmResult { get; set; }
         private int LastConfirmCount { get; set; }
-        public bool HasSettings { get; private set; }
-        public bool HasAbout { get; private set; }
+        public System.Windows.Forms.IWin32Window SettingsForm { get; private set; }
+        public System.Windows.Forms.IWin32Window AboutForm { get; private set; }
         public string Status { get; private set; }
         public System.Drawing.Image Image { get; private set; }
         public bool Enabled { get; set; }
         public string CurrentFilePath { get; set; }
-        public System.Windows.Forms.IWin32Window MainWnd { get; set; }
         private int BrowserDialogStyle { get; set; }
 
         public MyOperator()
@@ -34,8 +33,8 @@ namespace CopyTo
             this.Name = "CopyTo";
             this.Title = "Copy To";
             this.Description = "Copy selected files to specified directory";
-            this.HasAbout = true;
-            this.HasSettings = true;
+            this.AboutForm = new AboutForm(this);
+            this.SettingsForm = new SettingsForm(this);
             this.Image = Properties.Resources.CopyTo;
             this.Destination = string.Empty;
             this.FileExistingAction = 1;//Ask
@@ -70,7 +69,7 @@ namespace CopyTo
                 FolderBrowserDialog dlgFolder = new FolderBrowserDialog();
                 dlgFolder.ShowNewFolderButton = true;
                 dlgFolder.SelectedPath = this.Destination;
-                if (dlgFolder.ShowDialog(this.MainWnd) != DialogResult.OK)
+                if (dlgFolder.ShowDialog() != DialogResult.OK)
                     return false;
                 this.Destination = dlgFolder.SelectedPath;
             }

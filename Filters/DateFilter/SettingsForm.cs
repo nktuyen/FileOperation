@@ -12,27 +12,11 @@ namespace DateFilter
 {
     public partial class SettingsForm : Form
     {
-        private DateTime _dtfrom = new DateTime();
-        public DateTime DateFrom {
-            get
-            {
-                return _dtfrom;
-            }
-            set
-            {
-                _dtfrom = value;
-            }
-        }
-        public DateTime DateTo { get; set; }
-        public bool UseDateTo { get; set; }
-
-        public SettingsForm()
+        private MyFilter Filter { get; set; }
+        public SettingsForm(MyFilter filter = null)
         {
             InitializeComponent();
-
-            this.DateFrom = DateTime.Now;
-            this.DateTo = DateTime.Now;
-            this.UseDateTo = true;
+            this.Filter = filter;
         }
 
         private void SettingsForm_KeyDown(object sender, KeyEventArgs e)
@@ -43,17 +27,17 @@ namespace DateFilter
 
         private void SettingsForm_Load(object sender, EventArgs e)
         {
-            if ((this.DateFrom >= datePickerFrom.MinDate) && (this.DateFrom <= datePickerFrom.MaxDate))
-                datePickerFrom.Value = this.DateFrom;
+            if ((this.Filter.DateFrom >= datePickerFrom.MinDate) && (this.Filter.DateFrom <= datePickerFrom.MaxDate))
+                datePickerFrom.Value = this.Filter.DateFrom;
             else
                 datePickerFrom.Value = DateTime.Now;
-            chkDateTo.Checked = this.UseDateTo;
+            chkDateTo.Checked = this.Filter.UseDateTo;
             chkDateTo_CheckedChanged(sender, e);
 
-            if (this.UseDateTo)
+            if (this.Filter.UseDateTo)
             {
-                if ((this.DateTo >= datePickerTo.MinDate) && (this.DateTo <= datePickerTo.MaxDate))
-                    datePickerTo.Value = this.DateTo;
+                if ((this.Filter.DateTo >= datePickerTo.MinDate) && (this.Filter.DateTo <= datePickerTo.MaxDate))
+                    datePickerTo.Value = this.Filter.DateTo;
                 else
                     datePickerTo.Value = DateTime.Now;
             }
@@ -61,10 +45,10 @@ namespace DateFilter
 
         private void btnOK_Click(object sender, EventArgs e)
         {
-            this.UseDateTo = chkDateTo.Checked;
-            this.DateFrom = datePickerFrom.Value;
-            if (this.UseDateTo)
-                this.DateTo = datePickerTo.Value;
+            this.Filter.UseDateTo = chkDateTo.Checked;
+            this.Filter.DateFrom = datePickerFrom.Value;
+            if (this.Filter.UseDateTo)
+                this.Filter.DateTo = datePickerTo.Value;
         }
 
         private void chkDateTo_CheckedChanged(object sender, EventArgs e)

@@ -12,9 +12,12 @@ namespace BulkRename
 {
     public partial class AboutForm : Form
     {
-        public AboutForm()
+        private MyOperator Operator { get; set; }
+        public AboutForm(MyOperator oper = null)
         {
             InitializeComponent();
+
+            this.Operator = oper;
         }
     }
 }

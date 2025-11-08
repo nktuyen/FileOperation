@@ -11,20 +11,15 @@ namespace DateFilter
 {
     public class MyFilter : IFilter
     {
-        private DateTime DateFrom { get; set; }
-        private DateTime DateTo { get; set; }
-        private bool UseDateTo { get; set; }
- 
-
+        public DateTime DateFrom { get; set; }
+        public DateTime DateTo { get; set; }
+        public bool UseDateTo { get; set; }
         public string Name { get; private set; }
         public string Title { get;private set; }
         public string Description { get; private set; }
-        public bool HasSettings { get; private set; }
-
-        public bool HasAbout { get; private set; }
-
+        public System.Windows.Forms.IWin32Window SettingsForm { get; private set; }
+        public System.Windows.Forms.IWin32Window AboutForm { get; private set; }
         public bool Enabled { get; set; }
-        public System.Windows.Forms.IWin32Window MainWnd { get; set; }
         public System.Drawing.Image Image { get;private set; }
 
         public MyFilter()
@@ -33,8 +28,8 @@ namespace DateFilter
             this.Title = "Date Filter";
             this.Description = "Filter files by created date";
             this.Image = null;
-            this.HasAbout = true;
-            this.HasSettings = true;
+            this.AboutForm = new AboutForm(this);
+            this.SettingsForm = new SettingsForm(this);
             this.DateFrom = DateTime.Now;
             this.DateTo = DateTime.Now;
             this.UseDateTo = true;
@@ -71,31 +66,6 @@ namespace DateFilter
                 Debug.Print(ex.Message);
                 return false;
             }
-        }
-
-        public System.Windows.Forms.DialogResult ShowAbout(System.Windows.Forms.IWin32Window owner)
-        {
-            AboutForm frm = new AboutForm();
-            return frm.ShowDialog(owner);
-        }
-
-        public System.Windows.Forms.DialogResult ShowSettings(System.Windows.Forms.IWin32Window owner)
-        {
-            SettingsForm frm = new SettingsForm();
-            frm.DateFrom = this.DateFrom;
-            frm.DateTo = this.DateTo;
-            frm.UseDateTo = this.UseDateTo;
-
-            System.Windows.Forms.DialogResult res = frm.ShowDialog(owner);
-            if (res == System.Windows.Forms.DialogResult.OK)
-            {
-                this.DateFrom = frm.DateFrom;
-                this.UseDateTo = frm.UseDateTo;
-                if (this.UseDateTo)
-                    this.DateTo = frm.DateTo;
-            }
-
-            return res;
         }
 
         public bool LoadSettings(Microsoft.Win32.RegistryKey regKey = null)

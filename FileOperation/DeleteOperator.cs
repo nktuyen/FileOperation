@@ -18,11 +18,10 @@ namespace FileOperation
         public string Description { get;private set; }
         public string Status { get;private set;}
         public System.Drawing.Image Image { get; private set; }
-        public bool HasSettings { get; private set; }
-        public bool HasAbout { get;private set; }
+        public System.Windows.Forms.IWin32Window SettingsForm { get; private set; }
+        public System.Windows.Forms.IWin32Window AboutForm { get;private set; }
         public bool Enabled { get; set; }
         public string CurrentFilePath { get; set; }
-        public System.Windows.Forms.IWin32Window MainWnd { get; set; }
 
         public DeleteOperator()
         {
@@ -30,7 +29,8 @@ namespace FileOperation
             this.Title = "Delete";
             this.Description = "Delete selected files from disk";
             this.Image = Properties.Resources.Cancel;
-            this.HasSettings = true;
+            this.AboutForm = null;
+            this.SettingsForm = new DeleteOperatorSettingsForm(this);
             this.Enabled = true;
             this.MoveToTrash = true;
         }

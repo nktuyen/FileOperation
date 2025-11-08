@@ -14,9 +14,12 @@ namespace AttributesFilter
 {
     public partial class AboutForm : Form
     {
-        public AboutForm()
+        private MyFilter Filter { get;set; }
+        public AboutForm(MyFilter filter = null)
         {
             InitializeComponent();
+
+            this.Filter = filter;
         }
 
         private void AboutForm_Load(object sender, EventArgs e)

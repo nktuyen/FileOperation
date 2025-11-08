@@ -14,11 +14,11 @@ namespace FileOperation
 {
     public partial class NameFilterSettingsForm : Form
     {
-        public string Wildcard { get; set; }
-        public NameFilterSettingsForm()
+        private NameFilter Filter { get; set; }
+        public NameFilterSettingsForm(NameFilter filter = null)
         {
             InitializeComponent();
-            this.Wildcard = string.Empty;
+            this.Filter = filter;
         }
 
         private void SettingsForm_Load(object sender, EventArgs e)
@@ -39,17 +39,17 @@ namespace FileOperation
                 this.Text = "Settings";
             }
 
-            txtWildcard.Text = this.Wildcard;
+            txtWildcard.Text = this.Filter.Wildcard;
         }
 
         private void txtWildcard_TextChanged(object sender, EventArgs e)
         {
-            btnOK.Enabled = txtWildcard.TextLength > 0;
+            
         }
 
         private void btnOK_Click(object sender, EventArgs e)
         {
-            this.Wildcard = txtWildcard.Text;
+            this.Filter.Wildcard = txtWildcard.Text;
         }
 
         private void NameFilterSettingsForm_KeyDown(object sender, KeyEventArgs e)

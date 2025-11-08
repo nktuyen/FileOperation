@@ -26,13 +26,12 @@ namespace BulkRename
 
         public bool Enabled { get; set; }
 
-        public bool HasSettings { get; private set;}
+        public System.Windows.Forms.IWin32Window SettingsForm { get; private set;}
 
-        public bool HasAbout { get; private set; }
+        public System.Windows.Forms.IWin32Window AboutForm { get; private set; }
 
         public string CurrentFilePath { get; set; }
-        public IWin32Window MainWnd { get; set; }
-        private string NameTemplate { get; set; }
+        public string NameTemplate { get; set; }
         private long FileCount { get; set; }
         private long FileIndex { get; set; }
         private Dictionary<string,ContextVariable> ContextVariables { get; set; }
@@ -43,8 +42,8 @@ namespace BulkRename
             this.Title = "Bulk Rename";
             this.Description = "Rename multiple files use name template";
             this.Image = Properties.Resources.BulkRename.ToBitmap();
-            this.HasAbout = true;
-            this.HasSettings = true;
+            this.AboutForm = new AboutForm(this);
+            this.SettingsForm = new SettingsForm(this);
             this.NameTemplate = string.Empty;
             this.ContextVariables = new Dictionary<string, ContextVariable>();
         }
@@ -149,29 +148,6 @@ namespace BulkRename
             this.FirstFileInfo = null;
             this.Status = string.Empty;
             return true;
-        }
-
-        public DialogResult ShowAbout(IWin32Window owner = null)
-        {
-            AboutForm frm = new AboutForm();
-            DialogResult res = frm.ShowDialog();
-            if (res == DialogResult.OK)
-            {
-                
-            }
-            return res;
-        }
-
-        public DialogResult ShowSettings(IWin32Window owner = null)
-        {
-            SettingsForm frm = new SettingsForm();
-            frm.NameTemplate = this.NameTemplate;
-            DialogResult res = frm.ShowDialog();
-            if (res == DialogResult.OK)
-            {
-                this.NameTemplate = frm.NameTemplate;
-            }
-            return res;
         }
 
         public bool LoadSettings(Microsoft.Win32.RegistryKey regKey = null)

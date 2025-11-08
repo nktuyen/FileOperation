@@ -13,9 +13,11 @@ namespace FileOperation
     public partial class DeleteOperatorSettingsForm : Form
     {
         public bool MoveToTrash { get; set; }
-        public DeleteOperatorSettingsForm()
+        private DeleteOperator Operator { get; set; }
+        public DeleteOperatorSettingsForm(DeleteOperator oper = null)
         {
             InitializeComponent();
+            this.Operator = oper;
         }
 
         private void DeleteOperatorSettingsForm_Load(object sender, EventArgs e)

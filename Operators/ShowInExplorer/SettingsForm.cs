@@ -13,9 +13,12 @@ namespace ShowInExplorer
     public partial class SettingsForm : Form
     {
         public bool Selected { get; set; }
-        public SettingsForm()
+        private MyOperator Operator { get; set; }
+        public SettingsForm(MyOperator oper = null)
         {
             InitializeComponent();
+
+            this.Operator = oper;
         }
 
         private void SettingsForm_KeyDown(object sender, KeyEventArgs e)

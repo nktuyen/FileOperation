@@ -12,21 +12,23 @@ namespace BulkRename
 {
     public partial class SettingsForm : Form
     {
-        public string NameTemplate { get; set; }
-        public SettingsForm()
+        private MyOperator Operator { get; set; }
+        public SettingsForm(MyOperator oper = null)
         {
             InitializeComponent();
+
+            this.Operator = oper;
         }
 
         private void SettingsForm_Load(object sender, EventArgs e)
         {
-            txtNameTemplate.Text = this.NameTemplate;
+            txtNameTemplate.Text = this.Operator.NameTemplate;
             btnOK.Enabled = txtNameTemplate.TextLength > 0;
         }
 
         private void btnOK_Click(object sender, EventArgs e)
         {
-            this.NameTemplate = txtNameTemplate.Text;
+            this.Operator.NameTemplate = txtNameTemplate.Text;
         }
 
         private void txtNameTemplate_TextChanged(object sender, EventArgs e)

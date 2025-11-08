@@ -11,16 +11,15 @@ namespace FileOperation
 {
     public class NameFilter : IFilter
     {
-        private string Wildcard { get; set; }
+        public string Wildcard { get; set; }
         public string Name { get;private set; }
         public string Title { get;private set;}
         public string Description { get;private set;}
 
         public bool Enabled { get; set; }
         public System.Drawing.Image Image { get;private set ; }
-        public System.Windows.Forms.IWin32Window MainWnd { get; set; }
-        public bool HasSettings { get; private set; }
-        public bool HasAbout { get;private set; }
+        public System.Windows.Forms.IWin32Window SettingsForm { get; private set; }
+        public System.Windows.Forms.IWin32Window AboutForm { get;private set; }
 
         public NameFilter()
         {
@@ -28,7 +27,8 @@ namespace FileOperation
             this.Title = "Name Filter";
             this.Description = "Filter files' names by wildcard";
             this.Image = null;
-            this.HasSettings = true;
+            this.SettingsForm = new NameFilterSettingsForm(this);
+            this.AboutForm = null;
             this.Enabled = true;
             this.Wildcard = string.Empty;
         }
@@ -54,25 +54,6 @@ namespace FileOperation
                     nMatched++;
             }
             return nMatched > 0;
-        }
-
-        public System.Windows.Forms.DialogResult ShowAbout(System.Windows.Forms.IWin32Window owner)
-        {
-            AboutForm frm = new AboutForm();
-            return frm.ShowDialog(owner);
-        }
-
-        public System.Windows.Forms.DialogResult ShowSettings(System.Windows.Forms.IWin32Window owner)
-        {
-            NameFilterSettingsForm frm = new NameFilterSettingsForm();
-            frm.Wildcard = this.Wildcard;
-            System.Windows.Forms.DialogResult res = frm.ShowDialog(owner);
-            if (res == System.Windows.Forms.DialogResult.OK)
-            {
-                this.Wildcard = frm.Wildcard;
-            }
-
-            return res;
         }
 
         public bool LoadSettings(Microsoft.Win32.RegistryKey regKey = null)

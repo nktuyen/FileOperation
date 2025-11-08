@@ -16,15 +16,13 @@ namespace ShowInExplorer
     {
         public string Name{ get; private set; }
         public string Title { get;private set; }
-
         public string Description{get;private set;}
         public string Status{ get; private set; }
         public System.Drawing.Image Image { get; private set; }
         public bool Enabled { get; set; }
-        public bool HasSettings { get;private set; }
-        public bool HasAbout {  get;private set; } 
+        public System.Windows.Forms.IWin32Window SettingsForm { get;private set; }
+        public System.Windows.Forms.IWin32Window AboutForm{  get;private set; } 
         public string CurrentFilePath { get; set; }
-        public IWin32Window MainWnd { get; set; }
         private bool MultipleFiles { get; set; }
         private bool ShowSelectedState { get; set; }
 
@@ -33,8 +31,8 @@ namespace ShowInExplorer
             this.Name = "ShowInExplorer";
             this.Title = "Show in Explorer";
             this.Description = "Show selected files in Windows Explorer";
-            this.HasAbout = true;
-            this.HasSettings = true;
+            this.AboutForm = new AboutForm(this);
+            this.SettingsForm = new SettingsForm(this);
             this.Image = Properties.Resources.WindowsExplorer;
             this.ShowSelectedState = true;
         }

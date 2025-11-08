@@ -186,12 +186,11 @@ namespace FileOperation
             IOperator deleteOperator = new DeleteOperator();
             if (deleteOperator != null)
             {
-                deleteOperator.MainWnd = this;
                 deleteOperator.Initialize();
                 deleteOperator.LoadSettings(settingsKey);
                 Operators.Add(deleteOperator);
 
-                if (deleteOperator.HasSettings)
+                if (deleteOperator.SettingsForm != null)
                 {
                     ToolStripMenuItem operSettingsItem = (ToolStripMenuItem)settingsOperatorsToolStripMenuItem.DropDownItems.Add(deleteOperator.Title);
                     operSettingsItem.Tag = deleteOperator;
@@ -199,7 +198,7 @@ namespace FileOperation
                     operSettingsItem.Click += new EventHandler(operSettingsMenuItemToolStripMenuItem_Click);
                 }
 
-                if (deleteOperator.HasAbout)
+                if (deleteOperator.AboutForm != null)
                 {
                     ToolStripMenuItem operAboutItem = (ToolStripMenuItem)aboutOperatorsToolStripMenuItem.DropDownItems.Add(deleteOperator.Title);
                     operAboutItem.Tag = deleteOperator;
@@ -239,12 +238,11 @@ namespace FileOperation
                         IOperator oper = (IOperator)Activator.CreateInstance(pluginType);
                         if (oper != null)
                         {
-                            oper.MainWnd = this;
                             oper.Initialize();
                             oper.LoadSettings(settingsKey);
                             Operators.Add(oper);
 
-                            if (oper.HasSettings)
+                            if (oper.SettingsForm != null)
                             {
                                 ToolStripMenuItem operSettingsItem = (ToolStripMenuItem)settingsOperatorsToolStripMenuItem.DropDownItems.Add(oper.Title);
                                 operSettingsItem.Tag = oper;
@@ -252,7 +250,7 @@ namespace FileOperation
                                 operSettingsItem.Click += new EventHandler(operSettingsMenuItemToolStripMenuItem_Click);
                             }
 
-                            if (oper.HasAbout)
+                            if (oper.AboutForm != null)
                             {
                                 ToolStripMenuItem operAboutItem = (ToolStripMenuItem)aboutOperatorsToolStripMenuItem.DropDownItems.Add(oper.Title);
                                 operAboutItem.Tag = oper;
@@ -367,7 +365,6 @@ namespace FileOperation
             IFilter nameFilter = new NameFilter();
             if (nameFilter != null)
             {
-                nameFilter.MainWnd = this;
                 nameFilter.Initialize();
                 nameFilter.LoadSettings(settingsKey);
                 Filters.Add(nameFilter);
@@ -377,14 +374,14 @@ namespace FileOperation
                 filterItem.Tag = nameFilter;
                 filterItem.Click += new EventHandler(filterMenuItemToolStripMenuItem_Click);
 
-                if (nameFilter.HasSettings)
+                if (nameFilter.SettingsForm != null)
                 {
                     ToolStripMenuItem filterSettingsItem = (ToolStripMenuItem)settingsFiltersToolStripMenuItem.DropDownItems.Add(nameFilter.Title);
                     filterSettingsItem.Tag = nameFilter;
                     filterSettingsItem.Click += new EventHandler(filterSettingsMenuItemToolStripMenuItem_Click);
                 }
 
-                if (nameFilter.HasAbout)
+                if (nameFilter.AboutForm != null)
                 {
                     ToolStripMenuItem filterAboutItem = (ToolStripMenuItem)aboutFiltersToolStripMenuItem.DropDownItems.Add(nameFilter.Title);
                     filterAboutItem.Tag = nameFilter;
@@ -422,7 +419,6 @@ namespace FileOperation
                         IFilter filter = (IFilter)Activator.CreateInstance(pluginType);
                         if (filter != null)
                         {
-                            filter.MainWnd = this;
                             filter.Initialize();
                             filter.LoadSettings(settingsKey);
                             Filters.Add(filter);
@@ -433,14 +429,14 @@ namespace FileOperation
                             filterItem.Click += new EventHandler(filterMenuItemToolStripMenuItem_Click);
                             
 
-                            if (filter.HasSettings)
+                            if (filter.SettingsForm != null)
                             {
                                 ToolStripMenuItem filterSettingsItem = (ToolStripMenuItem)settingsFiltersToolStripMenuItem.DropDownItems.Add(filter.Title);
                                 filterSettingsItem.Tag = filter;
                                 filterSettingsItem.Click += new EventHandler(filterSettingsMenuItemToolStripMenuItem_Click);
                             }
 
-                            if (filter.HasAbout)
+                            if (filter.AboutForm != null)
                             {
                                 ToolStripMenuItem filterAboutItem = (ToolStripMenuItem)aboutFiltersToolStripMenuItem.DropDownItems.Add(filter.Title);
                                 filterAboutItem.Tag = filter;
@@ -623,7 +619,8 @@ namespace FileOperation
             IFilter filter = (IFilter)menuItem.Tag;
             if (filter != null)
             {
-                filter.ShowAbout();
+                if (filter.AboutForm != null)
+                    ((System.Windows.Forms.Form)filter.AboutForm).ShowDialog(this);
             }
         }
 
@@ -633,7 +630,8 @@ namespace FileOperation
             IFilter filter = (IFilter)menuItem.Tag;
             if (filter != null)
             {
-                filter.ShowSettings();
+                if (filter.SettingsForm != null)
+                    ((System.Windows.Forms.Form)filter.SettingsForm).ShowDialog(this);
             }
         }
 
@@ -654,7 +652,8 @@ namespace FileOperation
             IOperator oper = (IOperator)menuItem.Tag;
             if (oper != null)
             {
-                oper.ShowSettings();
+                if (oper.SettingsForm != null)
+                    ((System.Windows.Forms.Form) oper.SettingsForm).ShowDialog(this);
             }
         }
 
@@ -664,7 +663,8 @@ namespace FileOperation
             IOperator oper = (IOperator)menuItem.Tag;
             if (oper != null)
             {
-                oper.ShowAbout();
+                if(oper.AboutForm != null)
+                    ((System.Windows.Forms.Form)oper.AboutForm).ShowDialog(this);
             }
         }
 

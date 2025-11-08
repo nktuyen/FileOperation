@@ -16,24 +16,15 @@ namespace TagFilter
     public class MyFilter : IFilter
     {
         public string Name { get; private set; }
-
         public string Title { get;private set; }
-
         public string Description {  get; private set; }
-
         public bool Enabled { get; set; }
-
-        public bool HasSettings { get; private set; }
-
-        public bool HasAbout {  get; private set; }
-
+        public System.Windows.Forms.IWin32Window SettingsForm { get; private set; }
+        public System.Windows.Forms.IWin32Window AboutForm {  get; private set; }
         public Image Image {  get; private set; }
-
-        public IWin32Window MainWnd {  get; set; }
-
-        private TagLib.MediaTypes MediaTypes { get; set; }
-        private TimeSpan DurationMin { get; set; }
-        private TimeSpan DurationMax { get; set; }
+        public TagLib.MediaTypes MediaTypes { get; set; }
+        public TimeSpan DurationMin { get; set; }
+        public TimeSpan DurationMax { get; set; }
 
         public MyFilter()
         {
@@ -41,8 +32,8 @@ namespace TagFilter
             this.Title = "Tag Filter";
             this.Description = "Filter files by tags";
             this.Image = null;
-            this.HasAbout = true;
-            this.HasSettings = true;
+            this.AboutForm = new AboutForm(this);
+            this.SettingsForm = new SettingsForm(this);
             this.MediaTypes = MediaTypes.None;
         }
 
@@ -74,29 +65,6 @@ namespace TagFilter
         public bool Initialize()
         {
             return true;
-        }
-
-        public DialogResult ShowAbout(IWin32Window owner = null)
-        {
-            AboutForm frm = new AboutForm();
-            return frm.ShowDialog();
-        }
-
-        public DialogResult ShowSettings(IWin32Window owner = null)
-        {
-            SettingsForm frm = new SettingsForm();
-            frm.MediaTypes = this.MediaTypes;
-            frm.DurationMin = this.DurationMin;
-            frm.DurationMax = this.DurationMax;
-            DialogResult res = frm.ShowDialog();
-            if (res == DialogResult.OK)
-            {
-                this.MediaTypes = frm.MediaTypes;
-                this.DurationMin = frm.DurationMin;
-                this.DurationMax = frm.DurationMax;
-            }
-
-            return res;
         }
 
         public bool LoadSettings(Microsoft.Win32.RegistryKey regKey = null)

@@ -13,20 +13,19 @@ namespace SizeFilter
 
     public class MyFilter : IFilter
     {
-        private long SizeFrom { get; set; }
-        private long SizeTo { get; set; }
-
+        public long SizeFrom { get; set; }
+        public long SizeTo { get; set; }
+        public SizeUnit UnitFrom { get;set; }
+        public SizeUnit UnitTo { get; set; }
         public string Name { get; private set; }
         public string Title { get;private set; }
         public string Description { get; private set; }
 
         public bool Enabled { get; set; }
         public System.Drawing.Image Image { get;private set; }
-        public bool HasSettings { get;private set; }
+        public System.Windows.Forms.IWin32Window SettingsForm { get;private set; }
 
-        public bool HasAbout { get;private set; }
-
-        public System.Windows.Forms.IWin32Window MainWnd { get; set; }
+        public System.Windows.Forms.IWin32Window AboutForm { get;private set; }
 
         public MyFilter()
         {
@@ -34,8 +33,8 @@ namespace SizeFilter
             this.Title = "Size Filter";
             this.Description = "Filter files by size";
             this.Image = null;
-            this.HasAbout = true;
-            this.HasSettings = true;
+            this.AboutForm = new AboutForm(this);
+            this.SettingsForm = new SettingsForm(this);
             this.SizeFrom = 0;
             this.SizeTo = -1;
         }
@@ -65,27 +64,6 @@ namespace SizeFilter
                 return false;
             }
             return true;
-        }
-
-        public System.Windows.Forms.DialogResult ShowAbout(System.Windows.Forms.IWin32Window owner)
-        {
-            AboutForm frm = new AboutForm();
-            return frm.ShowDialog(owner);
-        }
-
-        public System.Windows.Forms.DialogResult ShowSettings(System.Windows.Forms.IWin32Window owner)
-        {
-            SettingsForm frm = new SettingsForm();
-            frm.SizeFrom = this.SizeFrom;
-            frm.SizeTo = this.SizeTo;
-            System.Windows.Forms.DialogResult res = frm.ShowDialog(owner);
-            if (res == System.Windows.Forms.DialogResult.OK)
-            {
-                this.SizeFrom = frm.SizeFrom;
-                this.SizeTo = frm.SizeTo;
-            }
-
-            return res;
         }
 
         public bool LoadSettings(Microsoft.Win32.RegistryKey regKey = null)

@@ -11,26 +11,25 @@ namespace AttributesFilter
 {
     public class MyFilter : IFilter
     {
-        private FileAttributes Attributes { get; set; }
+        public FileAttributes Attributes { get; set; }
         public enum MatchingMode { EQuality, Containing }
         public MatchingMode Matching { get; set; }
-        public bool HasSettings{ get; private set; }
-        public bool HasAbout { get; private set; }
+        public System.Windows.Forms.IWin32Window SettingsForm { get; private set; }
+        public System.Windows.Forms.IWin32Window AboutForm { get; private set; }
 
         public string Name { get;private set; }
         public string Title { get; private set; }
         public string Description { get; private set; }
         public System.Drawing.Image Image { get; private set; }
         public bool Enabled { get; set; }
-        public System.Windows.Forms.IWin32Window MainWnd { get; set; }
         public MyFilter()
         {
             this.Name = "AttributesFilter";
             this.Title = "Attributes Filter";
             this.Description = "Filter files by attributes";
             this.Image = null;
-            this.HasAbout = true;
-            this.HasSettings = true;
+            this.AboutForm = new AboutForm(this);
+            this.SettingsForm = new SettingsForm(this);
             this.Attributes = FileAttributes.Archive | FileAttributes.Normal;
             this.Matching = MatchingMode.Containing;
         }
@@ -63,32 +62,6 @@ namespace AttributesFilter
             }
 
             return false;
-        }
-
-        public System.Windows.Forms.DialogResult ShowAbout(System.Windows.Forms.IWin32Window owner)
-        {
-            AboutForm frm = new AboutForm();
-            return frm.ShowDialog(owner);
-        }
-
-        public System.Windows.Forms.DialogResult ShowSettings(System.Windows.Forms.IWin32Window owner)
-        {
-            SettingsForm frm = new SettingsForm();
-            frm.Attributes = this.Attributes;
-            if (this.Matching == MatchingMode.Containing)
-                frm.ExactMatch = false;
-            else
-                frm.ExactMatch = true;
-            System.Windows.Forms.DialogResult res = frm.ShowDialog(owner);
-            if (res == System.Windows.Forms.DialogResult.OK)
-            {
-                this.Attributes = frm.Attributes;
-                if (frm.ExactMatch)
-                    this.Matching = MatchingMode.EQuality;
-                else
-                    this.Matching = MatchingMode.Containing;
-            }
-            return res;
         }
 
         public bool LoadSettings(Microsoft.Win32.RegistryKey regKey = null)

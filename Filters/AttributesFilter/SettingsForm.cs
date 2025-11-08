@@ -15,13 +15,11 @@ namespace AttributesFilter
 {
     public partial class SettingsForm : Form
     {
-        public FileAttributes Attributes { get; set; }
-        public bool ExactMatch { get; set; }
-
-        public SettingsForm()
+        private MyFilter Filter { get; set; }
+        public SettingsForm(MyFilter filter = null)
         {
             InitializeComponent();
-            Attributes = FileAttributes.Archive;
+            this.Filter = filter;
         }
 
         private void SettingsForm_Load(object sender, EventArgs e)
@@ -43,34 +41,34 @@ namespace AttributesFilter
             }
 
             ListViewItem item = lvwFIleAttributes.Items.Add(FileAttributes.Archive.ToString());
-            if((this.Attributes & FileAttributes.Archive) != 0)
+            if((this.Filter.Attributes & FileAttributes.Archive) != 0)
                 item.Checked = true;
             item = lvwFIleAttributes.Items.Add(FileAttributes.Compressed.ToString());
-            if ((this.Attributes & FileAttributes.Compressed) != 0)
+            if ((this.Filter.Attributes & FileAttributes.Compressed) != 0)
                 item.Checked = true;
             item = lvwFIleAttributes.Items.Add(FileAttributes.Encrypted.ToString());
-            if ((this.Attributes & FileAttributes.Encrypted) != 0)
+            if ((this.Filter.Attributes & FileAttributes.Encrypted) != 0)
                 item.Checked = true;
             item = lvwFIleAttributes.Items.Add(FileAttributes.Hidden.ToString());
-            if ((this.Attributes & FileAttributes.Hidden) != 0)
+            if ((this.Filter.Attributes & FileAttributes.Hidden) != 0)
                 item.Checked = true;
             item = lvwFIleAttributes.Items.Add(FileAttributes.Normal.ToString());
-            if ((this.Attributes & FileAttributes.Normal) != 0)
+            if ((this.Filter.Attributes & FileAttributes.Normal) != 0)
                 item.Checked = true;
             item = lvwFIleAttributes.Items.Add(FileAttributes.NotContentIndexed.ToString());
-            if ((this.Attributes & FileAttributes.NotContentIndexed) != 0)
+            if ((this.Filter.Attributes & FileAttributes.NotContentIndexed) != 0)
                 item.Checked = true;
             item = lvwFIleAttributes.Items.Add(FileAttributes.ReadOnly.ToString());
-            if ((this.Attributes & FileAttributes.ReadOnly) != 0)
+            if ((this.Filter.Attributes & FileAttributes.ReadOnly) != 0)
                 item.Checked = true;
             item = lvwFIleAttributes.Items.Add(FileAttributes.System.ToString());
-            if ((this.Attributes & FileAttributes.System) != 0)
+            if ((this.Filter.Attributes & FileAttributes.System) != 0)
                 item.Checked = true;
             item = lvwFIleAttributes.Items.Add(FileAttributes.Temporary.ToString());
-            if ((this.Attributes & FileAttributes.Temporary) != 0)
+            if ((this.Filter.Attributes & FileAttributes.Temporary) != 0)
                 item.Checked = true;
 
-            if (this.ExactMatch)
+            if (this.Filter.Matching == MyFilter.MatchingMode.EQuality)
                 radEquality.Checked = true;
             else
                 radContains.Checked = true;
@@ -78,54 +76,54 @@ namespace AttributesFilter
 
         private void btnOK_Click(object sender, EventArgs e)
         {
-            this.Attributes = 0;
+            this.Filter.Attributes = 0;
             foreach (ListViewItem item in lvwFIleAttributes.Items)
             {
                 if (item.Checked)
                 {
                     if (item.Index == 0)
                     {
-                        this.Attributes |= FileAttributes.Archive;
+                        this.Filter.Attributes |= FileAttributes.Archive;
                     }
                     else if (item.Index == 1)
                     {
-                        this.Attributes |= FileAttributes.Compressed;
+                        this.Filter.Attributes |= FileAttributes.Compressed;
                     }
                     else if (item.Index == 2)
                     {
-                        this.Attributes |= FileAttributes.Encrypted;
+                        this.Filter.Attributes |= FileAttributes.Encrypted;
                     }
                     else if (item.Index == 3)
                     {
-                        this.Attributes |= FileAttributes.Hidden;
+                        this.Filter.Attributes |= FileAttributes.Hidden;
                     }
                     else if (item.Index == 4)
                     {
-                        this.Attributes |= FileAttributes.Normal;
+                        this.Filter.Attributes |= FileAttributes.Normal;
                     }
                     else if (item.Index == 5)
                     {
-                        this.Attributes |= FileAttributes.NotContentIndexed;
+                        this.Filter.Attributes |= FileAttributes.NotContentIndexed;
                     }
                     else if (item.Index == 6)
                     {
-                        this.Attributes |= FileAttributes.ReadOnly;
+                        this.Filter.Attributes |= FileAttributes.ReadOnly;
                     }
                     else if (item.Index == 7)
                     {
-                        this.Attributes |= FileAttributes.System;
+                        this.Filter.Attributes |= FileAttributes.System;
                     }
                     else if (item.Index == 8)
                     {
-                        this.Attributes |= FileAttributes.Temporary;
+                        this.Filter.Attributes |= FileAttributes.Temporary;
                     }
                 }
             }
 
             if (radEquality.Checked)
-                this.ExactMatch = true;
+                this.Filter.Matching = MyFilter.MatchingMode.EQuality;
             else
-                this.ExactMatch = false;
+                this.Filter.Matching = MyFilter.MatchingMode.Containing;
         }
 
         private void lvwFIleAttributes_ItemChecked(object sender, ItemCheckedEventArgs e)

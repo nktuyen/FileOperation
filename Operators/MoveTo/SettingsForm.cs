@@ -14,10 +14,12 @@ namespace MoveTo
     {
         public int FileExistingAction { get; set; }
         public int BrowserDialogStyle { get; set; }
-
-        public SettingsForm()
+        private MyOperator Operator { get; set; }
+        public SettingsForm(MyOperator oper = null)
         {
             InitializeComponent();
+
+            this.Operator = oper;
         }
 
         private void btnOK_Click(object sender, EventArgs e)
