@@ -29,7 +29,7 @@ namespace FileOperation
             this.Image = null;
             this.SettingsForm = new NameFilterSettingsForm(this);
             this.AboutForm = null;
-            this.Enabled = true;
+            this.Enabled = false;
             this.Wildcard = string.Empty;
         }
 

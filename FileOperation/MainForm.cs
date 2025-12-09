@@ -18,6 +18,7 @@ using System.Threading.Tasks;
 using System.Timers;
 using System.Windows.Forms;
 using System.Xml;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.ProgressBar;
 
 namespace FileOperation
 {
@@ -88,10 +89,16 @@ namespace FileOperation
         private System.Timers.Timer Timer { get; set; }
         private string WorkingFile { get; set; }
         private string RegistryKeyPath { get; set; }
-        private bool LoadRecentFile { get; set; }
+        private bool LoadRecentFilesAtStartup { get; set; }
         private List<string> RecentFiles { get;set; }
         private ToolStripMenuItem LoadRecentListToolStripMenuItem { get; set; }
         private List<System.Drawing.Image> RecentMenuImages { get; set; }
+
+        private ToolStripItem addFilesMenuItem = null;
+        private ToolStripItem addFilesinFolderMenuItem = null;
+        private ToolStripItem removeSelectedFilesMenuItem = null;
+        private ToolStripItem removeAllFilesMenuItem = null;
+
         public MainForm()
         {
             InitializeComponent();
@@ -178,7 +185,7 @@ namespace FileOperation
                 ctrl.Enabled = EnabledControlsMap[ctrl];
         }
 
-        private int LoadOperators(RegistryKey settingsKey = null)
+        private int LoadOperators()
         {
             int count = 0;
             Operators.Clear();
@@ -187,25 +194,7 @@ namespace FileOperation
             if (deleteOperator != null)
             {
                 deleteOperator.Initialize();
-                deleteOperator.LoadSettings(settingsKey);
                 Operators.Add(deleteOperator);
-
-                if (deleteOperator.SettingsForm != null)
-                {
-                    ToolStripMenuItem operSettingsItem = (ToolStripMenuItem)settingsOperatorsToolStripMenuItem.DropDownItems.Add(deleteOperator.Title);
-                    operSettingsItem.Tag = deleteOperator;
-                    operSettingsItem.Image = deleteOperator.Image;
-                    operSettingsItem.Click += new EventHandler(operSettingsMenuItemToolStripMenuItem_Click);
-                }
-
-                if (deleteOperator.AboutForm != null)
-                {
-                    ToolStripMenuItem operAboutItem = (ToolStripMenuItem)aboutOperatorsToolStripMenuItem.DropDownItems.Add(deleteOperator.Title);
-                    operAboutItem.Tag = deleteOperator;
-                    operAboutItem.Image = deleteOperator.Image;
-                    operAboutItem.Click += new EventHandler(operAboutMenuItemToolStripMenuItem_Click);
-                }
-
                 count++;
             }
 
@@ -239,25 +228,7 @@ namespace FileOperation
                         if (oper != null)
                         {
                             oper.Initialize();
-                            oper.LoadSettings(settingsKey);
                             Operators.Add(oper);
-
-                            if (oper.SettingsForm != null)
-                            {
-                                ToolStripMenuItem operSettingsItem = (ToolStripMenuItem)settingsOperatorsToolStripMenuItem.DropDownItems.Add(oper.Title);
-                                operSettingsItem.Tag = oper;
-                                operSettingsItem.Image = oper.Image;
-                                operSettingsItem.Click += new EventHandler(operSettingsMenuItemToolStripMenuItem_Click);
-                            }
-
-                            if (oper.AboutForm != null)
-                            {
-                                ToolStripMenuItem operAboutItem = (ToolStripMenuItem)aboutOperatorsToolStripMenuItem.DropDownItems.Add(oper.Title);
-                                operAboutItem.Tag = oper;
-                                operAboutItem.Image = oper.Image;
-                                operAboutItem.Click += new EventHandler(operAboutMenuItemToolStripMenuItem_Click);
-                            }
-
                             count++;
                         }
                     }
@@ -265,6 +236,28 @@ namespace FileOperation
             }
 
             return count;
+        }
+
+        private void PopulateOperators()
+        {
+            foreach(IOperator oper in this.Operators)
+            {
+                if (oper.SettingsForm != null)
+                {
+                    ToolStripMenuItem operSettingsItem = (ToolStripMenuItem)settingsOperatorsToolStripMenuItem.DropDownItems.Add(oper.Title);
+                    operSettingsItem.Tag = oper;
+                    operSettingsItem.Image = oper.Image;
+                    operSettingsItem.Click += new EventHandler(operSettingsMenuItemToolStripMenuItem_Click);
+                }
+
+                if (oper.AboutForm != null)
+                {
+                    ToolStripMenuItem operAboutItem = (ToolStripMenuItem)aboutOperatorsToolStripMenuItem.DropDownItems.Add(oper.Title);
+                    operAboutItem.Tag = oper;
+                    operAboutItem.Image = oper.Image;
+                    operAboutItem.Click += new EventHandler(operAboutMenuItemToolStripMenuItem_Click);
+                }
+            }
         }
 
         private string[] LoadRecentListFiles(RegistryKey regKey, int max = 10)
@@ -319,7 +312,7 @@ namespace FileOperation
                     this.WorkingFile = string.Empty;
 
                 if (objLoadRecentFile != null)
-                    this.LoadRecentFile = ((int)objLoadRecentFile != 0);
+                    this.LoadRecentFilesAtStartup = ((int)objLoadRecentFile != 0);
 
                 regKey.Close();
             }
@@ -342,7 +335,7 @@ namespace FileOperation
                 if (regKey != null)
                 {
                     regKey.SetValue("WorkingFile", this.WorkingFile, Microsoft.Win32.RegistryValueKind.String);
-                    regKey.SetValue("LoadRecentFile", this.LoadRecentFile ? 1 : 0, Microsoft.Win32.RegistryValueKind.DWord);
+                    regKey.SetValue("LoadRecentFile", this.LoadRecentFilesAtStartup ? 1 : 0, Microsoft.Win32.RegistryValueKind.DWord);
 
                     regKey.Close();
                 }
@@ -356,7 +349,7 @@ namespace FileOperation
             return true;
         }
 
-        private int LoadFilters(RegistryKey settingsKey = null)
+        private int LoadFilters()
         {
             int count = 0;
             Filters.Clear();
@@ -366,28 +359,31 @@ namespace FileOperation
             if (nameFilter != null)
             {
                 nameFilter.Initialize();
-                nameFilter.LoadSettings(settingsKey);
                 Filters.Add(nameFilter);
+                count++;
+            }
 
-                ToolStripMenuItem filterItem = (ToolStripMenuItem)filterToolStripMenuItem.DropDownItems.Add(nameFilter.Title);
-                filterItem.Checked = nameFilter.Enabled;
-                filterItem.Tag = nameFilter;
-                filterItem.Click += new EventHandler(filterMenuItemToolStripMenuItem_Click);
+            IFilter sizeFilter = new SizeFilter();
+            if (sizeFilter != null)
+            {
+                sizeFilter.Initialize();
+                Filters.Add(sizeFilter);
+                count++;
+            }
 
-                if (nameFilter.SettingsForm != null)
-                {
-                    ToolStripMenuItem filterSettingsItem = (ToolStripMenuItem)settingsFiltersToolStripMenuItem.DropDownItems.Add(nameFilter.Title);
-                    filterSettingsItem.Tag = nameFilter;
-                    filterSettingsItem.Click += new EventHandler(filterSettingsMenuItemToolStripMenuItem_Click);
-                }
+            IFilter dateFilter = new DateFilter();
+            if (dateFilter != null)
+            {
+                dateFilter.Initialize();
+                Filters.Add(dateFilter);
+                count++;
+            }
 
-                if (nameFilter.AboutForm != null)
-                {
-                    ToolStripMenuItem filterAboutItem = (ToolStripMenuItem)aboutFiltersToolStripMenuItem.DropDownItems.Add(nameFilter.Title);
-                    filterAboutItem.Tag = nameFilter;
-                    filterAboutItem.Click += new EventHandler(filterAboutMenuItemToolStripMenuItem_Click);
-                }
-                
+            IFilter attrFilter = new AttributesFilter();
+            if (attrFilter != null)
+            {
+                attrFilter.Initialize();
+                Filters.Add(attrFilter);
                 count++;
             }
 
@@ -420,29 +416,7 @@ namespace FileOperation
                         if (filter != null)
                         {
                             filter.Initialize();
-                            filter.LoadSettings(settingsKey);
                             Filters.Add(filter);
-
-                            ToolStripMenuItem filterItem = (ToolStripMenuItem)filterToolStripMenuItem.DropDownItems.Add(filter.Title);
-                            filterItem.Checked = filter.Enabled;
-                            filterItem.Tag = filter;
-                            filterItem.Click += new EventHandler(filterMenuItemToolStripMenuItem_Click);
-                            
-
-                            if (filter.SettingsForm != null)
-                            {
-                                ToolStripMenuItem filterSettingsItem = (ToolStripMenuItem)settingsFiltersToolStripMenuItem.DropDownItems.Add(filter.Title);
-                                filterSettingsItem.Tag = filter;
-                                filterSettingsItem.Click += new EventHandler(filterSettingsMenuItemToolStripMenuItem_Click);
-                            }
-
-                            if (filter.AboutForm != null)
-                            {
-                                ToolStripMenuItem filterAboutItem = (ToolStripMenuItem)aboutFiltersToolStripMenuItem.DropDownItems.Add(filter.Title);
-                                filterAboutItem.Tag = filter;
-                                filterAboutItem.Click += new EventHandler(filterAboutMenuItemToolStripMenuItem_Click);
-                            }
-
                             count++;
                         }
                     }
@@ -452,6 +426,30 @@ namespace FileOperation
             return count;
         }
 
+        private void PopulateFilters()
+        {
+            foreach(IFilter filter in this.Filters)
+            {
+                ToolStripMenuItem filterItem = (ToolStripMenuItem)filterToolStripMenuItem.DropDownItems.Add(filter.Title);
+                filterItem.Checked = filter.Enabled;
+                filterItem.Tag = filter;
+                filterItem.Click += new EventHandler(filterMenuItemToolStripMenuItem_Click);
+
+                if (filter.SettingsForm != null)
+                {
+                    ToolStripMenuItem filterSettingsItem = (ToolStripMenuItem)settingsFiltersToolStripMenuItem.DropDownItems.Add(filter.Title);
+                    filterSettingsItem.Tag = filter;
+                    filterSettingsItem.Click += new EventHandler(filterSettingsMenuItemToolStripMenuItem_Click);
+                }
+
+                if (filter.AboutForm != null)
+                {
+                    ToolStripMenuItem filterAboutItem = (ToolStripMenuItem)aboutFiltersToolStripMenuItem.DropDownItems.Add(filter.Title);
+                    filterAboutItem.Tag = filter;
+                    filterAboutItem.Click += new EventHandler(filterAboutMenuItemToolStripMenuItem_Click);
+                }
+            }
+        }
         private void RecentMenuItemClicked(object sender, EventArgs e)
         {
             ToolStripItem recentItem = sender as ToolStripItem;
@@ -499,118 +497,16 @@ namespace FileOperation
 
         private void MainForm_Load(object sender, EventArgs e)
         {
-            Assembly exeAssembly = null;
-            FileVersionInfo verInf = null;
-            RegistryKey mainKey = null;
-            RegistryKey filtersKey = null;
-            RegistryKey operatorsKey = null;
-            RegistryKey othersKey = null;
-            RegistryKey settingsKey = null;
-            RegistryKey recentListFilesKey = null;
-            try
-            {
-                exeAssembly = Assembly.GetExecutingAssembly();
-                if (exeAssembly != null)
-                    verInf = FileVersionInfo.GetVersionInfo(exeAssembly.Location);
-                if (verInf != null)
-                    this.RegistryKeyPath = string.Format("SOFTWARE\\{0}\\{1}\\",verInf.CompanyName, verInf.ProductName);
-                else
-                    this.RegistryKeyPath = "SOFTWARE\\NKTUYEN\\FileOperator\\";
+            LoadFilters();
+            LoadOperators();
+            Filters.Sort(delegate (IFilter f1, IFilter f2) { return f1.Name.CompareTo(f2.Name); });
+            Operators.Sort(delegate (IOperator o1, IOperator o2) { return o1.Name.CompareTo(o2.Name); });
+            LoadSettings();
+            PopulateFilters();
+            PopulateOperators();
 
-                mainKey = Registry.CurrentUser.OpenSubKey(this.RegistryKeyPath);
-                if (mainKey == null)
-                    mainKey = Registry.CurrentUser.CreateSubKey(this.RegistryKeyPath);
-                if (mainKey != null)
-                {
-                    recentListFilesKey = mainKey.OpenSubKey("Recents", true);
-                    if (recentListFilesKey == null)
-                        recentListFilesKey = mainKey.CreateSubKey("Recents", RegistryKeyPermissionCheck.ReadWriteSubTree);
-
-                    settingsKey = mainKey.OpenSubKey("Settings", true);
-                    if (settingsKey == null)
-                        settingsKey = mainKey.CreateSubKey("Settings", RegistryKeyPermissionCheck.ReadWriteSubTree);
-                    if (settingsKey != null)
-                    {
-                        filtersKey = settingsKey.OpenSubKey("Filters");
-                        if (filtersKey == null)
-                            filtersKey = settingsKey.CreateSubKey("Filters", RegistryKeyPermissionCheck.ReadWriteSubTree);
-
-                        operatorsKey = settingsKey.OpenSubKey("Operators");
-                        if (operatorsKey == null)
-                            operatorsKey = settingsKey.CreateSubKey("Operators", RegistryKeyPermissionCheck.ReadWriteSubTree);
-
-                        othersKey = settingsKey.OpenSubKey("Others", true);
-                        if (othersKey == null)
-                            othersKey = settingsKey.CreateSubKey("Others", RegistryKeyPermissionCheck.ReadWriteSubTree);
-                    }
-                }
-            }
-            catch (System.Exception ex)
-            {
-                Debug.Print(ex.Message);
-            }
-
-            LoadSettings(othersKey);
-            LoadFilters(filtersKey);
-            LoadOperators(operatorsKey);
-
-            string[] recentFiles = LoadRecentListFiles(recentListFilesKey, this.RecentMenuImages.Count);
-            if (recentFiles.Length > 0)
-            {
-                if (this.LoadRecentListToolStripMenuItem == null)
-                {
-                    this.LoadRecentListToolStripMenuItem = new ToolStripMenuItem();
-                    this.LoadRecentListToolStripMenuItem.Text = "Load Recent List";
-                }
-                fileToolStripMenuItem.DropDownItems.Insert(5, this.LoadRecentListToolStripMenuItem);
-
-                int imageIndex = 0;
-                ToolStripItem recentItem = null;
-                foreach (string file in recentFiles)
-                {
-                    recentItem = this.LoadRecentListToolStripMenuItem.DropDownItems.Add(file);
-                    recentItem.Image = this.RecentMenuImages[imageIndex];
-                    recentItem.Click += new EventHandler(RecentMenuItemClicked);
-                    imageIndex++;
-                    if (!this.RecentFiles.Contains(file))
-                        this.RecentFiles.Add(file);
-                }
-            }
-
-            loadRecentFileAtStartupToolStripMenuItem.Checked = this.LoadRecentFile;
-            if(this.LoadRecentFile && this.WorkingFile != string.Empty)
-            {
-                List<string> files = new List<string>();
-                using (StreamReader fileStream = new StreamReader(this.WorkingFile, Encoding.UTF8))
-                {
-                    string line = string.Empty;
-                    while ((line = fileStream.ReadLine()) != null)
-                    {
-                        line = line.Trim();
-                        if (line.Length > 0)
-                        {
-                            try
-                            {
-                                if (Regex.IsMatch(line, @"^(?:[a-zA-Z]\:|\\\\[\w\.]+\\[\w.$]+)\\(?:[\w]+\\)*"))
-                                {
-                                    files.Add(line);
-                                }
-                            }
-                            catch (System.Exception ex)
-                            {
-                                Debug.Print(ex.Message);
-                                continue;
-                            }
-                        }
-                    }
-                }
-
-                lvwFiles.Items.Clear();
-                MainImgList.Images.Clear();
-                if (bgwAddFiles.IsBusy)
-                    bgwAddFiles.CancelAsync();
-                bgwAddFiles.RunWorkerAsync(files.ToArray());
-            }
+            lvwFiles.Items.Clear();
+            MainImgList.Images.Clear();
         }
 
         private void filterAboutMenuItemToolStripMenuItem_Click(object sender, EventArgs e)
@@ -899,7 +795,6 @@ namespace FileOperation
                 lblStatus.Text = string.Format("Total:{0} file(s)", lvwFiles.Items.Count);
             }
 
-            removeAllFilesToolstripMenu.Enabled = lvwFiles.Items.Count > 0;
             saveListToolStripMenuItem.Enabled = lvwFiles.Items.Count > 0;
         }
 
@@ -1166,7 +1061,6 @@ namespace FileOperation
                 this.Timer = null;
             }
 
-            removeAllFilesToolstripMenu.Enabled = lvwFiles.Items.Count > 0;
             saveListToolStripMenuItem.Enabled = lvwFiles.Items.Count > 0;
         }
 
@@ -1182,18 +1076,6 @@ namespace FileOperation
             }
             else if(bgwDropFiles.IsBusy)
                 bgwDropFiles.CancelAsync();
-        }
-
-        private void removeAllFilesToolstripMenu_Click(object sender, EventArgs e)
-        {
-            DialogResult res = MessageBox.Show("Are you sure to remove all files in the list?", "Remove All Files", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-            if (res != DialogResult.Yes)
-                return;
-            lvwFiles.Items.Clear();
-            MainImgList.Images.Clear();
-            lblStatus.Text = string.Format("Total:{0} file(s)", lvwFiles.Items.Count);
-            removeAllFilesToolstripMenu.Enabled = lvwFiles.Items.Count > 0;
-            saveListToolStripMenuItem.Enabled = lvwFiles.Items.Count > 0;
         }
 
         private void MainForm_KeyUp(object sender, KeyEventArgs e)
@@ -1282,7 +1164,6 @@ namespace FileOperation
                         item.SubItems[0].Text = minIndex.ToString();
                     }
 
-                    removeAllFilesToolstripMenu.Enabled = lvwFiles.Items.Count > 0;
                     saveListToolStripMenuItem.Enabled = lvwFiles.Items.Count > 0;
                     lblStatus.Text = string.Format("Total:{0} file(s)", lvwFiles.Items.Count);
                 }
@@ -1292,8 +1173,44 @@ namespace FileOperation
         private void filesContextMenuStrip_Opening(object sender, CancelEventArgs e)
         {
             filesContextMenuStrip.Items.Clear();
+            if(addFilesMenuItem == null)
+            {
+                addFilesMenuItem = new ToolStripMenuItem("Add Files");
+                addFilesMenuItem.Click += addFilesContextMenuItem_Click;
+            }
+            filesContextMenuStrip.Items.Add(addFilesMenuItem);
+
+            if (addFilesinFolderMenuItem == null)
+            {
+                addFilesinFolderMenuItem = new ToolStripMenuItem("Add Files in Folder");
+                addFilesinFolderMenuItem.Click += addFilesInFolderContextMenuItem_Click;
+            }
+            filesContextMenuStrip.Items.Add(addFilesinFolderMenuItem);
+
+            if (lvwFiles.Items.Count > 0)
+            {
+                if (lvwFiles.SelectedItems.Count > 0)
+                {
+                    if (removeSelectedFilesMenuItem == null)
+                    {
+                        removeSelectedFilesMenuItem = new ToolStripMenuItem("Remove");
+                        removeSelectedFilesMenuItem.Click += removeContextMenuItem_Click;
+                    }
+                    filesContextMenuStrip.Items.Add(removeSelectedFilesMenuItem);
+                }
+
+                if (removeAllFilesMenuItem == null)
+                {
+                    removeAllFilesMenuItem = new ToolStripMenuItem("Remove All");
+                    removeAllFilesMenuItem.Click += removeAllContextMenuItem_Click;
+                }
+                filesContextMenuStrip.Items.Add(removeAllFilesMenuItem);
+            }
+
             if (lvwFiles.SelectedItems.Count <= 0)
                 return;
+
+            filesContextMenuStrip.Items.Add("-");
 
             foreach (IOperator oper in Operators)
             {
@@ -1647,7 +1564,6 @@ namespace FileOperation
                 this.Timer = null;
             }
 
-            removeAllFilesToolstripMenu.Enabled = lvwFiles.Items.Count > 0;
             saveListToolStripMenuItem.Enabled = lvwFiles.Items.Count > 0;
         }
 
@@ -1737,94 +1653,48 @@ namespace FileOperation
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            Assembly exeAssembly = null;
-            FileVersionInfo verInf = null;
-            RegistryKey mainKey = null;
-            RegistryKey filtersKey = null;
-            RegistryKey operatorsKey = null;
-            RegistryKey othersKey = null;
-            RegistryKey settingsKey = null;
-            RegistryKey recetnFilesKey = null;
-            try
-            {
-                exeAssembly = Assembly.GetExecutingAssembly();
-                if (exeAssembly != null)
-                    verInf = FileVersionInfo.GetVersionInfo(exeAssembly.Location);
-                if (verInf != null)
-                    this.RegistryKeyPath = string.Format("SOFTWARE\\{0}\\{1}\\", verInf.CompanyName, verInf.ProductName);
-                else
-                    this.RegistryKeyPath = "SOFTWARE\\NKTUYEN\\FileOperator\\";
-
-                mainKey = Registry.CurrentUser.OpenSubKey(this.RegistryKeyPath);
-                if (mainKey == null)
-                    mainKey = Registry.CurrentUser.CreateSubKey(this.RegistryKeyPath, RegistryKeyPermissionCheck.ReadWriteSubTree);
-                if (mainKey != null)
-                {
-                    recetnFilesKey = mainKey.OpenSubKey("Recents", true);
-                    if (recetnFilesKey == null)
-                        recetnFilesKey = mainKey.CreateSubKey("Recents", RegistryKeyPermissionCheck.ReadWriteSubTree);
-
-                    settingsKey = mainKey.OpenSubKey("Settings");
-                    if (settingsKey == null)
-                        settingsKey = mainKey.CreateSubKey("Settings", RegistryKeyPermissionCheck.ReadWriteSubTree);
-                    if (settingsKey != null)
-                    {
-                        filtersKey = settingsKey.OpenSubKey("Filters", true);
-                        if (filtersKey == null)
-                            filtersKey = settingsKey.CreateSubKey("Filters", RegistryKeyPermissionCheck.ReadWriteSubTree);
-
-                        operatorsKey = settingsKey.OpenSubKey("Operators", true);
-                        if (operatorsKey == null)
-                            operatorsKey = settingsKey.CreateSubKey("Operators", RegistryKeyPermissionCheck.ReadWriteSubTree);
-
-                        othersKey = settingsKey.OpenSubKey("Others",true);
-                        if (othersKey == null)
-                            othersKey = settingsKey.CreateSubKey("Others", RegistryKeyPermissionCheck.ReadWriteSubTree);
-                    }
-                }
-            }
-            catch (System.Exception ex)
-            {
-                Debug.Print(ex.Message);
-            }
-
-            if (filtersKey != null)
-            {
-                foreach (IFilter filter in this.Filters)
-                {
-                    filter.SaveSettings(filtersKey);
-                }
-            }
-
-
-            if (operatorsKey != null)
-            {
-                foreach (IOperator oper in this.Operators)
-                {
-                    oper.SaveSettings(operatorsKey);
-                }
-            }
-
-            if(othersKey != null)
-            {
-                SaveSettings(othersKey);
-            }
-
-            if(recetnFilesKey != null)
-            {
-                int count = 1;
-                foreach(string file in this.RecentFiles)
-                {
-                    recetnFilesKey.SetValue(count.ToString(), file, RegistryValueKind.String);
-                    count++;
-                }
-            }
+            SaveSettings();
         }
 
         private void loadRecentFileAtStartupToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            this.LoadRecentFile = !this.LoadRecentFile;
-            loadRecentFileAtStartupToolStripMenuItem.Checked = this.LoadRecentFile;
+            this.LoadRecentFilesAtStartup = !this.LoadRecentFilesAtStartup;
+            loadRecentFileAtStartupToolStripMenuItem.Checked = this.LoadRecentFilesAtStartup;
+        }
+
+        private void addFilesContextMenuItem_Click(object sender, EventArgs e)
+        {
+            addFilesToolStripMenuItem_Click(sender, e);
+        }
+
+        private void addFilesInFolderContextMenuItem_Click(object sender, EventArgs e)
+        {
+            addFilesInFolderToolStripMenuItem_Click(sender, e);
+        }
+
+        private void removeContextMenuItem_Click(object sender, EventArgs e)
+        {
+            DialogResult res = MessageBox.Show("Are you sure to remove selected file(s) from list?", "Remove", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (res != DialogResult.Yes)
+                return;
+            foreach(ListViewItem selItem in lvwFiles.SelectedItems)
+            {
+                lvwFiles.Items.Remove(selItem);
+            }
+
+            lblStatus.Text = string.Format("Total:{0} file(s)", lvwFiles.Items.Count);
+            saveListToolStripMenuItem.Enabled = lvwFiles.Items.Count > 0;
+        }
+
+        private void removeAllContextMenuItem_Click(object sender, EventArgs e)
+        {
+            DialogResult res = MessageBox.Show("Are you sure to remove all files in the list?", "Remove All", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (res != DialogResult.Yes)
+                return;
+            lvwFiles.Items.Clear();
+            MainImgList.Images.Clear();
+            lblStatus.Text = string.Format("Total:{0} file(s)", lvwFiles.Items.Count);
+            saveListToolStripMenuItem.Enabled = lvwFiles.Items.Count > 0;
         }
     }
 }

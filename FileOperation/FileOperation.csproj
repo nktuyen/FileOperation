@@ -55,6 +55,16 @@
     <Compile Include="AboutForm.Designer.cs">
       <DependentUpon>AboutForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="AttributesFilter.cs" />
+    <Compile Include="AttributesFilterSettingsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AttributesFilterSettingsForm.Designer.cs" />
+    <Compile Include="DateFilter.cs" />
+    <Compile Include="DateFilterSettingsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DateFilterSettingsForm.Designer.cs" />
     <Compile Include="DeleteOperator.cs" />
     <Compile Include="DeleteOperatorSettingsForm.cs">
       <SubType>Form</SubType>
@@ -95,9 +105,16 @@
     <Compile Include="NameFilterSettingsForm.designer.cs">
       <DependentUpon>NameFilterSettingsForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="SizeFilter.cs" />
+    <Compile Include="SizeFilterSettingsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SizeFilterSettingsForm.Designer.cs" />
     <EmbeddedResource Include="AboutForm.resx">
       <DependentUpon>AboutForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="AttributesFilterSettingsForm.resx" />
+    <EmbeddedResource Include="DateFilterSettingsForm.resx" />
     <EmbeddedResource Include="DeleteOperatorSettingsForm.resx">
       <DependentUpon>DeleteOperatorSettingsForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -123,6 +140,7 @@
     <EmbeddedResource Include="NameFilterSettingsForm.resx">
       <DependentUpon>NameFilterSettingsForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="SizeFilterSettingsForm.resx" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

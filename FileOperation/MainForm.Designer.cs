@@ -34,7 +34,6 @@
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.addFilesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.addFilesInFolderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.removeAllFilesToolstripMenu = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.loadListToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveListToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -66,6 +65,11 @@
             this.dlgOpenList = new System.Windows.Forms.OpenFileDialog();
             this.dlgSaveList = new System.Windows.Forms.SaveFileDialog();
             this.MainImgList = new System.Windows.Forms.ImageList(this.components);
+            this.addFilesContextMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.addFilesInFolderContextMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.removeContextMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.removeAllContextMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem4 = new System.Windows.Forms.ToolStripSeparator();
             this.lvwFiles = new FileOperation.ListViewEx();
             this.colNb = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.colName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -75,6 +79,7 @@
             this.colCreatedTime = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.colStatus = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.MainMenu.SuspendLayout();
+            this.filesContextMenuStrip.SuspendLayout();
             this.SuspendLayout();
             // 
             // MainMenu
@@ -94,7 +99,6 @@
             this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.addFilesToolStripMenuItem,
             this.addFilesInFolderToolStripMenuItem,
-            this.removeAllFilesToolstripMenu,
             this.toolStripSeparator1,
             this.loadListToolStripMenuItem,
             this.saveListToolStripMenuItem,
@@ -108,7 +112,7 @@
             // 
             this.addFilesToolStripMenuItem.Name = "addFilesToolStripMenuItem";
             this.addFilesToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.F)));
-            this.addFilesToolStripMenuItem.Size = new System.Drawing.Size(243, 22);
+            this.addFilesToolStripMenuItem.Size = new System.Drawing.Size(208, 22);
             this.addFilesToolStripMenuItem.Text = "Add Files";
             this.addFilesToolStripMenuItem.Click += new System.EventHandler(this.addFilesToolStripMenuItem_Click);
             // 
@@ -116,30 +120,20 @@
             // 
             this.addFilesInFolderToolStripMenuItem.Name = "addFilesInFolderToolStripMenuItem";
             this.addFilesInFolderToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.I)));
-            this.addFilesInFolderToolStripMenuItem.Size = new System.Drawing.Size(243, 22);
+            this.addFilesInFolderToolStripMenuItem.Size = new System.Drawing.Size(208, 22);
             this.addFilesInFolderToolStripMenuItem.Text = "Add Files in Folder";
             this.addFilesInFolderToolStripMenuItem.Click += new System.EventHandler(this.addFilesInFolderToolStripMenuItem_Click);
-            // 
-            // removeAllFilesToolstripMenu
-            // 
-            this.removeAllFilesToolstripMenu.Enabled = false;
-            this.removeAllFilesToolstripMenu.Name = "removeAllFilesToolstripMenu";
-            this.removeAllFilesToolstripMenu.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
-            | System.Windows.Forms.Keys.Delete)));
-            this.removeAllFilesToolstripMenu.Size = new System.Drawing.Size(243, 22);
-            this.removeAllFilesToolstripMenu.Text = "Remove All Files";
-            this.removeAllFilesToolstripMenu.Click += new System.EventHandler(this.removeAllFilesToolstripMenu_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(240, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(205, 6);
             // 
             // loadListToolStripMenuItem
             // 
             this.loadListToolStripMenuItem.Name = "loadListToolStripMenuItem";
             this.loadListToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
-            this.loadListToolStripMenuItem.Size = new System.Drawing.Size(243, 22);
+            this.loadListToolStripMenuItem.Size = new System.Drawing.Size(208, 22);
             this.loadListToolStripMenuItem.Text = "Load List";
             this.loadListToolStripMenuItem.Click += new System.EventHandler(this.loadListToolStripMenuItem_Click);
             // 
@@ -148,20 +142,20 @@
             this.saveListToolStripMenuItem.Enabled = false;
             this.saveListToolStripMenuItem.Name = "saveListToolStripMenuItem";
             this.saveListToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
-            this.saveListToolStripMenuItem.Size = new System.Drawing.Size(243, 22);
+            this.saveListToolStripMenuItem.Size = new System.Drawing.Size(208, 22);
             this.saveListToolStripMenuItem.Text = "Save List";
             this.saveListToolStripMenuItem.Click += new System.EventHandler(this.saveListToolStripMenuItem_Click);
             // 
             // toolStripMenuItem1
             // 
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(240, 6);
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(205, 6);
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
             this.exitToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.W)));
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(243, 22);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(208, 22);
             this.exitToolStripMenuItem.Text = "E&xit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
@@ -185,25 +179,25 @@
             // settingsFiltersToolStripMenuItem
             // 
             this.settingsFiltersToolStripMenuItem.Name = "settingsFiltersToolStripMenuItem";
-            this.settingsFiltersToolStripMenuItem.Size = new System.Drawing.Size(208, 22);
+            this.settingsFiltersToolStripMenuItem.Size = new System.Drawing.Size(213, 22);
             this.settingsFiltersToolStripMenuItem.Text = "Filters";
             // 
             // settingsOperatorsToolStripMenuItem
             // 
             this.settingsOperatorsToolStripMenuItem.Name = "settingsOperatorsToolStripMenuItem";
-            this.settingsOperatorsToolStripMenuItem.Size = new System.Drawing.Size(208, 22);
+            this.settingsOperatorsToolStripMenuItem.Size = new System.Drawing.Size(213, 22);
             this.settingsOperatorsToolStripMenuItem.Text = "Operators";
             // 
             // toolStripMenuItem3
             // 
             this.toolStripMenuItem3.Name = "toolStripMenuItem3";
-            this.toolStripMenuItem3.Size = new System.Drawing.Size(205, 6);
+            this.toolStripMenuItem3.Size = new System.Drawing.Size(210, 6);
             // 
             // loadRecentFileAtStartupToolStripMenuItem
             // 
             this.loadRecentFileAtStartupToolStripMenuItem.Name = "loadRecentFileAtStartupToolStripMenuItem";
-            this.loadRecentFileAtStartupToolStripMenuItem.Size = new System.Drawing.Size(208, 22);
-            this.loadRecentFileAtStartupToolStripMenuItem.Text = "Load recent file at startup";
+            this.loadRecentFileAtStartupToolStripMenuItem.Size = new System.Drawing.Size(213, 22);
+            this.loadRecentFileAtStartupToolStripMenuItem.Text = "Load recent files at startup";
             this.loadRecentFileAtStartupToolStripMenuItem.Click += new System.EventHandler(this.loadRecentFileAtStartupToolStripMenuItem_Click);
             // 
             // helpToolStripMenuItem
@@ -321,8 +315,14 @@
             // 
             // filesContextMenuStrip
             // 
+            this.filesContextMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.addFilesContextMenuItem,
+            this.addFilesInFolderContextMenuItem,
+            this.removeContextMenuItem,
+            this.removeAllContextMenuItem,
+            this.toolStripMenuItem4});
             this.filesContextMenuStrip.Name = "filesContextMenuStrip";
-            this.filesContextMenuStrip.Size = new System.Drawing.Size(61, 4);
+            this.filesContextMenuStrip.Size = new System.Drawing.Size(172, 98);
             this.filesContextMenuStrip.Opening += new System.ComponentModel.CancelEventHandler(this.filesContextMenuStrip_Opening);
             // 
             // txtListViewItem
@@ -359,6 +359,39 @@
             this.MainImgList.ColorDepth = System.Windows.Forms.ColorDepth.Depth32Bit;
             this.MainImgList.ImageSize = new System.Drawing.Size(16, 16);
             this.MainImgList.TransparentColor = System.Drawing.Color.White;
+            // 
+            // addFilesContextMenuItem
+            // 
+            this.addFilesContextMenuItem.Name = "addFilesContextMenuItem";
+            this.addFilesContextMenuItem.Size = new System.Drawing.Size(171, 22);
+            this.addFilesContextMenuItem.Text = "Add Files";
+            this.addFilesContextMenuItem.Click += new System.EventHandler(this.addFilesContextMenuItem_Click);
+            // 
+            // addFilesInFolderContextMenuItem
+            // 
+            this.addFilesInFolderContextMenuItem.Name = "addFilesInFolderContextMenuItem";
+            this.addFilesInFolderContextMenuItem.Size = new System.Drawing.Size(171, 22);
+            this.addFilesInFolderContextMenuItem.Text = "Add Files in Folder";
+            this.addFilesInFolderContextMenuItem.Click += new System.EventHandler(this.addFilesInFolderContextMenuItem_Click);
+            // 
+            // removeContextMenuItem
+            // 
+            this.removeContextMenuItem.Name = "removeContextMenuItem";
+            this.removeContextMenuItem.Size = new System.Drawing.Size(171, 22);
+            this.removeContextMenuItem.Text = "Remove";
+            this.removeContextMenuItem.Click += new System.EventHandler(this.removeContextMenuItem_Click);
+            // 
+            // removeAllContextMenuItem
+            // 
+            this.removeAllContextMenuItem.Name = "removeAllContextMenuItem";
+            this.removeAllContextMenuItem.Size = new System.Drawing.Size(171, 22);
+            this.removeAllContextMenuItem.Text = "Remove All";
+            this.removeAllContextMenuItem.Click += new System.EventHandler(this.removeAllContextMenuItem_Click);
+            // 
+            // toolStripMenuItem4
+            // 
+            this.toolStripMenuItem4.Name = "toolStripMenuItem4";
+            this.toolStripMenuItem4.Size = new System.Drawing.Size(168, 6);
             // 
             // lvwFiles
             // 
@@ -453,6 +486,7 @@
             this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.MainForm_KeyUp);
             this.MainMenu.ResumeLayout(false);
             this.MainMenu.PerformLayout();
+            this.filesContextMenuStrip.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -486,7 +520,6 @@
         private System.Windows.Forms.ProgressBar MainProgressbar;
         private System.Windows.Forms.Button btnCancel;
         private System.Windows.Forms.Label lblStatus;
-        private System.Windows.Forms.ToolStripMenuItem removeAllFilesToolstripMenu;
         private System.Windows.Forms.ColumnHeader colCreatedTime;
         private System.Windows.Forms.ContextMenuStrip filesContextMenuStrip;
         private System.Windows.Forms.TextBox txtListViewItem;
@@ -504,6 +537,11 @@
         private System.Windows.Forms.ColumnHeader colStatus;
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem3;
         private System.Windows.Forms.ToolStripMenuItem loadRecentFileAtStartupToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem addFilesContextMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem addFilesInFolderContextMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem removeContextMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem removeAllContextMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripMenuItem4;
     }
 }
 
